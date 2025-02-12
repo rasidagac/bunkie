@@ -8,9 +8,9 @@
     "start": "next start",
     "lint": "next lint",
     "prepare": "yarn pull:postgres && yarn generate:postgres",
-    "pull:postgres": "dotenv -e .env.local -- yarn dlx prisma db pull",
-    "generate:postgres": "dotenv -e .env.local -- yarn dlx prisma generate",
-    "migrate:postgres": "dotenv -e .env.local -- yarn dlx prisma migrate deploy"
+    "pull:postgres": "prisma db pull",
+    "generate:postgres": "prisma generate",
+    "migrate:postgres": "prisma migrate deploy"
   },
   "dependencies": {
     "@clerk/nextjs": "^6.11.1",
