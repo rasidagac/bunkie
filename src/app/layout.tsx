@@ -5,6 +5,7 @@ import "./globals.css";
 
 import { ThemeProvider } from "@/components/theme-provider";
 import { ClerkProvider } from "@clerk/nextjs";
+import { Toaster } from "@ui/toaster";
 import { Geist, Geist_Mono } from "next/font/google";
 
 const geistSans = Geist({
@@ -38,6 +39,7 @@ export default function RootLayout({
         <body className="flex min-h-screen flex-col antialiased">
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             {children}
+            <Toaster />
           </ThemeProvider>
         </body>
       </html>

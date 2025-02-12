@@ -66,6 +66,9 @@ export default {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+      fontSize: {
+        base: ["0.875rem", "1.25rem"],
+      },
     },
     fontFamily: {
       sans: ["var(--font-geist-sans)"],
