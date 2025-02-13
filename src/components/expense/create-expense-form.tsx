@@ -25,7 +25,7 @@ const formSchema = z.object({
   title: z.string().nonempty(),
   price: z.coerce.number(),
   currency: z.union([z.literal("TRY"), z.literal("USD"), z.literal("EUR")]),
-  image: z.instanceof(FileList).optional(),
+  image: z.instanceof(File).array().optional(),
 });
 
 export type CreateExpenseValues = z.infer<typeof formSchema>;
@@ -46,7 +46,6 @@ export default function CreateExpenseForm({
   const imageRef = form.register("image");
 
   async function handleSubmit(values: CreateExpenseValues) {
-    console.log(values);
     createExpense(house_id, user_id, values).then(() => {
       form.reset();
       toast({ title: "Expense created successfully" });

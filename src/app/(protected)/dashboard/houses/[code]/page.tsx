@@ -1,16 +1,9 @@
-import CopyToClipboard from "@/components/copy-to-clipboard";
 import ExpensesTable from "@/components/house/expenses-table";
+import HouseHeader from "@/components/house/house-header";
+import LiabilitiesDrawer from "@/components/house/liabilities-drawer";
 import { currentUser } from "@clerk/nextjs/server";
 import prisma from "@lib/prisma";
 import { Button } from "@ui/button";
-import {
-  Drawer,
-  DrawerContent,
-  DrawerDescription,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@ui/drawer";
 import { Separator } from "@ui/separator";
 import { PlusCircle } from "lucide-react";
 import Link from "next/link";
@@ -22,11 +15,12 @@ export default async function HousePage({
   params: Promise<{ code: string }>;
 }) {
   const { code } = await params;
+  const decodedCode = decodeURIComponent(code);
 
   const user = await currentUser();
 
   const house = await prisma.houses.findFirst({
-    where: { code },
+    where: { code: decodedCode },
   });
 
   if (!house) {
@@ -68,54 +62,21 @@ export default async function HousePage({
 
   return (
     <div className="flex h-full flex-col gap-4">
-      <div>
-        <h1 className="text-xl font-bold">{house.title}</h1>
-        <CopyToClipboard
-          textToCopy={code}
-          label="Copy code"
-          variant="ghost"
-          className="h-fit p-0 text-gray-500"
-        />
-        <div className="mt-2 flex items-center gap-2">
+      <HouseHeader houseTitle={house.title} code={code} />
+      <div className="mt-2 flex items-center gap-2">
+        <Button size="sm" variant="outline">
+          Settle up
+        </Button>
+        <LiabilitiesDrawer houseTitle={house.title} balances={balances} />
+        <Link href={`/dashboard/houses/${decodedCode}/create`}>
           <Button size="sm" variant="outline">
-            Settle up
+            <PlusCircle /> Add expense
           </Button>
-          <Drawer>
-            <DrawerTrigger asChild>
-              <Button size="sm" variant="outline">
-                Liabilities
-              </Button>
-            </DrawerTrigger>
-            <DrawerContent>
-              <DrawerHeader>
-                <DrawerTitle>Liabilities for {house.title}</DrawerTitle>
-                <DrawerDescription>
-                  Settle up with your friends and housemates
-                </DrawerDescription>
-              </DrawerHeader>
-              <div className="flex flex-col gap-2 p-6">
-                {balances.map((debt, index) => (
-                  <div
-                    key={index}
-                    className="flex justify-between rounded-full border border-gray-200 px-4 py-2 text-base"
-                  >
-                    <span>{debt.creditor_name}</span>
-                    <span>{Number(debt.amount)}</span>
-                  </div>
-                ))}
-              </div>
-            </DrawerContent>
-          </Drawer>
-          <Link href={`/dashboard/houses/${code}/create`}>
-            <Button size="sm" variant="outline">
-              <PlusCircle /> Add expense
-            </Button>
-          </Link>
-        </div>
+        </Link>
       </div>
       <Separator className="w-1/3" />
       <ExpensesTable data={expenses} userCount={usersCountOfHouse} />
-      <Link href={`/dashboard/houses/${code}/expenses`}>
+      <Link href={`/dashboard/houses/${decodedCode}/expenses`}>
         <Button size="sm" variant="outline" className="w-full">
           View all expenses
         </Button>

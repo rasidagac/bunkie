@@ -10,11 +10,12 @@ export default async function CreateExpensePage({
   params: Promise<{ code: string }>;
 }) {
   const { code } = await params;
+  const decodedCode = decodeURIComponent(code);
 
   const user = await currentUser();
 
   const house = await prisma.houses.findFirst({
-    where: { code },
+    where: { code: decodedCode },
     select: { id: true },
   });
 
