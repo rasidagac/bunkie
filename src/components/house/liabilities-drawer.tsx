@@ -1,3 +1,6 @@
+"use client";
+
+import { useUser } from "@clerk/nextjs";
 import { Button } from "@ui/button";
 import {
   Drawer,
@@ -19,10 +22,14 @@ interface LiabilitiesDrawerProps {
   }[];
 }
 
-const LiabilitiesDrawer: React.FC<LiabilitiesDrawerProps> = ({
+export default function LiabilitiesDrawer({
   houseTitle,
   balances,
-}) => {
+}: LiabilitiesDrawerProps) {
+  const { user } = useUser();
+
+  const myDebtors = balances.filter((debt) => debt.creditor === user?.id);
+
   return (
     <Drawer>
       <DrawerTrigger asChild>
@@ -33,24 +40,25 @@ const LiabilitiesDrawer: React.FC<LiabilitiesDrawerProps> = ({
       <DrawerContent>
         <DrawerHeader>
           <DrawerTitle>Liabilities for {houseTitle}</DrawerTitle>
-          <DrawerDescription>
-            Settle up with your friends and housemates
-          </DrawerDescription>
+          <DrawerDescription>People who owe you money</DrawerDescription>
         </DrawerHeader>
         <div className="flex flex-col gap-2 p-6">
-          {balances.map((debt, index) => (
+          {myDebtors.map((debt, index) => (
             <div
               key={index}
               className="flex justify-between rounded-full border border-gray-200 px-4 py-2 text-base"
             >
-              <span>{debt.creditor_name}</span>
-              <span>{Number(debt.amount)}</span>
+              <span>{debt.debtor_name}</span>
+              <span>
+                {Number(debt.amount).toLocaleString("tr-TR", {
+                  style: "currency",
+                  currency: "TRY",
+                })}
+              </span>
             </div>
           ))}
         </div>
       </DrawerContent>
     </Drawer>
   );
-};
-
-export default LiabilitiesDrawer;
+}

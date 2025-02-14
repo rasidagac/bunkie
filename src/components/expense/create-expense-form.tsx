@@ -13,6 +13,13 @@ import {
   FormMessage,
 } from "@ui/form";
 import { Input } from "@ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@ui/select";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -21,11 +28,20 @@ interface CreateExpenseFormProps {
   user_id: string;
 }
 
+const SPLIT_TYPES = {
+  equal: "Equal",
+  custom: "Custom",
+  percentage: "Percentage",
+} as const;
+
+type SplitType = keyof typeof SPLIT_TYPES;
+
 const formSchema = z.object({
   title: z.string().nonempty(),
   price: z.coerce.number(),
   currency: z.union([z.literal("TRY"), z.literal("USD"), z.literal("EUR")]),
-  image: z.instanceof(File).array().optional(),
+  split_type: z.enum(["equal", "custom", "percentage"]).default("equal"),
+  image: z.instanceof(FileList).optional(),
 });
 
 export type CreateExpenseValues = z.infer<typeof formSchema>;
@@ -40,6 +56,7 @@ export default function CreateExpenseForm({
       title: "",
       price: 0,
       currency: "TRY",
+      split_type: "equal",
     },
   });
 
@@ -80,6 +97,57 @@ export default function CreateExpenseForm({
               <FormControl>
                 <Input type="number" {...field} />
               </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="currency"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Currency</FormLabel>
+              <FormControl>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select currency" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="TRY">TRY</SelectItem>
+                    <SelectItem value="USD">USD</SelectItem>
+                    <SelectItem value="EUR">EUR</SelectItem>
+                  </SelectContent>
+                </Select>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="split_type"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Split Type</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select split type" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {Object.entries(SPLIT_TYPES).map(([value, label]) => (
+                    <SelectItem key={value} value={value}>
+                      {label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
               <FormMessage />
             </FormItem>
           )}

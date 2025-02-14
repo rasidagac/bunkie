@@ -9,9 +9,10 @@ export default async function ExpensesPage({
   params: Promise<{ code: string }>;
 }) {
   const { code } = await params;
+  const decodedCode = decodeURIComponent(code);
 
   const house = await prisma.houses.findFirst({
-    where: { code },
+    where: { code: decodedCode },
   });
 
   if (!house) {

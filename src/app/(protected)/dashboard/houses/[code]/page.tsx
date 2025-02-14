@@ -45,19 +45,19 @@ export default async function HousePage({
     debtor: string;
     debtor_name: string;
   }[] = await prisma.$queryRaw`
-        SELECT
-            es.user_id AS debtor_id,
-            debtor.full_name AS debtor_name,  
-            e.user_id AS creditor_id,
-            creditor.full_name AS creditor_name, 
-            SUM(es.amount) AS amount 
-        FROM expense_splits es
-                 JOIN expenses e ON es.expense_id = e.id
-                 JOIN users debtor ON es.user_id = debtor.id 
-                 JOIN users creditor ON e.user_id = creditor.id 
-        WHERE es.user_id = ${user?.id}
-          AND e.house_id = ${house.id} 
-        GROUP BY es.user_id, debtor.full_name, e.user_id, creditor.full_name;
+    SELECT
+      es.user_id AS debtor,
+      debtor.full_name AS debtor_name,  
+      e.user_id AS creditor,
+      creditor.full_name AS creditor_name, 
+      CAST(SUM(es.amount) AS TEXT) AS amount  -- Convert Decimal to string
+    FROM expense_splits es
+      JOIN expenses e ON es.expense_id = e.id
+      JOIN users debtor ON es.user_id = debtor.id 
+      JOIN users creditor ON e.user_id = creditor.id 
+    WHERE es.user_id = ${user?.id}
+      AND e.house_id = ${house.id} 
+    GROUP BY es.user_id, debtor.full_name, e.user_id, creditor.full_name;
 `;
 
   return (
