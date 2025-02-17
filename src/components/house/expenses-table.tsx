@@ -1,7 +1,6 @@
-import type { User } from "@clerk/nextjs/server";
 import type { expenses, users } from "@prisma/client";
 
-import { currentUser } from "@clerk/nextjs/server";
+import { currentUser } from "@lib/supabase";
 import { cn } from "@lib/utils";
 import { ScrollArea } from "@ui/scroll-area";
 import { format } from "date-fns";
@@ -29,14 +28,14 @@ const ExpenseRow = async ({
   expense: expenseData;
   userCount: number;
 }) => {
-  const user = (await currentUser()) as User;
+  const { user } = await currentUser();
   const fullName = expense.users.full_name;
   const totalCost = expense.price.toNumber().toLocaleString("tr-TR", {
     style: "currency",
     currency: expense.currency,
   });
 
-  const paidByUser = expense.users.id === user.id;
+  const paidByUser = expense.users.id === user?.id;
 
   function getLiability() {
     const pricePerUser = expense.price.toNumber() / userCount;
@@ -86,7 +85,13 @@ const ExpenseRow = async ({
   );
 };
 
-export default function ExpensesTable({ data, userCount }: ExpensesTableProps) {
+export async function ExpensesTable({ data, userCount }: ExpensesTableProps) {
+  const { user } = await currentUser();
+
+  if (!user) {
+    return null;
+  }
+
   const table = data.reduce<JSX.Element[]>((acc, expense, index) => {
     const currentMonth = getMonthTitle(expense.created_at as Date);
     const prevMonth =

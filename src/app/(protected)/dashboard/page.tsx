@@ -1,6 +1,5 @@
 import JoinHouseForm from "@/components/house/join-house-form";
-import { currentUser } from "@clerk/nextjs/server";
-import prisma from "@lib/prisma";
+import { createClient } from "@/utils/supabase/server";
 import { Avatar, AvatarFallback, AvatarImage } from "@ui/avatar";
 import { Button } from "@ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@ui/card";
@@ -17,17 +16,19 @@ import { ChevronRight, Plus, Users } from "lucide-react";
 import Link from "next/link";
 
 export default async function DashboardPage() {
-  const user = await currentUser();
-  const houseOfCurrentUser = await prisma.house_users.findMany({
-    where: {
-      user_id: user?.id,
-    },
-    select: {
-      houses: true,
-    },
-  });
+  const supabase = await createClient();
+  const { data } = await supabase.auth.getUser();
 
-  if (!houseOfCurrentUser.length) {
+  if (!data.user) {
+    return null;
+  }
+
+  const { data: groupsOfCurrentUser } = await supabase
+    .from("group_users")
+    .select("groups(*), profiles(*)")
+    .eq("user_id", data.user.id);
+
+  if (!groupsOfCurrentUser?.length) {
     return (
       <div className="flex flex-col items-center rounded-lg border-2 border-dashed p-6">
         <h1 className="text-xl font-bold">No House</h1>
@@ -64,41 +65,27 @@ export default async function DashboardPage() {
     );
   }
 
-  const otherHouseUsers = (houseId: string) =>
-    prisma.house_users.findMany({
-      where: {
-        house_id: houseId,
-      },
-      select: {
-        users: true,
-      },
-    });
-
   return (
     <div>
-      <h1 className="text-2xl">My Houses</h1>
+      <h1 className="text-2xl font-bold">My Houses</h1>
       <Separator className="my-2 w-1/3" />
-      {houseOfCurrentUser.map(async ({ houses }) => (
-        <Link href={`/dashboard/houses/${houses?.code}`} key={houses?.id}>
+      {groupsOfCurrentUser.map(({ groups, profiles }) => (
+        <Link href={`/dashboard/groups/${groups?.code}`} key={groups?.id}>
           <Card>
             <CardHeader>
-              <CardTitle className="text-xl">{houses?.title}</CardTitle>
+              <CardTitle className="text-xl">{groups?.name}</CardTitle>
             </CardHeader>
             <CardContent className="flex gap-2 pb-0">
-              {(await otherHouseUsers(houses?.id as string)).map(
-                ({ users }) => (
-                  <Avatar
-                    key={users?.id}
-                    className="-mr-5 border-2 drop-shadow-sm"
-                  >
-                    <AvatarImage
-                      src={users?.avatar_url as string}
-                      alt={users?.username as string}
-                    />
-                    <AvatarFallback>{users?.username?.[0]}</AvatarFallback>
-                  </Avatar>
-                ),
-              )}
+              <Avatar
+                key={profiles?.id}
+                className="-mr-5 border-2 drop-shadow-sm"
+              >
+                <AvatarImage
+                  src={profiles?.avatar_url as string}
+                  alt={profiles?.username as string}
+                />
+                <AvatarFallback>{profiles?.username?.[0]}</AvatarFallback>
+              </Avatar>
             </CardContent>
             <CardFooter className="justify-end text-sm">
               View House <ChevronRight />

@@ -1,29 +1,38 @@
 "use server";
-
-import { currentUser } from "@clerk/nextjs/server";
-import prisma from "@lib/prisma";
+import { currentUser } from "@/lib/supabase";
+import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 
 export async function joinHouse(
   _prevState: { error: string },
   formData: FormData,
 ) {
+  const supabase = await createClient();
   const code = formData.get("code") as string;
-  const house = await prisma.houses.findFirst({
-    where: { code },
-  });
+  const { data: group } = await supabase
+    .from("groups")
+    .select()
+    .eq("code", code)
+    .single();
 
-  if (!house) {
+  if (!group) {
     return { error: "House not found" };
   }
 
-  const user = await currentUser();
-  await prisma.house_users.create({
-    data: {
-      user_id: user?.id,
-      house_id: house.id,
-    },
+  const { user } = await currentUser();
+
+  if (!user) {
+    return { error: "User not found" };
+  }
+
+  const { error: groupUserError } = await supabase.from("group_users").insert({
+    user_id: user.id,
+    group_id: group.id,
   });
 
-  redirect(`/dashboard/houses/${house.code}`);
+  if (groupUserError) {
+    return { error: "Failed to join house" };
+  }
+
+  redirect(`/dashboard/houses/${group.code}`);
 }

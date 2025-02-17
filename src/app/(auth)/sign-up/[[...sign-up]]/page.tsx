@@ -1,13 +1,26 @@
-"use client";
+import { SignUpForm } from "@/components/auth/sign-up-form";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@ui/card";
 
-import { SignUp } from "@clerk/nextjs";
-import { dark } from "@clerk/themes";
-import { useTheme } from "next-themes";
-
-export default function Page() {
-  const { theme } = useTheme();
-
+export default function SignUpPage() {
   return (
-    <SignUp appearance={{ baseTheme: theme === "dark" ? dark : undefined }} />
+    <div className="container flex h-screen w-screen flex-col items-center justify-center">
+      <Card className="w-[350px]">
+        <CardHeader>
+          <CardTitle>Create an account</CardTitle>
+          <CardDescription>
+            Enter your email below to create your account
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <SignUpForm />
+        </CardContent>
+      </Card>
+    </div>
   );
 }

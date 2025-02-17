@@ -1,63 +1,81 @@
-"use client";
-
-import { useUser } from "@clerk/nextjs";
+import { Tables } from "@/types/supabase";
+import { createClient } from "@/utils/supabase/server";
+import { User } from "@supabase/auth-js";
 import { Button } from "@ui/button";
 import {
   Drawer,
+  DrawerClose,
   DrawerContent,
   DrawerDescription,
+  DrawerFooter,
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
 } from "@ui/drawer";
 
 interface LiabilitiesDrawerProps {
-  houseTitle: string;
-  balances: {
-    amount: string;
-    creditor: string;
-    creditor_name: string;
-    debtor: string;
-    debtor_name: string;
-  }[];
+  group: Tables<"groups">;
 }
 
-export default function LiabilitiesDrawer({
-  houseTitle,
-  balances,
-}: LiabilitiesDrawerProps) {
-  const { user } = useUser();
+export async function LiabilitiesDrawer({ group }: LiabilitiesDrawerProps) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-  const myDebtors = balances.filter((debt) => debt.creditor === user?.id);
+  const user_balances = await supabase
+    .from("user_balances")
+    .select(
+      `
+      *,
+      debtor:profiles!debtor (
+        full_name    
+      ),
+      creditor:profiles!creditor (
+        full_name    
+      )
+    `,
+    )
+    .neq("debtor", (user as User)?.id)
+    .eq("group_id", group.id);
+
+  console.log(user_balances);
 
   return (
     <Drawer>
       <DrawerTrigger asChild>
-        <Button size="sm" variant="outline">
-          Liabilities
+        <Button variant="outline" size="sm">
+          View Liabilities
         </Button>
       </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader>
-          <DrawerTitle>Liabilities for {houseTitle}</DrawerTitle>
-          <DrawerDescription>People who owe you money</DrawerDescription>
+          <DrawerTitle>Liabilities</DrawerTitle>
+          <DrawerDescription>
+            View your current liabilities in this house
+          </DrawerDescription>
         </DrawerHeader>
-        <div className="flex flex-col gap-2 p-6">
-          {myDebtors.map((debt, index) => (
+        <div className="space-y-2 p-4">
+          {user_balances.data?.map((balance) => (
             <div
-              key={index}
-              className="flex justify-between rounded-full border border-gray-200 px-4 py-2 text-base"
+              key={balance.id}
+              className="flex items-center justify-between gap-2 rounded-full border px-3 py-2 text-base"
             >
-              <span>{debt.debtor_name}</span>
-              <span>
-                {Number(debt.amount).toLocaleString("tr-TR", {
-                  style: "currency",
+              <div>{balance.creditor?.full_name}</div>
+              <div>
+                {balance.amount?.toLocaleString("tr-TR", {
                   currency: "TRY",
+                  style: "currency",
                 })}
-              </span>
+              </div>
             </div>
           ))}
         </div>
+        <DrawerFooter>
+          <DrawerClose asChild>
+            <Button variant="outline">Close</Button>
+          </DrawerClose>
+        </DrawerFooter>
       </DrawerContent>
     </Drawer>
   );

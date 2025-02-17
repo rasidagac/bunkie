@@ -13,8 +13,6 @@
     "migrate:postgres": "prisma migrate deploy"
   },
   "dependencies": {
-    "@clerk/nextjs": "^6.11.1",
-    "@clerk/themes": "^2.2.16",
     "@hookform/resolvers": "^3.10.0",
     "@neondatabase/serverless": "^0.10.4",
     "@prisma/adapter-neon": "^6.3.1",
@@ -29,6 +27,8 @@
     "@radix-ui/react-slot": "^1.1.2",
     "@radix-ui/react-toast": "^1.2.6",
     "@radix-ui/react-tooltip": "^1.1.8",
+    "@supabase/ssr": "^0.5.2",
+    "@supabase/supabase-js": "^2.48.1",
     "@vercel/blob": "^0.27.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -39,7 +39,6 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.54.2",
-    "svix": "^1.45.1",
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
     "vaul": "^1.1.2",
@@ -64,6 +63,7 @@
     "prettier": "3.4.2",
     "prettier-plugin-tailwindcss": "^0.6.11",
     "prisma": "^6.3.1",
+    "supabase": "2.12.1",
     "tailwindcss": "^3.4.17",
     "typescript": "^5.7.3"
   },
