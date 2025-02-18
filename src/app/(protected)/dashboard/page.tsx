@@ -25,7 +25,16 @@ export default async function DashboardPage() {
 
   const { data: groupsOfCurrentUser } = await supabase
     .from("group_users")
-    .select("groups(*), profiles(*)")
+    .select(
+      `
+      groups:groups(*),
+      all_users:groups(
+      group_users(
+        profiles(*)
+      )
+    )
+  `,
+    )
     .eq("user_id", data.user.id);
 
   if (!groupsOfCurrentUser?.length) {
@@ -69,23 +78,27 @@ export default async function DashboardPage() {
     <div>
       <h1 className="text-2xl font-bold">My Houses</h1>
       <Separator className="my-2 w-1/3" />
-      {groupsOfCurrentUser.map(({ groups, profiles }) => (
+      {groupsOfCurrentUser.map(({ groups, all_users }) => (
         <Link href={`/dashboard/groups/${groups?.code}`} key={groups?.id}>
           <Card>
             <CardHeader>
               <CardTitle className="text-xl">{groups?.name}</CardTitle>
             </CardHeader>
             <CardContent className="flex gap-2 pb-0">
-              <Avatar
-                key={profiles?.id}
-                className="-mr-5 border-2 drop-shadow-sm"
-              >
-                <AvatarImage
-                  src={profiles?.avatar_url as string}
-                  alt={profiles?.username as string}
-                />
-                <AvatarFallback>{profiles?.username?.[0]}</AvatarFallback>
-              </Avatar>
+              <div className="flex -space-x-5 hover:-space-x-2">
+                {all_users?.group_users?.map(({ profiles }) => (
+                  <Avatar
+                    key={profiles?.id}
+                    className="border-2 drop-shadow-sm transition-all ease-in-out"
+                  >
+                    <AvatarImage
+                      src={profiles?.avatar_url as string}
+                      alt={profiles?.username as string}
+                    />
+                    <AvatarFallback>{profiles?.username?.[0]}</AvatarFallback>
+                  </Avatar>
+                ))}
+              </div>
             </CardContent>
             <CardFooter className="justify-end text-sm">
               View House <ChevronRight />

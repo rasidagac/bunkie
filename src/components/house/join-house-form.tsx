@@ -1,7 +1,7 @@
 "use client";
 
 import FormSubmitButton from "@/components/form-submit-button";
-import { joinHouse } from "@actions/houses/joinHouse";
+import { joinGroup } from "@actions/groups/joinGroup";
 import { Input } from "@ui/input";
 import { Label } from "@ui/label";
 import { useActionState } from "react";
@@ -11,7 +11,7 @@ const initialState = {
 };
 
 export default function JoinHouseForm() {
-  const [state, formAction] = useActionState(joinHouse, initialState);
+  const [state, formAction] = useActionState(joinGroup, initialState);
 
   return (
     <form action={formAction} className="grid gap-4 py-4">

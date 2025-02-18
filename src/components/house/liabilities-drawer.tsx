@@ -1,6 +1,7 @@
-import { Tables } from "@/types/supabase";
+import type { Tables } from "@/types/supabase";
+import type { User } from "@supabase/auth-js";
+
 import { createClient } from "@/utils/supabase/server";
-import { User } from "@supabase/auth-js";
 import { Button } from "@ui/button";
 import {
   Drawer,
@@ -14,10 +15,10 @@ import {
 } from "@ui/drawer";
 
 interface LiabilitiesDrawerProps {
-  group: Tables<"groups">;
+  groupId: Tables<"groups">["id"];
 }
 
-export async function LiabilitiesDrawer({ group }: LiabilitiesDrawerProps) {
+export async function LiabilitiesDrawer({ groupId }: LiabilitiesDrawerProps) {
   const supabase = await createClient();
   const {
     data: { user },
@@ -36,10 +37,8 @@ export async function LiabilitiesDrawer({ group }: LiabilitiesDrawerProps) {
       )
     `,
     )
-    .neq("debtor", (user as User)?.id)
-    .eq("group_id", group.id);
-
-  console.log(user_balances);
+    .neq("creditor", (user as User).id)
+    .eq("group_id", groupId);
 
   return (
     <Drawer>
@@ -56,20 +55,26 @@ export async function LiabilitiesDrawer({ group }: LiabilitiesDrawerProps) {
           </DrawerDescription>
         </DrawerHeader>
         <div className="space-y-2 p-4">
-          {user_balances.data?.map((balance) => (
-            <div
-              key={balance.id}
-              className="flex items-center justify-between gap-2 rounded-full border px-3 py-2 text-base"
-            >
-              <div>{balance.creditor?.full_name}</div>
-              <div>
-                {balance.amount?.toLocaleString("tr-TR", {
-                  currency: "TRY",
-                  style: "currency",
-                })}
+          {user_balances.data?.length ? (
+            user_balances.data?.map((balance) => (
+              <div
+                key={balance.id}
+                className="flex items-center justify-between gap-2 rounded-full border px-3 py-2 text-base"
+              >
+                <div>{balance.creditor?.full_name}</div>
+                <div>
+                  {balance.amount?.toLocaleString("tr-TR", {
+                    currency: "TRY",
+                    style: "currency",
+                  })}
+                </div>
               </div>
+            ))
+          ) : (
+            <div className="text-center text-gray-500">
+              No liabilities found.
             </div>
-          ))}
+          )}
         </div>
         <DrawerFooter>
           <DrawerClose asChild>

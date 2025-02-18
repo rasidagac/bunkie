@@ -3,7 +3,7 @@
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 
-export async function createHouse(formData: FormData) {
+export async function createGroup(formData: FormData) {
   const title = formData.get("title") as string;
 
   const supabase = await createClient();
@@ -28,5 +28,5 @@ export async function createHouse(formData: FormData) {
     group_id: group.id,
   });
 
-  redirect(`../houses/${group?.code}`);
+  redirect(`../groups/${group?.code}`);
 }

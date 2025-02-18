@@ -1,6 +1,8 @@
+import { ExpensesTable } from "@/components/house/expenses-table";
 import HouseHeader from "@/components/house/house-header";
 import { LiabilitiesDrawer } from "@/components/house/liabilities-drawer";
-import { createClient } from "@/utils/supabase/server";
+import { getExpenseList } from "@actions/expenses/getExpenseList";
+import { getByCode } from "@actions/groups/getByCode";
 import { Button } from "@ui/button";
 import { Separator } from "@ui/separator";
 import { PlusCircle } from "lucide-react";
@@ -15,15 +17,19 @@ export default async function HousePage({
   const { code } = await params;
   const decodedCode = decodeURIComponent(code);
 
-  const supabase = await createClient();
-  const { data: group } = await supabase
-    .from("groups")
-    .select()
-    .eq("code", decodedCode)
-    .single();
+  const { data: group } = await getByCode(decodedCode);
 
   if (!group) {
     notFound();
+  }
+
+  const { data: formattedExpenses } = await getExpenseList({
+    groupId: group.id,
+    limit: 10,
+  });
+
+  if (!formattedExpenses?.length) {
+    return <div>No expenses yet</div>;
   }
 
   return (
@@ -33,16 +39,16 @@ export default async function HousePage({
         <Button size="sm" variant="outline">
           Settle up
         </Button>
-        <LiabilitiesDrawer group={group} />
-        <Link href={`/dashboard/houses/${decodedCode}/create`}>
+        <LiabilitiesDrawer groupId={group.id} />
+        <Link href={`/dashboard/groups/${decodedCode}/create`}>
           <Button size="sm" variant="outline">
             <PlusCircle /> Add expense
           </Button>
         </Link>
       </div>
       <Separator className="w-1/3" />
-      {/* <ExpensesTable data={expenses} userCount={usersCountOfHouse} /> */}
-      <Link href={`/dashboard/houses/${decodedCode}/expenses`}>
+      <ExpensesTable data={formattedExpenses} />
+      <Link href={`/dashboard/groups/${decodedCode}/expenses`}>
         <Button size="sm" variant="outline" className="w-full">
           View all expenses
         </Button>

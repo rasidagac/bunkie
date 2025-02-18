@@ -3,7 +3,7 @@ import { currentUser } from "@/lib/supabase";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 
-export async function joinHouse(
+export async function joinGroup(
   _prevState: { error: string },
   formData: FormData,
 ) {
@@ -34,5 +34,5 @@ export async function joinHouse(
     return { error: "Failed to join house" };
   }
 
-  redirect(`/dashboard/houses/${group.code}`);
+  redirect(`/dashboard/groups/${group.code}`);
 }

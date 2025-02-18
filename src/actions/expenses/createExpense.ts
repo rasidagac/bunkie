@@ -56,7 +56,7 @@ export default async function createExpense(
     }
     // For now, other split types will be handled in future implementations
 
-    revalidatePath(`/dashboard/houses/${house_id}`);
+    revalidatePath(`/dashboard/groups/${house_id}`);
     return { success: true };
   } catch (error) {
     console.error("Failed to create expense:", error);

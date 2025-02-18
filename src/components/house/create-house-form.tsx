@@ -1,5 +1,5 @@
 import FormSubmitButton from "@/components/form-submit-button";
-import { createHouse } from "@actions/houses/createHouse";
+import { createGroup } from "@actions/groups/createGroup";
 import { Input } from "@ui/input";
 import { Label } from "@ui/label";
 import Form from "next/form";
@@ -9,7 +9,7 @@ export default function CreateHouseForm() {
     <Form
       id="create-house-form"
       className="grid gap-4 py-4"
-      action={createHouse}
+      action={createGroup}
     >
       <div className="flex items-center gap-4">
         <Label htmlFor="title">Title</Label>
