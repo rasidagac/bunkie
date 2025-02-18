@@ -40,7 +40,7 @@ const formSchema = z.object({
 
 // export type CreateExpenseValues = z.infer<typeof formSchema>;
 export type CreateExpenseValues = TablesInsert<"expenses"> & {
-  image: File[] | undefined;
+  image: File[];
 };
 
 export default function CreateExpenseForm({
