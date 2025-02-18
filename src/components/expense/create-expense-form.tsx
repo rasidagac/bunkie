@@ -1,5 +1,7 @@
 "use client";
 
+import type { TablesInsert } from "@/types/supabase";
+
 import FormSubmitButton from "@/components/form-submit-button";
 import { toast } from "@/hooks/use-toast";
 import createExpense from "@actions/expenses/createExpense";
@@ -36,7 +38,10 @@ const formSchema = z.object({
   image: z.instanceof(File).array().optional(),
 });
 
-export type CreateExpenseValues = z.infer<typeof formSchema>;
+// export type CreateExpenseValues = z.infer<typeof formSchema>;
+export type CreateExpenseValues = TablesInsert<"expenses"> & {
+  image: File[] | undefined;
+};
 
 export default function CreateExpenseForm({
   groupId,

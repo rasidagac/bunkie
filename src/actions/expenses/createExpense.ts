@@ -1,21 +1,22 @@
 "use server";
 
-import { CreateExpenseValues } from "@/components/expense/create-expense-form";
+import type { TablesInsert } from "@/types/supabase";
+
+import { createClient } from "@/utils/supabase/server";
 import uploadFile from "@actions/upload/uploadFile";
-import prisma from "@lib/prisma";
 import { revalidatePath } from "next/cache";
 
 export default async function createExpense(
-  house_id: string,
-  user_id: string,
-  values: CreateExpenseValues,
+  groupId: string,
+  userId: string,
+  values: TablesInsert<"expenses"> & { image: File[] },
 ) {
-  const { title, price, currency, image, split_type } = values;
+  const { title, amount, currency, image, split_type } = values;
   let image_url = null;
 
   if (image?.length) {
     try {
-      const blob = await uploadFile(image[0], house_id);
+      const blob = await uploadFile(image[0], groupId);
       image_url = blob.downloadUrl;
     } catch (error) {
       console.error(error);
@@ -23,40 +24,19 @@ export default async function createExpense(
   }
 
   try {
-    const expense = await prisma.expenses.create({
-      data: {
-        title,
-        price,
-        currency,
-        split_type,
-        image_url,
-        user_id,
-        house_id,
-      },
+    const supabase = await createClient();
+
+    await supabase.from("expenses").insert({
+      title,
+      amount,
+      image_url,
+      currency,
+      split_type,
+      user_id: userId,
+      group_id: groupId,
     });
 
-    // Create equal splits based on split_type
-    if (split_type === "equal") {
-      const houseUsers = await prisma.house_users.findMany({
-        where: {
-          house_id: house_id,
-          user_id: { not: null },
-        },
-      });
-
-      const splitAmount = price / houseUsers.length;
-
-      await prisma.expense_splits.createMany({
-        data: houseUsers.map((user) => ({
-          expense_id: expense.id,
-          user_id: user.user_id!,
-          amount: splitAmount,
-        })),
-      });
-    }
-    // For now, other split types will be handled in future implementations
-
-    revalidatePath(`/dashboard/groups/${house_id}`);
+    revalidatePath(`/dashboard/groups/${groupId}`);
     return { success: true };
   } catch (error) {
     console.error("Failed to create expense:", error);
