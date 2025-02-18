@@ -24,37 +24,29 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 interface CreateExpenseFormProps {
-  house_id: string;
-  user_id: string;
+  groupId: string;
+  userId: string;
 }
-
-const SPLIT_TYPES = {
-  equal: "Equal",
-  custom: "Custom",
-  percentage: "Percentage",
-} as const;
-
-type SplitType = keyof typeof SPLIT_TYPES;
 
 const formSchema = z.object({
   title: z.string().nonempty(),
-  price: z.coerce.number(),
+  amount: z.coerce.number(),
   currency: z.union([z.literal("TRY"), z.literal("USD"), z.literal("EUR")]),
   split_type: z.enum(["equal", "custom", "percentage"]).default("equal"),
-  image: z.instanceof(FileList).optional(),
+  image: z.instanceof(File).array().optional(),
 });
 
 export type CreateExpenseValues = z.infer<typeof formSchema>;
 
 export default function CreateExpenseForm({
-  house_id,
-  user_id,
+  groupId,
+  userId,
 }: CreateExpenseFormProps) {
   const form = useForm<CreateExpenseValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: "",
-      price: 0,
+      amount: 0,
       currency: "TRY",
       split_type: "equal",
     },
@@ -63,7 +55,7 @@ export default function CreateExpenseForm({
   const imageRef = form.register("image");
 
   async function handleSubmit(values: CreateExpenseValues) {
-    createExpense(house_id, user_id, values).then(() => {
+    createExpense(groupId, userId, values).then(() => {
       form.reset();
       toast({ title: "Expense created successfully" });
     });
@@ -90,64 +82,32 @@ export default function CreateExpenseForm({
         />
         <FormField
           control={form.control}
-          name="price"
+          name="amount"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Price</FormLabel>
+              <FormLabel>Amount</FormLabel>
               <FormControl>
-                <Input type="number" {...field} />
+                <div className="grid grid-cols-12 gap-x-2">
+                  <Input type="number" className="col-span-9" {...field} />
+                  <Select
+                    onValueChange={(value: "TRY" | "USD" | "EUR") =>
+                      form.setValue("currency", value)
+                    }
+                    defaultValue={form.getValues("currency")}
+                  >
+                    <FormControl>
+                      <SelectTrigger className="col-span-3">
+                        <SelectValue placeholder="Select currency" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="TRY">TRY</SelectItem>
+                      <SelectItem value="USD">USD</SelectItem>
+                      <SelectItem value="EUR">EUR</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="currency"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Currency</FormLabel>
-              <FormControl>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select currency" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="TRY">TRY</SelectItem>
-                    <SelectItem value="USD">USD</SelectItem>
-                    <SelectItem value="EUR">EUR</SelectItem>
-                  </SelectContent>
-                </Select>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="split_type"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Split Type</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select split type" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {Object.entries(SPLIT_TYPES).map(([value, label]) => (
-                    <SelectItem key={value} value={value}>
-                      {label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
               <FormMessage />
             </FormItem>
           )}
