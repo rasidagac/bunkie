@@ -48,11 +48,13 @@ export default async function HousePage({
       </div>
       <Separator className="w-1/3" />
       <ExpensesTable data={formattedExpenses} />
-      <Link href={`/dashboard/groups/${decodedCode}/expenses`}>
-        <Button size="sm" variant="outline" className="w-full">
-          View all expenses
-        </Button>
-      </Link>
+      {formattedExpenses.length ? (
+        <Link href={`/dashboard/groups/${decodedCode}/expenses`}>
+          <Button size="sm" variant="outline" className="w-full">
+            View all expenses
+          </Button>
+        </Link>
+      ) : null}
     </div>
   );
 }
