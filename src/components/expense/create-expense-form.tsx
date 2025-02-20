@@ -6,6 +6,7 @@ import FormSubmitButton from "@/components/form-submit-button";
 import { toast } from "@/hooks/use-toast";
 import createExpense from "@actions/expenses/createExpense";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Button } from "@ui/button";
 import {
   Form,
   FormControl,
@@ -35,11 +36,13 @@ const formSchema = z.object({
   amount: z.coerce.number(),
   currency: z.union([z.literal("TRY"), z.literal("USD"), z.literal("EUR")]),
   split_type: z.enum(["equal", "custom", "percentage"]).default("equal"),
-  image: z.instanceof(File).array().optional(),
+  image: z
+    .unknown()
+    .refine((fileList) => fileList instanceof FileList)
+    .optional(),
 });
 
-// export type CreateExpenseValues = z.infer<typeof formSchema>;
-export type CreateExpenseValues = TablesInsert<"expenses"> & {
+type CreateExpenseValues = TablesInsert<"expenses"> & {
   image: File[];
 };
 
@@ -54,10 +57,9 @@ export default function CreateExpenseForm({
       amount: 0,
       currency: "TRY",
       split_type: "equal",
+      image: [],
     },
   });
-
-  const imageRef = form.register("image");
 
   async function handleSubmit(values: CreateExpenseValues) {
     createExpense(groupId, userId, values).then(() => {
@@ -120,11 +122,30 @@ export default function CreateExpenseForm({
         <FormField
           control={form.control}
           name="image"
-          render={() => (
+          render={({ field }) => (
             <FormItem>
               <FormLabel>Image</FormLabel>
               <FormControl>
-                <Input type="file" accept="image/*" {...imageRef} />
+                <div className="relative">
+                  <Input
+                    type="file"
+                    accept="image/*"
+                    ref={form.register(field.name).ref}
+                    onChange={(event) => field.onChange(event.target.files)}
+                  />
+                  {field.value?.length ? (
+                    <Button
+                      type="button"
+                      className="absolute right-0 top-1/2 -translate-y-1/2"
+                      onClick={() => form.resetField("image")}
+                      aria-label="Clear file"
+                      size="icon"
+                      variant="outline"
+                    >
+                      ✕
+                    </Button>
+                  ) : null}
+                </div>
               </FormControl>
               <FormMessage />
             </FormItem>

@@ -15,7 +15,7 @@ interface ExpensesTableProps {
   data: ExpenseWithProfile[];
 }
 
-export async function ExpensesTable({ data }: ExpensesTableProps) {
+export function ExpensesTable({ data }: ExpensesTableProps) {
   return (
     <ScrollArea className="h-[500px] grow after:absolute after:bottom-0 after:h-8 after:w-full after:bg-gradient-to-b after:from-transparent after:to-background after:opacity-90">
       {data.map((expense) => (

@@ -13,20 +13,20 @@ export default async function createExpense(
 ) {
   const { title, amount, currency, image, split_type } = values;
   let image_url = null;
+  const supabase = await createClient();
 
   if (image?.length) {
     try {
-      const blob = await uploadFile(image[0], groupId);
+      const blob = await uploadFile(image[0], `${groupId}/${image[0].name}`);
       image_url = blob.downloadUrl;
     } catch (error) {
-      console.error(error);
+      throw error;
     }
   }
 
-  try {
-    const supabase = await createClient();
-
-    await supabase.from("expenses").insert({
+  const { data, error } = await supabase
+    .from("expenses")
+    .insert({
       title,
       amount,
       image_url,
@@ -34,12 +34,14 @@ export default async function createExpense(
       split_type,
       user_id: userId,
       group_id: groupId,
-    });
+    })
+    .select()
+    .single();
 
-    revalidatePath(`/dashboard/groups/${groupId}`);
-    return { success: true };
-  } catch (error) {
-    console.error("Failed to create expense:", error);
-    return { success: false, error: "Failed to create expense" };
+  if (error) {
+    throw new Error(error.message);
   }
+
+  revalidatePath(`/dashboard/groups/${groupId}`);
+  return data;
 }
