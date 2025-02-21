@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-import { createClient } from "@/utils/supabase/server";
+import { currentUser } from "@/lib/supabase";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -10,18 +10,14 @@ import {
 import Link from "next/link";
 
 export default async function Layout({ children }: { children: ReactNode }) {
-  const supabase = await createClient();
-
-  const user = await supabase.auth.getUser();
+  const { user } = await currentUser();
 
   return (
     <Breadcrumb>
       <BreadcrumbList>
         <BreadcrumbItem>
           <BreadcrumbLink asChild>
-            <Link href="/dashboard">
-              {user.data.user?.user_metadata.username}
-            </Link>
+            <Link href="/dashboard">{user?.user_metadata.user_name}</Link>
           </BreadcrumbLink>
         </BreadcrumbItem>
         {children}
