@@ -21,7 +21,7 @@ export default function SidebarBreadcrumb() {
         .split("/")
         .slice(2)
         .map((item, index, array) => {
-          if (array[index - 1] === "houses") {
+          if (array[index - 1] === "groups") {
             return <BreadcrumbSeparator key={item} />;
           }
 

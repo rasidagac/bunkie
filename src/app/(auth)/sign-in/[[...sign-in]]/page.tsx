@@ -1,13 +1,26 @@
-"use client";
+import { SignInForm } from "@/components/auth/sign-in-form";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@ui/card";
 
-import { SignIn } from "@clerk/nextjs";
-import { dark } from "@clerk/themes";
-import { useTheme } from "next-themes";
-
-export default function Page() {
-  const { theme } = useTheme();
-
+export default function SignInPage() {
   return (
-    <SignIn appearance={{ baseTheme: theme === "dark" ? dark : undefined }} />
+    <div className="container flex h-screen w-screen flex-col items-center justify-center">
+      <Card className="w-[350px]">
+        <CardHeader>
+          <CardTitle>Sign In</CardTitle>
+          <CardDescription>
+            Enter your email below to sign in to your account
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <SignInForm />
+        </CardContent>
+      </Card>
+    </div>
   );
 }

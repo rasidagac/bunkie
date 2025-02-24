@@ -1,11 +1,17 @@
 import type { ReactNode } from "react";
 
 import ThemeToggle from "@/components/theme-toggle";
-import { SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
+import { currentUser } from "@/lib/supabase";
 import { Button } from "@ui/button";
 import Link from "next/link";
 
-export default function PublicLayout({ children }: { children: ReactNode }) {
+export default async function PublicLayout({
+  children,
+}: {
+  children: ReactNode;
+}) {
+  const { user } = await currentUser();
+
   return (
     <>
       <header className="flex h-16 items-center justify-between border-b px-4">
@@ -14,18 +20,17 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
         </Link>
         <div className="flex items-center gap-4">
           <ThemeToggle />
-          <SignedOut>
-            <SignInButton>
+          {user ? (
+            <Link href="/sign-in">
               <Button className="rounded-full">Sign in</Button>
-            </SignInButton>
-          </SignedOut>
-          <SignedIn>
+            </Link>
+          ) : (
             <Link href="/dashboard">
               <Button className="rounded-full" size="sm">
                 Dashboard
               </Button>
             </Link>
-          </SignedIn>
+          )}
         </div>
       </header>
       <main className="container flex-grow">{children}</main>
