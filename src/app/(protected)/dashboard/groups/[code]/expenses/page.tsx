@@ -1,5 +1,6 @@
 import { ExpensesTable } from "@/components/house/expenses-table";
-import prisma from "@lib/prisma";
+import { getExpenseList } from "@actions/expenses/getExpenseList";
+import { getByCode } from "@actions/groups/getByCode";
 import { Separator } from "@ui/separator";
 import { notFound } from "next/navigation";
 
@@ -11,29 +12,25 @@ export default async function ExpensesPage({
   const { code } = await params;
   const decodedCode = decodeURIComponent(code);
 
-  const house = await prisma.houses.findFirst({
-    where: { code: decodedCode },
-  });
+  const { data: group, error } = await getByCode(decodedCode);
 
-  if (!house) {
+  if (error) {
     notFound();
   }
 
-  const expenses = await prisma.expenses.findMany({
-    where: { house_id: house.id },
-    orderBy: { created_at: "desc" },
-    include: { users: true },
+  const { data: formattedExpenses } = await getExpenseList({
+    groupId: group.id,
   });
 
-  const usersCountOfHouse = await prisma.house_users.count({
-    where: { house_id: house.id },
-  });
+  if (!formattedExpenses?.length) {
+    return <div>No expenses yet</div>;
+  }
 
   return (
     <div className="flex h-full flex-col gap-2">
       <h1 className="text-xl font-bold">All expenses</h1>
       <Separator className="w-1/3" />
-      <ExpensesTable data={expenses} userCount={usersCountOfHouse} />
+      <ExpensesTable data={formattedExpenses} />
     </div>
   );
 }

@@ -21,14 +21,14 @@ export async function getExpenseList({
   limit,
 }: {
   groupId: string;
-  limit: number;
+  limit?: number;
 }) {
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const { error, data: expensesWithProfiles } = await supabase
+  const query = supabase
     .from("expenses")
     .select(
       `
@@ -44,8 +44,13 @@ export async function getExpenseList({
     )
   `,
     )
-    .eq("group_id", groupId)
-    .limit(limit);
+    .eq("group_id", groupId);
+
+  if (limit) {
+    query.limit(limit);
+  }
+
+  const { data: expensesWithProfiles, error } = await query;
 
   const { data: groupUsers, error: groupUsersError } = await supabase
     .from("group_users")
