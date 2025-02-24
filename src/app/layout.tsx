@@ -4,7 +4,6 @@ import type { ReactNode } from "react";
 import "./globals.css";
 
 import { ThemeProvider } from "@/components/theme-provider";
-import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "@ui/toaster";
 import { Geist, Geist_Mono } from "next/font/google";
 
@@ -20,8 +19,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Bunkie",
-  description:
-    "A modern, minimalistic, and accessible expense tracking for bunkies.",
+  description: "Manage your shared house expenses with ease",
 };
 
 export default function RootLayout({
@@ -30,19 +28,17 @@ export default function RootLayout({
   children: ReactNode;
 }>) {
   return (
-    <ClerkProvider>
-      <html
-        lang="en"
-        suppressHydrationWarning
-        className={`${geistSans.variable} ${geistMono.variable}`}
-      >
-        <body className="flex min-h-screen flex-col antialiased">
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-            {children}
-            <Toaster />
-          </ThemeProvider>
-        </body>
-      </html>
-    </ClerkProvider>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${geistSans.variable} ${geistMono.variable}`}
+    >
+      <body className="flex min-h-screen flex-col antialiased">
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          {children}
+          <Toaster />
+        </ThemeProvider>
+      </body>
+    </html>
   );
 }

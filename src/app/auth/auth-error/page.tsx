@@ -1,0 +1,37 @@
+import { Button } from "@ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@ui/card";
+import Link from "next/link";
+
+export default function AuthErrorPage() {
+  return (
+    <div className="container flex h-screen w-screen flex-col items-center justify-center">
+      <Card className="w-full max-w-md">
+        <CardHeader>
+          <CardTitle>Authentication Error</CardTitle>
+          <CardDescription>
+            There was a problem authenticating your account.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="grid gap-4">
+          <p className="text-sm text-muted-foreground">
+            This could happen for several reasons:
+          </p>
+          <ul className="list-disc pl-4 text-sm text-muted-foreground">
+            <li>The authentication process was cancelled</li>
+            <li>The authentication provider had an error</li>
+            <li>The authentication session expired</li>
+          </ul>
+          <Button asChild>
+            <Link href="/sign-in">Try Again</Link>
+          </Button>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}

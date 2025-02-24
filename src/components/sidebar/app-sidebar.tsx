@@ -1,4 +1,4 @@
-import { currentUser, User } from "@clerk/nextjs/server";
+import { currentUser } from "@/lib/supabase";
 import {
   Sidebar,
   SidebarContent,
@@ -43,7 +43,11 @@ const items = [
 ];
 
 export default async function AppSidebar() {
-  const user = (await currentUser()) as User;
+  const { user } = await currentUser();
+
+  if (!user) {
+    return null;
+  }
 
   return (
     <Sidebar>
@@ -67,13 +71,7 @@ export default async function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
-        <NavUser
-          user={{
-            user_name: user.username as string,
-            email: user.emailAddresses[0].emailAddress,
-            avatar: user.imageUrl,
-          }}
-        />
+        <NavUser />
       </SidebarFooter>
     </Sidebar>
   );

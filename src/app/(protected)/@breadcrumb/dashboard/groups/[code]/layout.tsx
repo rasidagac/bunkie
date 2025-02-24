@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-import prisma from "@lib/prisma";
+import { getByCode } from "@/actions/groups/getByCode";
 import {
   BreadcrumbItem,
   BreadcrumbLink,
@@ -18,17 +18,16 @@ export default async function Layout({
   params: Params;
 }) {
   const { code } = await params;
+  const decodedCode = decodeURIComponent(code);
 
-  const house = await prisma.houses.findFirst({
-    where: { code },
-  });
+  const group = await getByCode(decodedCode);
 
   return (
     <>
       <BreadcrumbSeparator />
       <BreadcrumbItem>
         <BreadcrumbLink asChild>
-          <Link href="/dashboard">{house?.title}</Link>
+          <Link href="/dashboard">{group.data?.name}</Link>
         </BreadcrumbLink>
       </BreadcrumbItem>
       {children}
