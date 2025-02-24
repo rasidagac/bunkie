@@ -1,3 +1,5 @@
+"use client";
+
 import { useAuth } from "@/lib/supabase/use-auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Alert, AlertDescription } from "@ui/alert";
