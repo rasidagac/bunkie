@@ -20,7 +20,7 @@ export async function createGroup(formData: FormData) {
 
   if (error) {
     console.error(error);
-    return { error: "Failed to create group" };
+    return;
   }
 
   await supabase.from("group_users").insert({
