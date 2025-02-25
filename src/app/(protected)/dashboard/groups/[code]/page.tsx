@@ -1,13 +1,30 @@
+import BreadcrumbWrapper from "@/components/breadcrumb/breadcrumb-wrapper";
 import { ExpensesTable } from "@/components/house/expenses-table";
 import HouseHeader from "@/components/house/house-header";
 import { LiabilitiesDrawer } from "@/components/house/liabilities-drawer";
 import { getExpenseList } from "@actions/expenses/getExpenseList";
 import { getByCode } from "@actions/groups/getByCode";
+import {
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbSeparator,
+} from "@ui/breadcrumb";
 import { Button } from "@ui/button";
 import { Separator } from "@ui/separator";
 import { PlusCircle } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+
+// Explicit component for breadcrumb
+function GroupBreadcrumb({ name, code }: { name: string; code: string }) {
+  return (
+    <BreadcrumbItem>
+      <BreadcrumbLink asChild>
+        <Link href={`/dashboard/groups/${code}`}>{name}</Link>
+      </BreadcrumbLink>
+    </BreadcrumbItem>
+  );
+}
 
 export default async function HousePage({
   params,
@@ -29,32 +46,44 @@ export default async function HousePage({
   });
 
   if (!formattedExpenses?.length) {
-    return <div>No expenses yet</div>;
+    return (
+      <div>
+        <div className="mb-4">
+          <BreadcrumbWrapper>
+            <GroupBreadcrumb name={group.name} code={code} />
+          </BreadcrumbWrapper>
+        </div>
+        <div>No expenses yet</div>
+      </div>
+    );
   }
 
   return (
-    <div className="flex h-full flex-col gap-4">
-      <HouseHeader houseTitle={group.name} code={code} />
-      <div className="flex items-center gap-2">
-        <Button size="sm" variant="outline">
-          Settle up
-        </Button>
-        <LiabilitiesDrawer groupId={group.id} />
-        <Link href={`/dashboard/groups/${decodedCode}/create`}>
-          <Button size="sm" variant="outline">
-            <PlusCircle /> Add expense
-          </Button>
-        </Link>
+    <div>
+      <div className="mb-4">
+        <BreadcrumbWrapper>
+          <BreadcrumbSeparator />
+          <GroupBreadcrumb name={group.name} code={code} />
+        </BreadcrumbWrapper>
       </div>
-      <Separator className="w-1/3" />
-      <ExpensesTable data={formattedExpenses} />
-      {formattedExpenses.length ? (
-        <Link href={`/dashboard/groups/${decodedCode}/expenses`}>
-          <Button size="sm" variant="outline" className="w-full">
-            View all expenses
-          </Button>
-        </Link>
-      ) : null}
+      <div>
+        <HouseHeader houseTitle={group.name} code={code} />
+        <div className="mt-6">
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl font-semibold">Latest Expenses</h2>
+            <Link href={`/dashboard/groups/${code}/create`}>
+              <Button size="sm" variant="outline">
+                <PlusCircle className="mr-2 h-4 w-4" />
+                Create Expense
+              </Button>
+            </Link>
+          </div>
+          <Separator className="my-2" />
+          <ExpensesTable data={formattedExpenses || []} />
+        </div>
+
+        <LiabilitiesDrawer groupId={group.id} />
+      </div>
     </div>
   );
 }
