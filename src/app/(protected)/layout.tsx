@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 
 import { AppSidebar } from "@/components/sidebar";
 import ThemeToggle from "@/components/theme-toggle";
+import UserAvatar from "@/components/user-avatar";
 import { Separator } from "@ui/separator";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@ui/sidebar";
 
@@ -20,7 +21,8 @@ export default function PublicLayout({
           <header className="flex h-16 shrink-0 items-center justify-between gap-2 border-b-2 px-4 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
             <div className="flex items-center gap-2">
               <SidebarTrigger className="-ml-1" />
-              <Separator orientation="vertical" className="mr-2 h-4" />
+              <Separator orientation="vertical" className="h-4" />
+              <UserAvatar />
             </div>
             <ThemeToggle />
           </header>
