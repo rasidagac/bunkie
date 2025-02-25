@@ -1,4 +1,5 @@
 import JoinHouseForm from "@/components/house/join-house-form";
+import { currentUser } from "@/lib/supabase";
 import { createClient } from "@/utils/supabase/server";
 import { Avatar, AvatarFallback, AvatarImage } from "@ui/avatar";
 import { Button } from "@ui/button";
@@ -16,10 +17,10 @@ import { ChevronRight, Plus, Users } from "lucide-react";
 import Link from "next/link";
 
 export default async function DashboardPage() {
+  const { user } = await currentUser();
   const supabase = await createClient();
-  const { data } = await supabase.auth.getUser();
 
-  if (!data.user) {
+  if (!user) {
     return null;
   }
 
@@ -35,7 +36,7 @@ export default async function DashboardPage() {
     )
   `,
     )
-    .eq("user_id", data.user.id);
+    .eq("user_id", user.id);
 
   if (!groupsOfCurrentUser?.length) {
     return (

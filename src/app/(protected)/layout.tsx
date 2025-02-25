@@ -6,13 +6,11 @@ import { Separator } from "@ui/separator";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@ui/sidebar";
 
 export default function PublicLayout({
-  breadcrumb,
-  modal,
   children,
+  modal,
 }: {
-  breadcrumb: ReactNode;
-  modal: ReactNode;
   children: ReactNode;
+  modal: ReactNode;
 }) {
   return (
     <>
@@ -23,7 +21,6 @@ export default function PublicLayout({
             <div className="flex items-center gap-2">
               <SidebarTrigger className="-ml-1" />
               <Separator orientation="vertical" className="mr-2 h-4" />
-              {breadcrumb}
             </div>
             <ThemeToggle />
           </header>
