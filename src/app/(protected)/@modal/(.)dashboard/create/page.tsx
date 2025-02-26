@@ -1,6 +1,6 @@
 "use client";
 
-import CreateHouseForm from "@/components/house/create-house-form";
+import CreateHouseForm from "@/components/features/group/create-house-form";
 import {
   Dialog,
   DialogContent,
