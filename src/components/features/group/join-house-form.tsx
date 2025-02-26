@@ -1,6 +1,6 @@
 "use client";
 
-import FormSubmitButton from "@/components/form-submit-button";
+import FormSubmitButton from "@/components/common/form-submit-button";
 import { joinGroup } from "@actions/groups/joinGroup";
 import { Input } from "@ui/input";
 import { Label } from "@ui/label";

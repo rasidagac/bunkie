@@ -1,4 +1,4 @@
-import JoinHouseForm from "@/components/house/join-house-form";
+import JoinHouseForm from "@/components/features/group/join-house-form";
 import { currentUser } from "@/lib/supabase";
 import { createClient } from "@/utils/supabase/server";
 import { Avatar, AvatarFallback, AvatarImage } from "@ui/avatar";
@@ -80,7 +80,7 @@ export default async function DashboardPage() {
       <h1 className="text-2xl font-bold">My Houses</h1>
       <Separator className="my-2 w-1/3" />
       {groupsOfCurrentUser.map(({ groups, all_users }) => (
-        <Link href={`/dashboard/groups/${groups?.code}`} key={groups?.id}>
+        <Link href={`/dashboard/groups/${groups?.id}`} key={groups?.id}>
           <Card>
             <CardHeader>
               <CardTitle className="text-xl">{groups?.name}</CardTitle>

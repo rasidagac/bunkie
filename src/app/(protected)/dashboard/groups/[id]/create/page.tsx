@@ -1,7 +1,7 @@
-import BreadcrumbWrapper from "@/components/breadcrumb/breadcrumb-wrapper";
-import CreateExpenseForm from "@/components/expense/create-expense-form";
+import { getById } from "@/actions/groups/getById";
+import CreateExpenseForm from "@/components/features/expense/create-expense-form";
+import BreadcrumbWrapper from "@/components/layout/breadcrumb-wrapper";
 import { currentUser } from "@/lib/supabase";
-import { getByCode } from "@actions/groups/getByCode";
 import {
   BreadcrumbItem,
   BreadcrumbLink,
@@ -14,21 +14,20 @@ import { notFound } from "next/navigation";
 // Explicit component for breadcrumb
 function CreateExpenseBreadcrumb({
   groupName,
-  code,
+  groupId,
 }: {
   groupName: string;
-  code: string;
+  groupId: string;
 }) {
   return (
     <>
+      <BreadcrumbSeparator />
       <BreadcrumbItem>
-        <BreadcrumbSeparator />
         <BreadcrumbLink asChild>
-          <Link href={`/dashboard/groups/${code}`}>{groupName}</Link>
+          <Link href={`/dashboard/groups/${groupId}`}>{groupName}</Link>
         </BreadcrumbLink>
       </BreadcrumbItem>
       <BreadcrumbSeparator />
-      <BreadcrumbItem>Create Expense</BreadcrumbItem>
     </>
   );
 }
@@ -36,14 +35,13 @@ function CreateExpenseBreadcrumb({
 export default async function CreateExpensePage({
   params,
 }: {
-  params: Promise<{ code: string }>;
+  params: Promise<{ id: string }>;
 }) {
-  const { code } = await params;
-  const decodedCode = decodeURIComponent(code);
+  const { id: groupId } = await params;
 
   const { user } = await currentUser();
 
-  const { data: group, error } = await getByCode(decodedCode);
+  const { data: group, error } = await getById(groupId);
 
   if (error) {
     notFound();
@@ -53,7 +51,7 @@ export default async function CreateExpensePage({
     <div>
       <div className="mb-4">
         <BreadcrumbWrapper>
-          <CreateExpenseBreadcrumb groupName={group.name} code={code} />
+          <CreateExpenseBreadcrumb groupName={group.name} groupId={groupId} />
         </BreadcrumbWrapper>
       </div>
 

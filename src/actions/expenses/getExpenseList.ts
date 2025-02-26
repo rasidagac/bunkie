@@ -2,6 +2,7 @@
 
 import { createClient } from "@/utils/supabase/server";
 import { format } from "date-fns";
+import { cache } from "react";
 
 type ExpensesWithProfiles = {
   id: string;
@@ -16,22 +17,17 @@ type ExpensesWithProfiles = {
   };
 };
 
-export async function getExpenseList({
-  groupId,
-  limit,
-}: {
-  groupId: string;
-  limit?: number;
-}) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+export const getExpenseList = cache(
+  async ({ groupId, limit }: { groupId: string; limit?: number }) => {
+    const supabase = await createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
-  const query = supabase
-    .from("expenses")
-    .select(
-      `
+    const query = supabase
+      .from("expenses")
+      .select(
+        `
     id,
     created_at,
     title,
@@ -43,34 +39,35 @@ export async function getExpenseList({
       full_name
     )
   `,
-    )
-    .eq("group_id", groupId);
+      )
+      .eq("group_id", groupId);
 
-  if (limit) {
-    query.limit(limit);
-  }
+    if (limit) {
+      query.limit(limit);
+    }
 
-  const { data: expensesWithProfiles, error } = await query;
+    const { data: expensesWithProfiles, error } = await query;
 
-  const { data: groupUsers, error: groupUsersError } = await supabase
-    .from("group_users")
-    .select("user_id")
-    .eq("group_id", groupId);
+    const { data: groupUsers, error: groupUsersError } = await supabase
+      .from("group_users")
+      .select("user_id")
+      .eq("group_id", groupId);
 
-  if (error || groupUsersError) {
-    console.error(error || groupUsersError);
-  }
+    if (error || groupUsersError) {
+      console.error(error || groupUsersError);
+    }
 
-  const userCount = groupUsers ? groupUsers.length : 1;
+    const userCount = groupUsers ? groupUsers.length : 1;
 
-  const data = formattedExpenses(
-    expensesWithProfiles,
-    userCount,
-    user?.id as string,
-  );
+    const data = formattedExpenses(
+      expensesWithProfiles,
+      userCount,
+      user?.id as string,
+    );
 
-  return { data, error: error || groupUsersError };
-}
+    return { data, error: error || groupUsersError };
+  },
+);
 
 function formattedExpenses(
   data: ExpensesWithProfiles[] | null,

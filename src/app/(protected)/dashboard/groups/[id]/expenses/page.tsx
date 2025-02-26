@@ -1,4 +1,4 @@
-import { ExpensesTable } from "@/components/house/expenses-table";
+import { ExpensesTable } from "@/components/features/group/expenses-table";
 import { getExpenseList } from "@actions/expenses/getExpenseList";
 import { getByCode } from "@actions/groups/getByCode";
 import { Separator } from "@ui/separator";

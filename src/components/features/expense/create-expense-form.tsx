@@ -2,7 +2,7 @@
 
 import type { TablesInsert } from "@/types/supabase";
 
-import FormSubmitButton from "@/components/form-submit-button";
+import FormSubmitButton from "@/components/common/form-submit-button";
 import { toast } from "@/hooks/use-toast";
 import createExpense from "@actions/expenses/createExpense";
 import { zodResolver } from "@hookform/resolvers/zod";

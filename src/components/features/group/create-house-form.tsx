@@ -1,4 +1,4 @@
-import FormSubmitButton from "@/components/form-submit-button";
+import FormSubmitButton from "@/components/common/form-submit-button";
 import { createGroup } from "@actions/groups/createGroup";
 import { Input } from "@ui/input";
 import { Label } from "@ui/label";
