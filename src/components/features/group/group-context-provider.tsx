@@ -1,7 +1,8 @@
 "use client";
 
+import type { ReactNode } from "react";
+
 import { useCurrentGroup } from "@/hooks/use-current-group";
-import { ReactNode } from "react";
 
 interface GroupContextProviderProps {
   children: ReactNode;
