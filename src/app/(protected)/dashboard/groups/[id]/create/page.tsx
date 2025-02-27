@@ -11,22 +11,20 @@ export default async function CreateExpensePage({
 }) {
   const { id: groupId } = await params;
 
-  const { user } = await currentUser();
+  const { user, error } = await currentUser();
 
-  if (!user) {
+  if (error) {
     redirect("/login");
   }
 
   return (
-    <div>
-      <div className="mb-4">
-        <CreateExpenseBreadcrumb />
-      </div>
-      <div className="flex flex-col gap-2">
+    <>
+      <CreateExpenseBreadcrumb />
+      <div className="mt-4 flex flex-col gap-2">
         <h1 className="text-xl font-bold">Create Expense</h1>
         <Separator className="w-1/3" />
-        <CreateExpenseForm groupId={groupId} userId={user!.id as string} />
+        <CreateExpenseForm groupId={groupId} userId={user!.id} />
       </div>
-    </div>
+    </>
   );
 }

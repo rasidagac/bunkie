@@ -33,7 +33,7 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${geistSans.variable} ${geistMono.variable}`}
     >
-      <body className="flex min-h-screen flex-col antialiased">
+      <body className="grid min-h-screen grid-rows-[auto_1fr] antialiased">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           {children}
           <Toaster />

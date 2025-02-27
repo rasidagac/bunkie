@@ -49,7 +49,7 @@ export default async function SingleGroupPage({
             <h2 className="text-xl font-semibold">Latest Expenses</h2>
             <Link href={`/dashboard/groups/${groupId}/create`}>
               <Button size="sm" variant="outline">
-                <PlusCircle className="mr-2 h-4 w-4" />
+                <PlusCircle className="h-4 w-4" />
                 Create Expense
               </Button>
             </Link>
