@@ -1,9 +1,8 @@
+import { GroupCards } from "@/components/features/group/group-cards";
 import JoinHouseForm from "@/components/features/group/join-house-form";
 import { currentUser } from "@/lib/supabase";
 import { createClient } from "@/utils/supabase/server";
-import { Avatar, AvatarFallback, AvatarImage } from "@ui/avatar";
 import { Button } from "@ui/button";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@ui/card";
 import {
   Dialog,
   DialogContent,
@@ -13,16 +12,12 @@ import {
   DialogTrigger,
 } from "@ui/dialog";
 import { Separator } from "@ui/separator";
-import { ChevronRight, Plus, Users } from "lucide-react";
+import { Plus, Users } from "lucide-react";
 import Link from "next/link";
 
 export default async function DashboardPage() {
   const { user } = await currentUser();
   const supabase = await createClient();
-
-  if (!user) {
-    return null;
-  }
 
   const { data: groupsOfCurrentUser } = await supabase
     .from("group_users")
@@ -36,7 +31,7 @@ export default async function DashboardPage() {
     )
   `,
     )
-    .eq("user_id", user.id);
+    .eq("user_id", user!.id);
 
   if (!groupsOfCurrentUser?.length) {
     return (
@@ -79,34 +74,7 @@ export default async function DashboardPage() {
     <div>
       <h1 className="text-2xl font-bold">My Houses</h1>
       <Separator className="my-2 w-1/3" />
-      {groupsOfCurrentUser.map(({ groups, all_users }) => (
-        <Link href={`/dashboard/groups/${groups?.id}`} key={groups?.id}>
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-xl">{groups?.name}</CardTitle>
-            </CardHeader>
-            <CardContent className="flex gap-2 pb-0">
-              <div className="flex -space-x-5 hover:-space-x-2">
-                {all_users?.group_users?.map(({ profiles }) => (
-                  <Avatar
-                    key={profiles?.id}
-                    className="border-2 drop-shadow-sm transition-all ease-in-out"
-                  >
-                    <AvatarImage
-                      src={profiles?.avatar_url as string}
-                      alt={profiles?.username as string}
-                    />
-                    <AvatarFallback>{profiles?.username?.[0]}</AvatarFallback>
-                  </Avatar>
-                ))}
-              </div>
-            </CardContent>
-            <CardFooter className="justify-end text-sm">
-              View House <ChevronRight />
-            </CardFooter>
-          </Card>
-        </Link>
-      ))}
+      <GroupCards groupsData={groupsOfCurrentUser} />
     </div>
   );
 }

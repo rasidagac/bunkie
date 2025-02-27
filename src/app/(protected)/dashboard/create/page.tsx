@@ -7,7 +7,7 @@ import {
   CardTitle,
 } from "@ui/card";
 
-export default function CreateHousePage() {
+export default function CreateGroupPage() {
   return (
     <Card className="lg:w-1/3">
       <CardHeader>

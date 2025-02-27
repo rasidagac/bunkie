@@ -1,6 +1,7 @@
 import type { Tables } from "@/types/supabase";
 import type { User } from "@supabase/auth-js";
 
+import { currentUser } from "@/lib/supabase/current-user";
 import { createClient } from "@/utils/supabase/server";
 import { Button } from "@ui/button";
 import {
@@ -13,17 +14,16 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@ui/drawer";
+import { Eye } from "lucide-react";
 
 interface LiabilitiesDrawerProps {
   groupId: Tables<"groups">["id"];
 }
 
 export async function LiabilitiesDrawer({ groupId }: LiabilitiesDrawerProps) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { user } = await currentUser();
 
+  const supabase = await createClient();
   const user_balances = await supabase
     .from("user_balances")
     .select(
@@ -42,9 +42,9 @@ export async function LiabilitiesDrawer({ groupId }: LiabilitiesDrawerProps) {
 
   return (
     <Drawer>
-      <DrawerTrigger asChild>
+      <DrawerTrigger asChild className="w-fit">
         <Button variant="outline" size="sm">
-          View Liabilities
+          <Eye className="h-4 w-4" /> View Liabilities
         </Button>
       </DrawerTrigger>
       <DrawerContent>
