@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-import ThemeToggle from "@/components/theme-toggle";
+import ThemeToggle from "@/components/common/theme-toggle";
 import { GalleryVerticalEnd } from "lucide-react";
 import Link from "next/link";
 

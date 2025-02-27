@@ -1,0 +1,35 @@
+"use client";
+
+import { createClient } from "@/utils/supabase/client";
+import { LogOut } from "lucide-react";
+import { useRouter } from "next/navigation";
+
+import { DropdownMenuItem } from "../ui/dropdown-menu";
+
+export default function UserDropdownContent() {
+  const { auth } = createClient();
+  const router = useRouter();
+
+  async function handleSignOut() {
+    await auth.signOut();
+    router.push("/");
+  }
+
+  return (
+    <>
+      {/* <DropdownMenuItem asChild>
+        <Link href="/dashboard" className="cursor-pointer">
+          <Settings className="mr-2 h-4 w-4" />
+          Manage Account
+        </Link>
+      </DropdownMenuItem> */}
+      <DropdownMenuItem
+        onClick={handleSignOut}
+        className="cursor-pointer text-destructive focus:text-destructive"
+      >
+        <LogOut className="mr-2 h-4 w-4" />
+        <span>Sign Out</span>
+      </DropdownMenuItem>
+    </>
+  );
+}
