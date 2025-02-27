@@ -1,22 +1,20 @@
 import CopyToClipboard from "@/components/common/copy-to-clipboard";
 
-interface HouseHeaderProps {
-  houseTitle: string;
+interface GroupHeaderProps {
+  groupName: string;
   groupCode: string;
 }
 
-const HouseHeader: React.FC<HouseHeaderProps> = ({ houseTitle, groupCode }) => {
+export function GroupHeader({ groupName, groupCode }: GroupHeaderProps) {
   return (
-    <div>
-      <h1 className="text-xl font-bold">{houseTitle}</h1>
+    <div className="flex flex-col items-start">
+      <h1 className="text-xl font-bold">{groupName}</h1>
       <CopyToClipboard
         textToCopy={groupCode}
         label="Copy code"
         variant="ghost"
-        className="h-fit p-0 text-gray-500"
+        className="h-fit p-0 text-gray-500 hover:bg-transparent"
       />
     </div>
   );
-};
-
-export default HouseHeader;
+}

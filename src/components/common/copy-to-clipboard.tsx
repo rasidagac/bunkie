@@ -1,7 +1,7 @@
 "use client";
 
 import { Button, ButtonProps } from "@ui/button";
-import { Check, Copy } from "lucide-react";
+import { Check, Copy, Loader2 } from "lucide-react";
 import { useState } from "react";
 
 interface CopyToClipboardProps extends ButtonProps {
@@ -30,7 +30,13 @@ export default function CopyToClipboard({
     });
   }
 
-  const icon = copied ? <Check /> : <Copy />;
+  const icon = disabled ? (
+    <Loader2 className="h-4 w-4 animate-spin" />
+  ) : copied ? (
+    <Check />
+  ) : (
+    <Copy />
+  );
 
   return (
     <Button
