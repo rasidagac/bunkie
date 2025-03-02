@@ -41,7 +41,7 @@ export function GroupCards({ groupsData }: GroupCardsProps) {
           {all_users?.group_users?.map(({ profiles }) => (
             <Avatar
               key={profiles?.id}
-              className="border-2 drop-shadow-sm transition-all ease-in-out"
+              className="border-2 drop-shadow-xs transition-all ease-in-out"
             >
               <AvatarImage
                 src={profiles?.avatar_url as string}

@@ -19,10 +19,10 @@ export default function AuthErrorPage() {
           </CardDescription>
         </CardHeader>
         <CardContent className="grid gap-4">
-          <p className="text-sm text-muted-foreground">
+          <p className="text-muted-foreground text-sm">
             This could happen for several reasons:
           </p>
-          <ul className="list-disc pl-4 text-sm text-muted-foreground">
+          <ul className="text-muted-foreground list-disc pl-4 text-sm">
             <li>The authentication process was cancelled</li>
             <li>The authentication provider had an error</li>
             <li>The authentication session expired</li>

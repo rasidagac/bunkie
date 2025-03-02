@@ -136,7 +136,7 @@ export default function CreateExpenseForm({
                   {field.value?.length ? (
                     <Button
                       type="button"
-                      className="absolute right-0 top-1/2 -translate-y-1/2"
+                      className="absolute top-1/2 right-0 -translate-y-1/2"
                       onClick={() => form.resetField("image")}
                       aria-label="Clear file"
                       size="icon"

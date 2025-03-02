@@ -28,8 +28,8 @@ export default async function UserDropdown() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button className="flex items-center gap-2 rounded-md transition-colors hover:bg-muted focus:outline-none">
-          <Avatar className="h-8 w-8 border border-border">
+        <button className="hover:bg-muted flex items-center gap-2 rounded-md transition-colors focus:outline-hidden">
+          <Avatar className="border-border h-8 w-8 border">
             <AvatarImage src={userMetadata.avatar_url} alt={email} />
             <AvatarFallback className="text-xs">
               {fallbackInitial.toUpperCase()}
@@ -40,8 +40,8 @@ export default async function UserDropdown() {
       <DropdownMenuContent align="end" className="w-56">
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">{displayName}</p>
-            <p className="text-xs leading-none text-muted-foreground">
+            <p className="text-sm leading-none font-medium">{displayName}</p>
+            <p className="text-muted-foreground text-xs leading-none">
               {email}
             </p>
           </div>
