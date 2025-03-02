@@ -12,6 +12,11 @@ export default async function PublicLayout({
 }) {
   const { user } = await currentUser();
 
+  const headerButton = {
+    label: user ? "Dashboard" : "Sign in",
+    href: user ? "/dashboard" : "/sign-in",
+  };
+
   return (
     <>
       <header className="flex h-16 items-center justify-between border-b px-4">
@@ -20,17 +25,9 @@ export default async function PublicLayout({
         </Link>
         <div className="flex items-center gap-4">
           <ThemeToggle />
-          {user ? (
-            <Link href="/sign-in">
-              <Button className="rounded-full">Sign in</Button>
-            </Link>
-          ) : (
-            <Link href="/dashboard">
-              <Button className="rounded-full" size="sm">
-                Dashboard
-              </Button>
-            </Link>
-          )}
+          <Link href={headerButton.href}>
+            <Button className="rounded-full">{headerButton.label}</Button>
+          </Link>
         </div>
       </header>
       <main className="container flex-grow">{children}</main>

@@ -1,5 +1,7 @@
+import type { NextRequest } from "next/server";
+
 import { createServerClient } from "@supabase/ssr";
-import { type NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 export const updateSession = async (request: NextRequest) => {
   let response = NextResponse.next({
@@ -36,10 +38,6 @@ export const updateSession = async (request: NextRequest) => {
   // protected routes
   if (request.nextUrl.pathname.startsWith("/dashboard") && user.error) {
     return NextResponse.redirect(new URL("/sign-in", request.url));
-  }
-
-  if (request.nextUrl.pathname === "/" && !user.error) {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
   return response;

@@ -2,7 +2,6 @@
 
 import type { Tables } from "@/types/supabase";
 
-import { useGroup } from "@/hooks/use-group";
 import { Avatar, AvatarFallback, AvatarImage } from "@ui/avatar";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@ui/card";
 import { ChevronRight } from "lucide-react";
@@ -22,11 +21,9 @@ interface GroupCardsProps {
 }
 
 export function GroupCards({ groupsData }: GroupCardsProps) {
-  const { setCurrentGroup } = useGroup();
   const router = useRouter();
 
-  function handleCardClick(group: Tables<"groups">) {
-    setCurrentGroup(group);
+  async function handleCardClick(group: Tables<"groups">) {
     router.push(`/dashboard/groups/${group.id}`);
   }
 

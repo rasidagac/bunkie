@@ -41,9 +41,9 @@ export async function LiabilitiesDrawer({ groupId }: LiabilitiesDrawerProps) {
     .eq("group_id", groupId);
 
   return (
-    <Drawer>
+    <Drawer autoFocus>
       <DrawerTrigger asChild className="w-fit">
-        <Button variant="outline" size="sm">
+        <Button variant="outline" size="sm" className="rounded-full">
           <Eye className="h-4 w-4" /> View Liabilities
         </Button>
       </DrawerTrigger>

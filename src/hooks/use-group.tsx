@@ -15,14 +15,29 @@ import {
 
 type Group = Tables<"groups">;
 
-type GroupContextType = {
+// Split into separate contexts for each value
+type GroupDataContextType = {
   currentGroup: Group | null;
+};
+
+type GroupActionsContextType = {
   setCurrentGroup: (group: Group | null) => void;
+};
+
+type GroupLoadingContextType = {
   isLoading: boolean;
   setIsLoading: (isLoading: boolean) => void;
 };
 
-const GroupContext = createContext<GroupContextType | undefined>(undefined);
+const GroupDataContext = createContext<GroupDataContextType | undefined>(
+  undefined,
+);
+const GroupActionsContext = createContext<GroupActionsContextType | undefined>(
+  undefined,
+);
+const GroupLoadingContext = createContext<GroupLoadingContextType | undefined>(
+  undefined,
+);
 
 type GroupProviderProps = {
   children: ReactNode;
@@ -30,7 +45,7 @@ type GroupProviderProps = {
 
 export function GroupProvider({ children }: GroupProviderProps) {
   const [currentGroup, setCurrentGroup] = useState<Group | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const { id: groupId } = useParams<{ id: string }>();
 
@@ -47,6 +62,8 @@ export function GroupProvider({ children }: GroupProviderProps) {
       }
     } catch (error) {
       console.error("Failed to load group from sessionStorage:", error);
+    } finally {
+      setIsLoading(false);
     }
   }, [groupId]);
 
@@ -64,25 +81,83 @@ export function GroupProvider({ children }: GroupProviderProps) {
     }
   };
 
-  const value = useMemo(
+  // Memoize each context value separately
+  const dataValue = useMemo(
     () => ({
       currentGroup,
+    }),
+    [currentGroup],
+  );
+
+  const actionsValue = useMemo(
+    () => ({
       setCurrentGroup: updateCurrentGroup,
+    }),
+    [],
+  );
+
+  const loadingValue = useMemo(
+    () => ({
       isLoading,
       setIsLoading,
     }),
-    [currentGroup, isLoading],
+    [isLoading],
   );
 
+  // Nest providers to minimize rerenders
   return (
-    <GroupContext.Provider value={value}>{children}</GroupContext.Provider>
+    <GroupActionsContext.Provider value={actionsValue}>
+      <GroupDataContext.Provider value={dataValue}>
+        <GroupLoadingContext.Provider value={loadingValue}>
+          {children}
+        </GroupLoadingContext.Provider>
+      </GroupDataContext.Provider>
+    </GroupActionsContext.Provider>
   );
 }
 
-export function useGroup() {
-  const context = useContext(GroupContext);
+// Split hooks for accessing different parts of the context
+export function useGroupData() {
+  const context = useContext(GroupDataContext);
   if (context === undefined) {
-    throw new Error("useGroup must be used within a GroupProvider");
+    throw new Error("useGroupData must be used within a GroupProvider");
   }
   return context;
+}
+
+export function useGroupActions() {
+  const context = useContext(GroupActionsContext);
+  if (context === undefined) {
+    throw new Error("useGroupActions must be used within a GroupProvider");
+  }
+  return context;
+}
+
+export function useGroupLoading() {
+  const context = useContext(GroupLoadingContext);
+  if (context === undefined) {
+    throw new Error("useGroupLoading must be used within a GroupProvider");
+  }
+  return context;
+}
+
+// Keep the original hook for backward compatibility
+export function useGroup() {
+  const dataContext = useContext(GroupDataContext);
+  const actionsContext = useContext(GroupActionsContext);
+  const loadingContext = useContext(GroupLoadingContext);
+
+  if (
+    dataContext === undefined ||
+    actionsContext === undefined ||
+    loadingContext === undefined
+  ) {
+    throw new Error("useGroup must be used within a GroupProvider");
+  }
+
+  return {
+    ...dataContext,
+    ...actionsContext,
+    ...loadingContext,
+  };
 }

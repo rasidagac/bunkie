@@ -19,7 +19,7 @@ export default async function DashboardPage() {
   const { user } = await currentUser();
   const supabase = await createClient();
 
-  const { data: groupsOfCurrentUser } = await supabase
+  const { data: groups } = await supabase
     .from("group_users")
     .select(
       `
@@ -33,25 +33,37 @@ export default async function DashboardPage() {
     )
     .eq("user_id", user!.id);
 
-  if (!groupsOfCurrentUser?.length) {
-    return (
-      <div className="flex flex-col items-center rounded-lg border-2 border-dashed p-6">
-        <h1 className="text-xl font-bold">No House</h1>
-        <Separator className="my-2 w-1/3" />
-        <p className="text-sm">You are not a member of any houses.</p>
-        <p className="text-sm">
-          Join a house or create a new one to get started.
-        </p>
-        <div className="mt-4 flex items-center gap-2">
+  function renderGroups() {
+    if (!groups?.length) {
+      return (
+        <div className="flex flex-col items-center rounded-lg border-2 border-dashed p-6">
+          <h1 className="text-xl font-bold">No Group</h1>
+          <Separator className="my-2 w-1/3" />
+          <p className="text-sm">You are not a member of any group.</p>
+          <p className="text-sm">
+            Join a group or create a new one to get started.
+          </p>
+        </div>
+      );
+    } else {
+      return <GroupCards groupsData={groups} />;
+    }
+  }
+
+  return (
+    <div>
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold">My Groups</h1>
+        <div className="flex items-center gap-2">
           <Link href="/dashboard/create">
-            <Button>
+            <Button size="sm" variant="outline" className="rounded-full">
               <Plus /> Create
             </Button>
           </Link>
           <Separator orientation="vertical" className="h-4" />
           <Dialog>
             <DialogTrigger asChild>
-              <Button>
+              <Button size="sm" variant="outline" className="rounded-full">
                 <Users /> Join
               </Button>
             </DialogTrigger>
@@ -67,14 +79,8 @@ export default async function DashboardPage() {
           </Dialog>
         </div>
       </div>
-    );
-  }
-
-  return (
-    <div>
-      <h1 className="text-2xl font-bold">My Houses</h1>
       <Separator className="my-2 w-1/3" />
-      <GroupCards groupsData={groupsOfCurrentUser} />
+      {renderGroups()}
     </div>
   );
 }
