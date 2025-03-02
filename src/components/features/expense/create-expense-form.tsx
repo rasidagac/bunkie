@@ -36,14 +36,16 @@ const formSchema = z.object({
   amount: z.coerce.number(),
   currency: z.union([z.literal("TRY"), z.literal("USD"), z.literal("EUR")]),
   split_type: z.enum(["equal", "custom", "percentage"]).default("equal"),
-  image: z
-    .unknown()
-    .refine((fileList) => fileList instanceof FileList)
-    .optional(),
+  image: z.instanceof(FileList).optional(),
 });
 
-type CreateExpenseValues = TablesInsert<"expenses"> & {
-  image: File[];
+type CreateExpenseValues = Omit<
+  TablesInsert<"expenses">,
+  "currency" | "split_type"
+> & {
+  currency: "TRY" | "USD" | "EUR";
+  split_type: "equal" | "custom" | "percentage";
+  image?: FileList;
 };
 
 export default function CreateExpenseForm({
@@ -57,12 +59,18 @@ export default function CreateExpenseForm({
       amount: 0,
       currency: "TRY",
       split_type: "equal",
-      image: [],
+      image: undefined,
     },
   });
 
   async function handleSubmit(values: CreateExpenseValues) {
-    createExpense(groupId, userId, values).then(() => {
+    // Convert FileList to File[] if needed by the createExpense function
+    const formattedValues = {
+      ...values,
+      image: values.image ? Array.from(values.image) : [],
+    };
+
+    createExpense(groupId, userId, formattedValues).then(() => {
       form.reset();
       toast({ title: "Expense created successfully" });
     });
