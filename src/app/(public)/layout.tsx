@@ -30,8 +30,8 @@ export default async function PublicLayout({
           </Link>
         </div>
       </header>
-      <main className="container flex-grow">{children}</main>
-      <footer className="h-14 bg-gray-100 py-4 shadow-sm">
+      <main className="container grow">{children}</main>
+      <footer className="h-14 bg-gray-100 py-4 shadow-xs">
         <p className="text-center text-sm text-gray-500">
           &copy; {new Date().getFullYear()} Bunkie. All rights reserved.
         </p>

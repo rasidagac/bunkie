@@ -19,7 +19,7 @@ export function NoExpense({
       <div className="grid gap-6">
         <div className="rounded-lg border p-6 text-center">
           <p className="text-lg font-medium">No expenses yet</p>
-          <p className="mb-4 text-sm text-muted-foreground">
+          <p className="text-muted-foreground mb-4 text-sm">
             Create your first expense to get started
           </p>
           <Link href={`/dashboard/groups/${currentGroup.id}/create`}>
