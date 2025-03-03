@@ -1,6 +1,4 @@
-import type { Tables } from "@/types/supabase";
-
-import { getById } from "@/actions/groups/getById";
+import { getCurrentGroup } from "@/actions/groups/getCurrentGroup";
 import { getUserGroups } from "@/actions/groups/getUserGroups";
 import { Button } from "@ui/button";
 import {
@@ -12,21 +10,11 @@ import {
   DrawerTrigger,
 } from "@ui/drawer";
 import { ChevronDown } from "lucide-react";
-import { cookies } from "next/headers";
 
 import { GroupList } from "./group-list";
 
 export async function GroupSwitcher() {
-  const cookieStore = await cookies();
-  const currentGroup = cookieStore.get("currentGroup");
-  let group: Tables<"groups"> | null = null;
-
-  if (currentGroup?.value) {
-    const { data } = await getById(currentGroup.value);
-    if (data) {
-      group = data;
-    }
-  }
+  const currentGroup = await getCurrentGroup();
 
   const { data: groups } = await getUserGroups();
 
@@ -34,7 +22,7 @@ export async function GroupSwitcher() {
     <Drawer autoFocus>
       <DrawerTrigger asChild>
         <Button variant="outline" className="justify-start">
-          {group?.name || "Set group"}
+          {currentGroup?.name || "Set group"}
           <ChevronDown className="ml-2 h-4 w-4" />
         </Button>
       </DrawerTrigger>

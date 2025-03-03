@@ -1,7 +1,5 @@
-"use client";
-
+import { getCurrentGroup } from "@/actions/groups/getCurrentGroup";
 import BreadcrumbWrapper from "@/components/layout/breadcrumb-wrapper";
-import { useGroup } from "@/hooks/use-group";
 import {
   BreadcrumbItem,
   BreadcrumbLink,
@@ -9,20 +7,16 @@ import {
 } from "@ui/breadcrumb";
 import Link from "next/link";
 
-export default function CreateExpenseBreadcrumb() {
-  const { currentGroup } = useGroup();
-
-  if (!currentGroup) {
-    return null;
-  }
+export default async function CreateExpenseBreadcrumb() {
+  const currentGroup = await getCurrentGroup();
 
   return (
     <BreadcrumbWrapper>
       <BreadcrumbSeparator />
       <BreadcrumbItem>
         <BreadcrumbLink asChild>
-          <Link href={`/dashboard/groups/${currentGroup.id}`}>
-            {currentGroup.name}
+          <Link href={`/dashboard/groups/${currentGroup?.id}`}>
+            {currentGroup?.name}
           </Link>
         </BreadcrumbLink>
       </BreadcrumbItem>
