@@ -1,6 +1,7 @@
 import type { Tables } from "@/types/supabase";
 
 import { getById } from "@/actions/groups/getById";
+import { getUserGroups } from "@/actions/groups/getUserGroups";
 import { Button } from "@ui/button";
 import {
   Drawer,
@@ -27,6 +28,8 @@ export async function GroupSwitcher() {
     }
   }
 
+  const { data: groups } = await getUserGroups();
+
   return (
     <Drawer autoFocus>
       <DrawerTrigger asChild>
@@ -41,7 +44,7 @@ export async function GroupSwitcher() {
           <DrawerDescription>Select a group to continue.</DrawerDescription>
         </DrawerHeader>
         <div className="mt-4 border-t">
-          <GroupList />
+          <GroupList data={groups ?? []} />
         </div>
       </DrawerContent>
     </Drawer>
