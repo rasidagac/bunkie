@@ -1,4 +1,4 @@
-import { getById } from "@/actions/groups/getById";
+import { getCurrentGroup } from "@/actions/groups/getCurrentGroup";
 import { ExpensesTable } from "@/components/features/group/expenses-table";
 import { GroupBreadcrumb } from "@/components/features/group/group-breadcrumb";
 import { GroupHeader } from "@/components/features/group/house-header";
@@ -18,7 +18,7 @@ export default async function SingleGroupPage({
 }) {
   const { id: groupId } = await params;
 
-  const { data: currentGroup } = await getById(groupId);
+  const currentGroup = await getCurrentGroup();
 
   if (!currentGroup) {
     notFound();
@@ -36,7 +36,7 @@ export default async function SingleGroupPage({
   return (
     <div>
       <div className="mb-4">
-        <GroupBreadcrumb name={currentGroup.name} groupId={currentGroup.id} />
+        <GroupBreadcrumb />
       </div>
       <div className="flex flex-col gap-6">
         <GroupHeader

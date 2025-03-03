@@ -13,8 +13,8 @@ import {
 import { setCookie } from "cookies-next";
 
 export function GroupList({ data }: { data: Tables<"groups">[] }) {
-  function handleSelect(value: string) {
-    setCookie("currentGroup", value);
+  function handleSelect(group: Tables<"groups">) {
+    setCookie("currentGroup", group);
   }
 
   return (
@@ -27,7 +27,7 @@ export function GroupList({ data }: { data: Tables<"groups">[] }) {
             <CommandItem
               key={group.id}
               value={group.name + " " + group.id}
-              onSelect={handleSelect}
+              onSelect={() => handleSelect(group)}
             >
               {group.name}
             </CommandItem>

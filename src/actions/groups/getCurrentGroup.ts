@@ -1,29 +1,17 @@
 "use server";
 
-import { createClient } from "@/utils/supabase/server";
+import type { Tables } from "@/types/supabase";
+
+import { cookies } from "next/headers";
 import { cache } from "react";
 
-export const getCurrentGroup = cache(async (groupId: string) => {
-  const supabase = await createClient();
+export const getCurrentGroup = cache(async () => {
+  const cookieStore = await cookies();
+  const currentGroup = cookieStore.get("currentGroup");
 
-  // Get the group with its members
-  const { data, error } = await supabase
-    .from("groups")
-    .select(
-      `
-      *,
-      members:group_users(
-        user:profiles(*)
-      )
-    `,
-    )
-    .eq("id", groupId)
-    .single();
-
-  if (error) {
-    console.error("Error fetching group:", error);
-    return { group: null, error };
+  if (currentGroup?.value) {
+    return JSON.parse(currentGroup.value) as Tables<"groups">;
   }
 
-  return { group: data, error: null };
+  return null;
 });
