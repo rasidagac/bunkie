@@ -1,8 +1,9 @@
 "use server";
 
+import { cache } from "react";
+
 import { currentUser } from "@/lib/supabase";
 import { createClient } from "@/utils/supabase/server";
-import { cache } from "react";
 
 export const getUserGroups = cache(async () => {
   const supabase = await createClient();

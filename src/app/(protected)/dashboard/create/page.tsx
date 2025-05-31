@@ -1,4 +1,3 @@
-import CreateHouseForm from "@/components/features/group/create-house-form";
 import {
   Card,
   CardContent,
@@ -6,6 +5,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@ui/card";
+
+import CreateHouseForm from "@/components/features/group/create-house-form";
 
 export default function CreateGroupPage() {
   return (

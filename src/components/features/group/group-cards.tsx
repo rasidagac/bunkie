@@ -1,11 +1,11 @@
 "use client";
 
-import type { Tables } from "@/types/supabase";
-
 import { Avatar, AvatarFallback, AvatarImage } from "@ui/avatar";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@ui/card";
 import { ChevronRight } from "lucide-react";
 import { useRouter } from "next/navigation";
+
+import type { Tables } from "@/types/supabase";
 
 type GroupsData = {
   groups: Tables<"groups"> | null;

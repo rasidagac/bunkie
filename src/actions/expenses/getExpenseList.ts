@@ -1,8 +1,9 @@
 "use server";
 
-import { createClient } from "@/utils/supabase/server";
 import { format } from "date-fns";
 import { cache } from "react";
+
+import { createClient } from "@/utils/supabase/server";
 
 type ExpensesWithProfiles = {
   id: string;

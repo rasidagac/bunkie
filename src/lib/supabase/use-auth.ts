@@ -2,9 +2,10 @@
 
 import type { User } from "@supabase/supabase-js";
 
-import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
+
+import { createClient } from "@/utils/supabase/client";
 
 interface UseAuthReturn {
   user: User | null;

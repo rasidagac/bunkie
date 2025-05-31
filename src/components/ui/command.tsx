@@ -7,11 +7,12 @@ import type {
   HTMLAttributes,
 } from "react";
 
-import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { cn } from "@/lib/utils";
 import { Command as CommandPrimitive } from "cmdk";
 import { Search } from "lucide-react";
 import { forwardRef } from "react";
+
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { cn } from "@/lib/utils";
 
 const Command = forwardRef<
   ComponentRef<typeof CommandPrimitive>,

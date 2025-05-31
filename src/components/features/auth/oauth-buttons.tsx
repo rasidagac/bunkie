@@ -1,9 +1,10 @@
 "use client";
 
-import { useAuth } from "@/lib/supabase/use-auth";
 import { Button } from "@ui/button";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
+
+import { useAuth } from "@/lib/supabase/use-auth";
 
 interface OAuthButtonProps {
   provider: "github" | "google" | "discord" | "twitter";

@@ -1,8 +1,9 @@
+import { PlusCircle } from "lucide-react";
+import { Link } from "lucide-react";
+
 import type { Tables } from "@/types/supabase";
 
 import { Button } from "@/components/ui/button";
-import { PlusCircle } from "lucide-react";
-import { Link } from "lucide-react";
 
 import { GroupBreadcrumb } from "./group-breadcrumb";
 
