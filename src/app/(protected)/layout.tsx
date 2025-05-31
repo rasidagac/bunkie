@@ -1,9 +1,10 @@
 import type { ReactNode } from "react";
 
+import { Separator } from "@ui/separator";
+
 import ThemeToggle from "@/components/common/theme-toggle";
 import UserDropdown from "@/components/common/user-dropdown";
 import { GroupSwitcher } from "@/components/features/group/group-switcher";
-import { Separator } from "@ui/separator";
 
 export default async function ProtectedLayout({
   children,

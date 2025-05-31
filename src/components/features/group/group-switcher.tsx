@@ -1,5 +1,3 @@
-import { getCurrentGroup } from "@/actions/groups/getCurrentGroup";
-import { getUserGroups } from "@/actions/groups/getUserGroups";
 import { Button } from "@ui/button";
 import {
   Drawer,
@@ -10,6 +8,9 @@ import {
   DrawerTrigger,
 } from "@ui/drawer";
 import { ChevronDown } from "lucide-react";
+
+import { getCurrentGroup } from "@/actions/groups/getCurrentGroup";
+import { getUserGroups } from "@/actions/groups/getUserGroups";
 
 import { GroupList } from "./group-list";
 
