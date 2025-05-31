@@ -1,0 +1,39 @@
+"use client";
+
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@ui/command";
+import { setCookie } from "cookies-next";
+
+import type { Tables } from "@/types/supabase";
+
+export function GroupList({ data }: { data: Tables<"groups">[] }) {
+  function handleSelect(group: Tables<"groups">) {
+    setCookie("currentGroup", group);
+  }
+
+  return (
+    <Command>
+      <CommandInput placeholder="Filter group..." />
+      <CommandList>
+        <CommandEmpty>No groups found.</CommandEmpty>
+        <CommandGroup>
+          {data.map((group) => (
+            <CommandItem
+              key={group.id}
+              value={group.name + " " + group.id}
+              onSelect={() => handleSelect(group)}
+            >
+              {group.name}
+            </CommandItem>
+          ))}
+        </CommandGroup>
+      </CommandList>
+    </Command>
+  );
+}
