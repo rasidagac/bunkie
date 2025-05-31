@@ -61,40 +61,6 @@ interface ExpenseItemProps {
 function ExpenseItem({ expense, isActive, onClose }: ExpenseItemProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const startXRef = useRef<number | null>(null);
-  const [translateX, setTranslateX] = useState(0);
-  const [swipeMode, setSwipeMode] = useState<"none" | "actions" | "delete">(
-    "none",
-  );
-  const hasVibratedRef = useRef(false);
-
-  // Constants for swipe thresholds
-  const ACTIONS_THRESHOLD = -80; // Threshold to show actions
-  const DELETE_THRESHOLD = -160; // Threshold to trigger delete directly
-
-  // Calculate background opacity based on swipe distance
-  const getDeleteBackgroundOpacity = useCallback(
-    (translateValue: number) => {
-      if (translateValue > ACTIONS_THRESHOLD) return 0;
-
-      // Map translateX from ACTIONS_THRESHOLD to DELETE_THRESHOLD to opacity 0-1
-      const progress = Math.min(
-        1,
-        (translateValue - ACTIONS_THRESHOLD) /
-          (DELETE_THRESHOLD - ACTIONS_THRESHOLD),
-      );
-      return Math.max(0, progress);
-    },
-    [ACTIONS_THRESHOLD, DELETE_THRESHOLD],
-  );
-
-  // Reset position when isActive changes to false
-  useEffect(() => {
-    if (!isActive) {
-      setTranslateX(0);
-      setSwipeMode("none");
-      hasVibratedRef.current = false;
-    }
-  }, [isActive]);
 
   const handleEdit = useCallback(() => {
     // Handle edit action
@@ -112,7 +78,7 @@ function ExpenseItem({ expense, isActive, onClose }: ExpenseItemProps) {
         ref={containerRef}
         className="bg-background group relative z-10 grid cursor-grab grid-cols-[auto_auto_1fr_auto] items-center gap-2 gap-x-4 text-xs active:cursor-grabbing"
         style={{
-          transform: `translateX(${translateX}px)`,
+          transform: `translateX(0px)`,
           transition:
             startXRef.current === null
               ? "transform 0.3s cubic-bezier(0.25, 1, 0.5, 1)"
@@ -168,17 +134,17 @@ function ExpenseItem({ expense, isActive, onClose }: ExpenseItemProps) {
       <div
         className="bg-destructive text-destructive-foreground absolute inset-0 flex items-center justify-center transition-all"
         style={{
-          opacity: getDeleteBackgroundOpacity(translateX),
-          transform: `scaleX(${swipeMode === "delete" ? 1 : 0.95})`,
+          opacity: 0,
+          transform: `scaleX(0.95)`,
           transformOrigin: "right",
-          pointerEvents: swipeMode === "delete" ? "auto" : "none",
+          pointerEvents: "none",
         }}
       >
         <div
           className="flex scale-[0.98] items-center gap-2 transition-transform"
           style={{
-            transform: `scale(${swipeMode === "delete" ? 1.1 : 0.9})`,
-            opacity: swipeMode === "delete" ? 1 : 0.7,
+            transform: `scale(0.9)`,
+            opacity: 0.7,
           }}
         >
           <Trash2 size={24} />

@@ -15,7 +15,7 @@ export function NoExpense({
   return (
     <div>
       <div className="mb-4">
-        <GroupBreadcrumb name={currentGroup.name} groupId={currentGroup.id} />
+        <GroupBreadcrumb />
       </div>
       <div className="grid gap-6">
         <div className="rounded-lg border p-6 text-center">
