@@ -10,11 +10,11 @@ import {
 } from "@ui/command";
 import { setCookie } from "cookies-next";
 
-import type { Tables } from "@/types/supabase";
+import type { Group } from "@/types/groups";
 
-export function GroupList({ data }: { data: Tables<"groups">[] }) {
-  function handleSelect(group: Tables<"groups">) {
-    setCookie("currentGroup", group);
+export function GroupList({ data }: { data: Group[] }) {
+  function handleSelect(group: Group) {
+    setCookie("currentGroup", JSON.stringify(group));
   }
 
   return (
