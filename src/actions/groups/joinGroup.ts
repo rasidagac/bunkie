@@ -1,7 +1,8 @@
 "use server";
+import { redirect } from "next/navigation";
+
 import { currentUser } from "@/lib/supabase";
 import { createClient } from "@/utils/supabase/server";
-import { redirect } from "next/navigation";
 
 export async function joinGroup(
   _prevState: { error: string },

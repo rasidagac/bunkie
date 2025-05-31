@@ -161,6 +161,15 @@ function ExpenseItem({
     [DELETE_THRESHOLD, ACTIONS_THRESHOLD, swipeMode, triggerHapticFeedback],
   );
 
+  const handleDelete = useCallback(() => {
+    // Handle delete action
+    console.log("Delete expense:", expense.id);
+    onClose();
+
+    // Here you would add the actual delete logic
+    // For example, call an API to delete the expense
+  }, [expense.id, onClose]);
+
   const handleTouchEnd = useCallback(() => {
     document.body.style.overflow = "";
 
@@ -181,7 +190,14 @@ function ExpenseItem({
     }
 
     startXRef.current = null;
-  }, [expense.id, onSwipe, onClose, swipeMode]);
+  }, [
+    swipeMode,
+    handleDelete,
+    ACTIONS_THRESHOLD,
+    onSwipe,
+    expense.id,
+    onClose,
+  ]);
 
   // Mouse events for desktop
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
@@ -233,15 +249,6 @@ function ExpenseItem({
     },
     [DELETE_THRESHOLD, ACTIONS_THRESHOLD, swipeMode, triggerHapticFeedback],
   );
-
-  const handleDelete = useCallback(() => {
-    // Handle delete action
-    console.log("Delete expense:", expense.id);
-    onClose();
-
-    // Here you would add the actual delete logic
-    // For example, call an API to delete the expense
-  }, [expense.id, onClose]);
 
   const handleMouseUp = useCallback(() => {
     if (!isDraggingRef.current) return;

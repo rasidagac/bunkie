@@ -1,8 +1,9 @@
 "use client";
 
-import { createClient } from "@/utils/supabase/client";
 import { LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
+
+import { createClient } from "@/utils/supabase/client";
 
 import { DropdownMenuItem } from "../ui/dropdown-menu";
 

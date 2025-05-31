@@ -1,9 +1,10 @@
 import type { ReactNode } from "react";
 
-import ThemeToggle from "@/components/common/theme-toggle";
-import { currentUser } from "@/lib/supabase";
 import { Button } from "@ui/button";
 import Link from "next/link";
+
+import ThemeToggle from "@/components/common/theme-toggle";
+import { currentUser } from "@/lib/supabase";
 
 export default async function PublicLayout({
   children,

@@ -1,7 +1,8 @@
 "use server";
 
-import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
+
+import { createClient } from "@/utils/supabase/server";
 
 export async function createGroup(formData: FormData) {
   const title = formData.get("title") as string;

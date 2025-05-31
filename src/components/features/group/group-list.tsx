@@ -1,7 +1,5 @@
 "use client";
 
-import type { Tables } from "@/types/supabase";
-
 import {
   Command,
   CommandEmpty,
@@ -11,6 +9,8 @@ import {
   CommandList,
 } from "@ui/command";
 import { setCookie } from "cookies-next";
+
+import type { Tables } from "@/types/supabase";
 
 export function GroupList({ data }: { data: Tables<"groups">[] }) {
   function handleSelect(group: Tables<"groups">) {

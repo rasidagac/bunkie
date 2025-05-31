@@ -1,4 +1,3 @@
-import { currentUser } from "@/lib/supabase";
 import { Avatar, AvatarFallback, AvatarImage } from "@ui/avatar";
 import {
   DropdownMenu,
@@ -7,6 +6,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@ui/dropdown-menu";
+
+import { currentUser } from "@/lib/supabase";
 
 import UserDropdownContent from "./user-dropdown-content";
 export default async function UserDropdown() {

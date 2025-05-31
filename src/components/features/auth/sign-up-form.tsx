@@ -1,6 +1,5 @@
 "use client";
 
-import { useAuth } from "@/lib/supabase/use-auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Alert, AlertDescription } from "@ui/alert";
 import { Button } from "@ui/button";
@@ -17,6 +16,8 @@ import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+
+import { useAuth } from "@/lib/supabase/use-auth";
 
 const formSchema = z
   .object({

@@ -1,5 +1,6 @@
-import BreadcrumbWrapper from "@/components/layout/breadcrumb-wrapper";
 import { BreadcrumbSeparator } from "@ui/breadcrumb";
+
+import BreadcrumbWrapper from "@/components/layout/breadcrumb-wrapper";
 
 export function GroupBreadcrumb() {
   return (

@@ -1,6 +1,5 @@
 "use client";
 
-import CreateHouseForm from "@/components/features/group/create-house-form";
 import {
   Dialog,
   DialogContent,
@@ -10,6 +9,8 @@ import {
 } from "@ui/dialog";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
+
+import CreateHouseForm from "@/components/features/group/create-house-form";
 
 export default function CreateHousePage() {
   const router = useRouter();

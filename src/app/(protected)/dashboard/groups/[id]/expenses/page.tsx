@@ -1,8 +1,9 @@
-import { ExpensesTable } from "@/components/features/group/expenses-table";
 import { getExpenseList } from "@actions/expenses/getExpenseList";
 import { getByCode } from "@actions/groups/getByCode";
 import { Separator } from "@ui/separator";
 import { notFound } from "next/navigation";
+
+import { ExpensesTable } from "@/components/features/group/expenses-table";
 
 export default async function ExpensesPage({
   params,

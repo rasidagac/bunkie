@@ -1,8 +1,5 @@
-import type { Tables } from "@/types/supabase";
 import type { User } from "@supabase/auth-js";
 
-import { currentUser } from "@/lib/supabase/current-user";
-import { createClient } from "@/utils/supabase/server";
 import { Button } from "@ui/button";
 import {
   Drawer,
@@ -15,6 +12,11 @@ import {
   DrawerTrigger,
 } from "@ui/drawer";
 import { Eye } from "lucide-react";
+
+import type { Tables } from "@/types/supabase";
+
+import { currentUser } from "@/lib/supabase/current-user";
+import { createClient } from "@/utils/supabase/server";
 
 interface LiabilitiesDrawerProps {
   groupId: Tables<"groups">["id"];

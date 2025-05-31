@@ -1,8 +1,9 @@
+import { Separator } from "@ui/separator";
+import { redirect } from "next/navigation";
+
 import CreateExpenseBreadcrumb from "@/components/features/expense/create-expense-breadcrumb";
 import CreateExpenseForm from "@/components/features/expense/create-expense-form";
 import { currentUser } from "@/lib/supabase";
-import { Separator } from "@ui/separator";
-import { redirect } from "next/navigation";
 
 export default async function CreateExpensePage({
   params,
