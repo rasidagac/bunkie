@@ -26,7 +26,7 @@ export async function joinGroup(
     return { error: "User not found" };
   }
 
-  const { error: groupUserError } = await supabase.from("group_users").insert({
+  const { error: groupUserError } = await supabase.from("memberships").insert({
     user_id: user.id,
     group_id: group.id,
   });

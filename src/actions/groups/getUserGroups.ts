@@ -10,7 +10,7 @@ export const getUserGroups = cache(async () => {
   const { user } = await currentUser();
 
   const { data, error } = await supabase
-    .from("group_users")
+    .from("memberships")
     .select(
       `
       groups:groups(*)
