@@ -1,3 +1,8 @@
+import { getExpenseList } from "@actions/expenses/getExpenseList";
+import { PlusCircle } from "lucide-react";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+
 import { getCurrentGroup } from "@/actions/groups/getCurrentGroup";
 import { ExpensesTable } from "@/components/features/group/expenses-table";
 import { GroupBreadcrumb } from "@/components/features/group/group-breadcrumb";
@@ -6,10 +11,6 @@ import { LiabilitiesDrawer } from "@/components/features/group/liabilities-drawe
 import { NoExpense } from "@/components/features/group/no-expense";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { getExpenseList } from "@actions/expenses/getExpenseList";
-import { PlusCircle } from "lucide-react";
-import Link from "next/link";
-import { notFound } from "next/navigation";
 
 export default async function SingleGroupPage({
   params,
@@ -55,7 +56,7 @@ export default async function SingleGroupPage({
             </Link>
           </div>
           <Separator className="my-2" />
-          <ExpensesTable data={formattedExpenses!} />
+          <ExpensesTable data={formattedExpenses} />
         </div>
       </div>
     </div>

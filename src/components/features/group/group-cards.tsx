@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 type GroupsData = {
   groups: Tables<"groups"> | null;
   all_users: {
-    group_users: Array<{
+    memberships: Array<{
       profiles: Tables<"profiles"> | null;
     }> | null;
   } | null;
@@ -38,7 +38,7 @@ export function GroupCards({ groupsData }: GroupCardsProps) {
       </CardHeader>
       <CardContent className="flex gap-2 pb-0">
         <div className="flex -space-x-5 hover:-space-x-2">
-          {all_users?.group_users?.map(({ profiles }) => (
+          {all_users?.memberships?.map(({ profiles }) => (
             <Avatar
               key={profiles?.id}
               className="border-2 drop-shadow-xs transition-all ease-in-out"

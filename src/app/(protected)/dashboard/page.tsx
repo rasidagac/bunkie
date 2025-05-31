@@ -1,7 +1,3 @@
-import { GroupCards } from "@/components/features/group/group-cards";
-import JoinHouseForm from "@/components/features/group/join-house-form";
-import { currentUser } from "@/lib/supabase";
-import { createClient } from "@/utils/supabase/server";
 import { Button } from "@ui/button";
 import {
   Dialog,
@@ -15,17 +11,22 @@ import { Separator } from "@ui/separator";
 import { Plus, Users } from "lucide-react";
 import Link from "next/link";
 
+import { GroupCards } from "@/components/features/group/group-cards";
+import JoinHouseForm from "@/components/features/group/join-house-form";
+import { currentUser } from "@/lib/supabase";
+import { createClient } from "@/utils/supabase/server";
+
 export default async function DashboardPage() {
   const { user } = await currentUser();
   const supabase = await createClient();
 
   const { data: groups } = await supabase
-    .from("group_users")
+    .from("memberships")
     .select(
       `
       groups:groups(*),
       all_users:groups(
-      group_users(
+      memberships(
         profiles(*)
       )
     )

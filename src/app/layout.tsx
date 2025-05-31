@@ -3,9 +3,10 @@ import type { ReactNode } from "react";
 
 import "./globals.css";
 
-import { ThemeProvider } from "@/components/providers/theme-provider";
 import { Toaster } from "@ui/toaster";
 import { Geist, Geist_Mono } from "next/font/google";
+
+import { ThemeProvider } from "@/components/providers/theme-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
