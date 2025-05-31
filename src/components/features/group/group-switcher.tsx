@@ -17,13 +17,17 @@ import { GroupList } from "./group-list";
 export async function GroupSwitcher() {
   const currentGroup = await getCurrentGroup();
 
+  if (!currentGroup) {
+    return null;
+  }
+
   const { data: groups } = await getUserGroups();
 
   return (
     <Drawer autoFocus>
       <DrawerTrigger asChild>
         <Button variant="outline" className="justify-start">
-          {currentGroup?.name || "Set group"}
+          {currentGroup.name}
           <ChevronDown className="ml-2 h-4 w-4" />
         </Button>
       </DrawerTrigger>
