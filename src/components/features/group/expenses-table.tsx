@@ -162,12 +162,17 @@ function ExpenseItem({
   );
 
   const handleDelete = useCallback(() => {
-    // Handle delete action
-    console.log("Delete expense:", expense.id);
-    onClose();
-
-    // Here you would add the actual delete logic
-    // For example, call an API to delete the expense
+    // TODO: Replace with actual delete API call
+    deleteExpense(expense.id)
+      .then(() => {
+        console.log("Expense deleted:", expense.id);
+        onClose();
+        // Optionally trigger a refresh of the expense list
+      })
+      .catch((error) => {
+        console.error("Failed to delete expense:", error);
+        // Show error message to user
+      });
   }, [expense.id, onClose]);
 
   const handleTouchEnd = useCallback(() => {

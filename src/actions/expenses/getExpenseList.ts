@@ -50,7 +50,7 @@ export const getExpenseList = cache(
     const { data: expensesWithProfiles, error } = await query;
 
     const { data: groupUsers, error: groupUsersError } = await supabase
-      .from("group_users")
+      .from("memberships")
       .select("user_id")
       .eq("group_id", groupId);
 

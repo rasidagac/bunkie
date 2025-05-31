@@ -24,7 +24,7 @@ export async function createGroup(formData: FormData) {
     return;
   }
 
-  await supabase.from("group_users").insert({
+  await supabase.from("memberships").insert({
     user_id: data.user?.id,
     group_id: group.id,
   });
