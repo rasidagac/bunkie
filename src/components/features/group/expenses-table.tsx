@@ -44,7 +44,6 @@ export function ExpensesTable({ data }: ExpensesTableProps) {
             key={expense.id}
             expense={expense}
             isActive={activeItemId === expense.id}
-            onSwipe={(id) => setActiveItemId(id)}
             onClose={() => setActiveItemId(null)}
           />
         ))}
@@ -56,21 +55,13 @@ export function ExpensesTable({ data }: ExpensesTableProps) {
 interface ExpenseItemProps {
   expense: ExpenseWithProfile;
   isActive: boolean;
-  onSwipe: (id: string) => void;
   onClose: () => void;
 }
 
-function ExpenseItem({
-  expense,
-  isActive,
-  onSwipe,
-  onClose,
-}: ExpenseItemProps) {
+function ExpenseItem({ expense, isActive, onClose }: ExpenseItemProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const startXRef = useRef<number | null>(null);
-  const currentXRef = useRef<number>(0);
   const [translateX, setTranslateX] = useState(0);
-  const isDraggingRef = useRef(false);
   const [swipeMode, setSwipeMode] = useState<"none" | "actions" | "delete">(
     "none",
   );
@@ -105,202 +96,6 @@ function ExpenseItem({
     }
   }, [isActive]);
 
-  // Provide haptic feedback when crossing into delete mode
-  const triggerHapticFeedback = useCallback(() => {
-    if (hasVibratedRef.current) return;
-
-    if ("vibrate" in navigator) {
-      navigator.vibrate(50); // Short vibration
-      hasVibratedRef.current = true;
-    }
-  }, []);
-
-  const handleTouchStart = useCallback((e: React.TouchEvent) => {
-    startXRef.current = e.touches[0].clientX;
-    document.body.style.overflow = "hidden"; // Prevent scrolling while swiping
-  }, []);
-
-  const handleTouchMove = useCallback(
-    (e: React.TouchEvent) => {
-      if (startXRef.current === null) return;
-
-      const currentX = e.touches[0].clientX;
-      const diff = currentX - startXRef.current;
-
-      // Only allow left swipe (negative diff)
-      if (diff <= 0) {
-        // Update swipe mode based on distance
-        const prevMode = swipeMode;
-        if (diff < DELETE_THRESHOLD) {
-          setSwipeMode("delete");
-          if (prevMode !== "delete") {
-            triggerHapticFeedback();
-          }
-        } else if (diff < ACTIONS_THRESHOLD) {
-          setSwipeMode("actions");
-          hasVibratedRef.current = false;
-        } else {
-          setSwipeMode("none");
-          hasVibratedRef.current = false;
-        }
-
-        // Apply resistance when swiping beyond DELETE_THRESHOLD
-        let newTranslateX;
-        if (diff < DELETE_THRESHOLD) {
-          // Add resistance to make it harder to swipe beyond DELETE_THRESHOLD
-          const overSwipe = diff - DELETE_THRESHOLD;
-          newTranslateX = DELETE_THRESHOLD + overSwipe * 0.2;
-        } else {
-          newTranslateX = diff;
-        }
-
-        setTranslateX(newTranslateX);
-        currentXRef.current = newTranslateX;
-      }
-    },
-    [DELETE_THRESHOLD, ACTIONS_THRESHOLD, swipeMode, triggerHapticFeedback],
-  );
-
-  const handleDelete = useCallback(() => {
-    // TODO: Replace with actual delete API call
-    deleteExpense(expense.id)
-      .then(() => {
-        console.log("Expense deleted:", expense.id);
-        onClose();
-        // Optionally trigger a refresh of the expense list
-      })
-      .catch((error) => {
-        console.error("Failed to delete expense:", error);
-        // Show error message to user
-      });
-  }, [expense.id, onClose]);
-
-  const handleTouchEnd = useCallback(() => {
-    document.body.style.overflow = "";
-
-    if (startXRef.current === null) return;
-
-    // Handle different swipe modes
-    if (swipeMode === "delete") {
-      // Trigger delete action immediately
-      handleDelete();
-    } else if (swipeMode === "actions") {
-      // Snap to actions position
-      setTranslateX(ACTIONS_THRESHOLD);
-      onSwipe(expense.id);
-    } else {
-      // Snap back to closed position
-      setTranslateX(0);
-      onClose();
-    }
-
-    startXRef.current = null;
-  }, [
-    swipeMode,
-    handleDelete,
-    ACTIONS_THRESHOLD,
-    onSwipe,
-    expense.id,
-    onClose,
-  ]);
-
-  // Mouse events for desktop
-  const handleMouseDown = useCallback((e: React.MouseEvent) => {
-    startXRef.current = e.clientX;
-    isDraggingRef.current = true;
-    document.body.style.overflow = "hidden";
-
-    // Prevent text selection during drag
-    e.preventDefault();
-  }, []);
-
-  const handleMouseMove = useCallback(
-    (e: React.MouseEvent) => {
-      if (startXRef.current === null || !isDraggingRef.current) return;
-
-      const currentX = e.clientX;
-      const diff = currentX - startXRef.current;
-
-      // Only allow left swipe (negative diff)
-      if (diff <= 0) {
-        // Update swipe mode based on distance
-        const prevMode = swipeMode;
-        if (diff < DELETE_THRESHOLD) {
-          setSwipeMode("delete");
-          if (prevMode !== "delete") {
-            triggerHapticFeedback();
-          }
-        } else if (diff < ACTIONS_THRESHOLD) {
-          setSwipeMode("actions");
-          hasVibratedRef.current = false;
-        } else {
-          setSwipeMode("none");
-          hasVibratedRef.current = false;
-        }
-
-        // Apply resistance when swiping beyond DELETE_THRESHOLD
-        let newTranslateX;
-        if (diff < DELETE_THRESHOLD) {
-          // Add resistance to make it harder to swipe beyond DELETE_THRESHOLD
-          const overSwipe = diff - DELETE_THRESHOLD;
-          newTranslateX = DELETE_THRESHOLD + overSwipe * 0.2;
-        } else {
-          newTranslateX = diff;
-        }
-
-        setTranslateX(newTranslateX);
-        currentXRef.current = newTranslateX;
-      }
-    },
-    [DELETE_THRESHOLD, ACTIONS_THRESHOLD, swipeMode, triggerHapticFeedback],
-  );
-
-  const handleMouseUp = useCallback(() => {
-    if (!isDraggingRef.current) return;
-
-    document.body.style.overflow = "";
-    isDraggingRef.current = false;
-
-    if (startXRef.current === null) return;
-
-    // Handle different swipe modes
-    if (swipeMode === "delete") {
-      // Trigger delete action immediately
-      handleDelete();
-    } else if (swipeMode === "actions") {
-      // Snap to actions position
-      setTranslateX(ACTIONS_THRESHOLD);
-      onSwipe(expense.id);
-    } else {
-      // Snap back to closed position
-      setTranslateX(0);
-      onClose();
-    }
-
-    startXRef.current = null;
-  }, [
-    swipeMode,
-    handleDelete,
-    ACTIONS_THRESHOLD,
-    onSwipe,
-    expense.id,
-    onClose,
-  ]);
-
-  // Add global mouse up event to handle cases where mouse is released outside the component
-  useEffect(() => {
-    const handleGlobalMouseUp = () => {
-      if (isDraggingRef.current) {
-        handleMouseUp();
-      }
-    };
-
-    window.addEventListener("mouseup", handleGlobalMouseUp);
-    return () => {
-      window.removeEventListener("mouseup", handleGlobalMouseUp);
-    };
-  }, [handleMouseUp]);
-
   const handleEdit = useCallback(() => {
     // Handle edit action
     console.log("Edit expense:", expense.id);
@@ -323,13 +118,6 @@ function ExpenseItem({
               ? "transform 0.3s cubic-bezier(0.25, 1, 0.5, 1)"
               : "none",
         }}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-        onMouseLeave={handleMouseUp}
         aria-roledescription="swipeable item"
         aria-describedby={`expense-${expense.id}-description`}
       >
@@ -368,7 +156,6 @@ function ExpenseItem({
           <Edit size={16} />
         </Button>
         <Button
-          onClick={handleDelete}
           className="h-full w-10 rounded-none"
           variant="destructive"
           aria-label={`Delete expense: ${expense.title}`}
