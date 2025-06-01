@@ -36,9 +36,7 @@ export default async function SingleGroupPage({
 
   return (
     <div>
-      <div className="mb-4">
-        <GroupBreadcrumb />
-      </div>
+      <GroupBreadcrumb />
       <div className="flex flex-col gap-6">
         <GroupHeader
           groupName={currentGroup.name}
@@ -48,7 +46,7 @@ export default async function SingleGroupPage({
         <div>
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-semibold">Latest Expenses</h2>
-            <Link href={`/dashboard/groups/${groupId}/create`}>
+            <Link href={`/groups/${groupId}/create`}>
               <Button size="sm" variant="outline">
                 <PlusCircle className="h-4 w-4" />
                 Create Expense
