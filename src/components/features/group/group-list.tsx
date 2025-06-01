@@ -14,7 +14,7 @@ import type { Group } from "@/types/groups";
 
 export function GroupList({ data }: { data: Group[] }) {
   function handleSelect(group: Group) {
-    setCookie("currentGroup", JSON.stringify(group));
+    setCookie("currentGroup", group.id);
   }
 
   return (
