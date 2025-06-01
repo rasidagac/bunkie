@@ -3,6 +3,8 @@ import type { NextRequest } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse } from "next/server";
 
+const protectedRoutes = ["/dashboard", "/groups"];
+
 export const updateSession = async (request: NextRequest) => {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -36,10 +38,10 @@ export const updateSession = async (request: NextRequest) => {
     },
   });
 
-  const user = await supabase.auth.getUser();
+  const { error: authError } = await supabase.auth.getUser();
 
   // protected routes
-  if (request.nextUrl.pathname.startsWith("/dashboard") && user.error) {
+  if (protectedRoutes.includes(request.nextUrl.pathname) && authError) {
     return NextResponse.redirect(new URL("/sign-in", request.url));
   }
 
