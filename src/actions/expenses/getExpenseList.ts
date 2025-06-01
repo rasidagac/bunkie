@@ -3,20 +3,9 @@
 import { format } from "date-fns";
 import { cache } from "react";
 
-import { createClient } from "@/utils/supabase/server";
+import type { ExpensesWithProfiles } from "@/types/expenses";
 
-type ExpensesWithProfiles = {
-  id: string;
-  created_at: string;
-  title: string;
-  amount: number;
-  image_url: string | null;
-  currency: string;
-  user_id: string;
-  profiles: {
-    full_name: string | null;
-  };
-};
+import { createClient } from "@/utils/supabase/server";
 
 export const getExpenseList = cache(
   async ({ groupId, limit }: { groupId: string; limit?: number }) => {
@@ -27,36 +16,20 @@ export const getExpenseList = cache(
 
     const query = supabase
       .from("expenses")
-      .select(
-        `
-    id,
-    created_at,
-    title,
-    amount,
-    image_url,
-    currency,
-    user_id,
-    profiles (
-      full_name
-    )
-  `,
-      )
+      .select("*, profile:profiles( full_name )")
       .eq("group_id", groupId);
 
     if (limit) {
       query.limit(limit);
     }
 
-    const { data: expensesWithProfiles, error } = await query;
+    const { data: expensesWithProfiles } = await query.throwOnError();
 
-    const { data: groupUsers, error: groupUsersError } = await supabase
+    const { data: groupUsers } = await supabase
       .from("memberships")
       .select("user_id")
-      .eq("group_id", groupId);
-
-    if (error || groupUsersError) {
-      console.error(error || groupUsersError);
-    }
+      .eq("group_id", groupId)
+      .throwOnError();
 
     const userCount = groupUsers ? groupUsers.length : 1;
 
@@ -66,16 +39,16 @@ export const getExpenseList = cache(
       user?.id as string,
     );
 
-    return { data, error: error || groupUsersError };
+    return { data };
   },
 );
 
 function formattedExpenses(
-  data: ExpensesWithProfiles[] | null,
+  data: ExpensesWithProfiles[],
   userCount: number,
   userId: string,
 ) {
-  return data?.map((expense) => {
+  return data.map((expense) => {
     const pricePerUser = expense.amount / userCount;
 
     const debtAmount = pricePerUser.toLocaleString("tr-TR", {
@@ -92,7 +65,7 @@ function formattedExpenses(
       id: expense.id,
       created_at: format(expense.created_at, "MMM \n dd"),
       title: expense.title,
-      full_name: expense.profiles.full_name,
+      full_name: expense.profile.full_name,
       image_url: expense.image_url,
       amount: expense.amount.toLocaleString("tr-TR", {
         style: "currency",

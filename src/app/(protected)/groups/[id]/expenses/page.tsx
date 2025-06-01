@@ -23,7 +23,7 @@ export default async function ExpensesPage({
     groupId: group.id,
   });
 
-  if (!formattedExpenses?.length) {
+  if (formattedExpenses.length === 0) {
     return <div>No expenses yet</div>;
   }
 
