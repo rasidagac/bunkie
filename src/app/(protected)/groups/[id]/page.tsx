@@ -30,7 +30,7 @@ export default async function SingleGroupPage({
     limit: 10,
   });
 
-  if (!formattedExpenses?.length) {
+  if (formattedExpenses.length === 0) {
     return <NoExpense currentGroup={currentGroup} />;
   }
 
