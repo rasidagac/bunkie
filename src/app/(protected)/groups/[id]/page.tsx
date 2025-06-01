@@ -25,12 +25,12 @@ export default async function SingleGroupPage({
     notFound();
   }
 
-  const { data: formattedExpenses, error } = await getExpenseList({
+  const { data: formattedExpenses } = await getExpenseList({
     groupId,
     limit: 10,
   });
 
-  if (error || !formattedExpenses || formattedExpenses.length === 0) {
+  if (formattedExpenses.length === 0) {
     return <NoExpense currentGroup={currentGroup} />;
   }
 

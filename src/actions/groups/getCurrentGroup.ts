@@ -2,6 +2,7 @@
 
 import { cookies } from "next/headers";
 import { cache } from "react";
+import { validate } from "uuid";
 
 import { createClient } from "@/utils/supabase/server";
 
@@ -11,7 +12,7 @@ export const getCurrentGroup = cache(async () => {
 
   const supabase = await createClient();
 
-  if (currentGroup) {
+  if (currentGroup && validate(currentGroup.value)) {
     const { data: group } = await supabase
       .from("groups")
       .select("*")
