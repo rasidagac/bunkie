@@ -31,7 +31,7 @@ export default async function SingleGroupPage({
   });
 
   if (formattedExpenses.length === 0) {
-    return <NoExpense currentGroup={currentGroup} />;
+    return <NoExpense groupId={groupId} />;
   }
 
   return (
