@@ -12,10 +12,10 @@ import {
 } from "@ui/form";
 import { Input } from "@ui/input";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 import FormSubmitButton from "@/components/common/form-submit-button";
 import { FileInput } from "@/components/ui/file-input";
-import { toast } from "@/hooks/use-toast";
 import { formSchema } from "@/schema/expense";
 import { ExpenseCreateFormValues } from "@/types/expenses";
 
@@ -43,10 +43,10 @@ export default function CreateExpenseForm({
     try {
       await createExpense(groupId, userId, values);
       form.reset();
-      toast({ title: "Expense created successfully" });
+      toast.success("Expense created successfully");
     } catch (error) {
       console.error(error);
-      toast({ title: "Failed to create expense" });
+      toast.error("Failed to create expense");
     }
   }
 

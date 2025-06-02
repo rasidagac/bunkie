@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 
 import "./globals.css";
 
-import { Toaster } from "@ui/toaster";
+import { Toaster } from "@ui/sonner";
 import { Geist, Geist_Mono } from "next/font/google";
 
 import { ThemeProvider } from "@/components/providers/theme-provider";
@@ -37,7 +37,7 @@ export default function RootLayout({
       <body className="grid min-h-screen grid-rows-[auto_1fr] antialiased">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           {children}
-          <Toaster />
+          <Toaster richColors position="top-center" />
         </ThemeProvider>
       </body>
     </html>
