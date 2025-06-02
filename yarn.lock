@@ -2631,7 +2631,7 @@ __metadata:
     uuid: "npm:^11.1.0"
     vaul: "npm:^1.1.2"
     ws: "npm:^8.18.2"
-    zod: "npm:^3.25.3"
+    zod: "npm:^3.25.0"
   languageName: unknown
   linkType: soft
 
@@ -6587,9 +6587,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"zod@npm:^3.25.3":
-  version: 3.25.3
-  resolution: "zod@npm:3.25.3"
-  checksum: 10c0/744bc6d8f1500fbda2ddc713540fea7db2354c585d256eed9064f11d89976c184e7472a999a6713d2ae8e148d9bc9f23aae0403c5eb57e45c8563cbd036aaa9d
+"zod@npm:^3.25.0":
+  version: 3.25.47
+  resolution: "zod@npm:3.25.47"
+  checksum: 10c0/932fd9dc37f0af65b9ce6c514904e1dea92fb7e7e0b75ddba393f7245cf73aa30c03c4ec9d2d7b35f2d825b49b3ceb96ba6e47401d801d90d5c989de27e94f7a
   languageName: node
   linkType: hard
