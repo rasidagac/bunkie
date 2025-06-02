@@ -23,8 +23,8 @@ import { cn } from "@/lib/utils";
 
 interface FileInputProps
   extends Omit<ComponentProps<"input">, "value" | "onChange"> {
-  value?: FileWithPreview[];
-  onChange?: (files: FileWithPreview[]) => void;
+  value?: File[];
+  onChange?: (files: File[]) => void;
   accept?: string;
   multiple?: boolean;
   maxSize?: number; // in bytes
@@ -32,11 +32,6 @@ interface FileInputProps
   className?: string;
   disabled?: boolean;
   placeholder?: string;
-}
-
-interface FileWithPreview extends File {
-  preview?: string;
-  id: string;
 }
 
 const formatFileSize = (bytes: number): string => {
@@ -57,13 +52,7 @@ const getFileIcon = (type: string) => {
   return File;
 };
 
-function FilePreview({
-  file,
-  onRemove,
-}: {
-  file: FileWithPreview;
-  onRemove: () => void;
-}) {
+function FilePreview({ file, onRemove }: { file: File; onRemove: () => void }) {
   const [previewUrl, setPreviewUrl] = useState<string>("");
   const IconComponent = getFileIcon(file.type);
 
@@ -136,7 +125,7 @@ export function FileInput({
   placeholder = "Choose files or drag and drop",
   ...props
 }: FileInputProps) {
-  const [internalFiles, setInternalFiles] = useState<FileWithPreview[]>([]);
+  const [internalFiles, setInternalFiles] = useState<File[]>([]);
   const [dragActive, setDragActive] = useState(false);
   const [error, setError] = useState<string>("");
   const [isProcessing, setIsProcessing] = useState(false);
@@ -173,7 +162,7 @@ export function FileInput({
 
   const processFiles = (fileList: FileList) => {
     setError("");
-    const newFiles: FileWithPreview[] = [];
+    const newFiles: File[] = [];
     const errors: string[] = [];
 
     Array.from(fileList).forEach((file) => {
@@ -193,11 +182,7 @@ export function FileInput({
         return;
       }
 
-      const fileWithPreview: FileWithPreview = Object.assign(file, {
-        id: Math.random().toString(36).substring(7),
-      });
-
-      newFiles.push(fileWithPreview);
+      newFiles.push(file);
     });
 
     if (errors.length > 0) {
@@ -347,7 +332,7 @@ export function FileInput({
           </p>
           {files.map((file, index) => (
             <FilePreview
-              key={file.id}
+              key={`${file.name}-${file.size}-${file.lastModified}`}
               file={file}
               onRemove={() => removeFile(index)}
             />
