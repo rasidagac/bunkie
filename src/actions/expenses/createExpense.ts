@@ -3,20 +3,20 @@
 import uploadFile from "@actions/upload/uploadFile";
 import { revalidatePath } from "next/cache";
 
-import type { TablesInsert } from "@/types/supabase";
+import type { ExpenseCreateFormValues } from "@/types/expenses";
 
 import { createClient } from "@/utils/supabase/server";
 
 export default async function createExpense(
   groupId: string,
   userId: string,
-  values: TablesInsert<"expenses"> & { image: File[] },
+  values: ExpenseCreateFormValues,
 ) {
   const { title, amount, currency, image, split_type } = values;
   let image_url = null;
   const supabase = await createClient();
 
-  if (image?.length) {
+  if (image) {
     try {
       const blob = await uploadFile(image[0], `${groupId}/${image[0].name}`);
       image_url = blob.downloadUrl;
