@@ -1,6 +1,8 @@
 "use client";
 
-import { Button, ButtonProps } from "@ui/button";
+import type { ButtonProps } from "@ui/button";
+
+import { Button } from "@ui/button";
 import { Check, Copy, Loader2 } from "lucide-react";
 import { useState } from "react";
 
