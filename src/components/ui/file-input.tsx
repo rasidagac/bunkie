@@ -182,11 +182,7 @@ export function FileInput({
         return;
       }
 
-      const fileWithPreview: File = Object.assign(file, {
-        id: Math.random().toString(36).substring(7),
-      });
-
-      newFiles.push(fileWithPreview);
+      newFiles.push(file);
     });
 
     if (errors.length > 0) {
@@ -336,7 +332,7 @@ export function FileInput({
           </p>
           {files.map((file, index) => (
             <FilePreview
-              key={`${file.name}-${index}`}
+              key={`${file.name}-${file.size}-${file.lastModified}`}
               file={file}
               onRemove={() => removeFile(index)}
             />
