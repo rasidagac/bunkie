@@ -16,7 +16,7 @@ export default async function createExpense(
   let image_url = null;
   const supabase = await createClient();
 
-  if (image) {
+  if (image && image.length > 0) {
     try {
       const blob = await uploadFile(image[0], `${groupId}/${image[0].name}`);
       image_url = blob.downloadUrl;
