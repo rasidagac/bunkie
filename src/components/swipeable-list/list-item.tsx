@@ -3,7 +3,7 @@
 import type { ReactNode, TouchEvent, MouseEvent } from "react";
 
 import { Edit3, Trash2 } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 type Item = {
   id: string;
@@ -30,7 +30,6 @@ export function ListItem<T extends Item>({
   const [startX, setStartX] = useState(0);
   const [currentX, setCurrentX] = useState(0);
   const [translateX, setTranslateX] = useState(0);
-  const itemRef = useRef<HTMLDivElement>(null);
 
   const SWIPE_THRESHOLD = 80;
   const MAX_SWIPE = 120;
@@ -121,7 +120,6 @@ export function ListItem<T extends Item>({
 
       {/* Main content */}
       <div
-        ref={itemRef}
         className={`bg-background relative cursor-pointer p-1 select-none ${
           isDragging
             ? "transition-none"

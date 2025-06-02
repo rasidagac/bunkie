@@ -11,5 +11,5 @@ export async function deleteExpense(id: string) {
     throw new Error(error.message);
   }
 
-  revalidatePath("/group/[id]");
+  revalidatePath("/groups/[id]", "page");
 }
