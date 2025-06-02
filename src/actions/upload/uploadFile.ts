@@ -16,5 +16,6 @@ type PutBody =
 export default async function uploadFile(file: PutBody, pathname: string) {
   return await put(pathname, file, {
     access: "public",
+    allowOverwrite: true,
   });
 }
