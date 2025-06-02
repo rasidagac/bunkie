@@ -16,9 +16,7 @@ export default async function CreateExpenseBreadcrumb() {
       <BreadcrumbSeparator />
       <BreadcrumbItem>
         <BreadcrumbLink asChild>
-          <Link href={`/dashboard/groups/${currentGroup?.id}`}>
-            {currentGroup?.name}
-          </Link>
+          <Link href={`/groups/${currentGroup?.id}`}>{currentGroup?.name}</Link>
         </BreadcrumbLink>
       </BreadcrumbItem>
       <BreadcrumbSeparator />
