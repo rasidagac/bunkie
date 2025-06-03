@@ -90,7 +90,7 @@ export function useAuth(): UseAuthReturn {
       const { error } = await auth.signInWithOAuth({
         provider,
         options: {
-          redirectTo: `${redirectURL}/auth/callback`,
+          redirectTo: `${redirectURL}auth/callback`,
         },
       });
 
