@@ -37,26 +37,23 @@ export function SignUpForm() {
   async function onValid(values: SignUpFormValues) {
     const supabase = createClient();
 
-    await new Promise(async (resolve, reject) => {
+    try {
       const { error, data } = await supabase.auth.signUp({
         email: values.email,
         password: values.password,
       });
 
       if (error) {
-        toast.error(error instanceof Error ? error.message : "Sign up failed");
-        reject(error);
+        throw error;
       }
 
       if (data.user) {
-        toast.success("Signed up successfully", {
-          onAutoClose: () => {
-            resolve(true);
-          },
-        });
+        toast.success("Signed up successfully");
         router.replace("/dashboard");
       }
-    });
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Sign up failed");
+    }
   }
 
   return (
