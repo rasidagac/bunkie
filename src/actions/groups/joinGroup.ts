@@ -1,7 +1,6 @@
 "use server";
 import { redirect } from "next/navigation";
 
-import { currentUser } from "@/lib/supabase";
 import { createClient } from "@/utils/supabase/server";
 
 export async function joinGroup(
@@ -20,7 +19,9 @@ export async function joinGroup(
     return { error: "House not found" };
   }
 
-  const { user } = await currentUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   if (!user) {
     return { error: "User not found" };
