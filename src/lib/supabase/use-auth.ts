@@ -7,6 +7,10 @@ import { useCallback, useEffect, useState } from "react";
 
 import { createClient } from "@/utils/supabase/client";
 
+import { getRedirectURL } from "./get-redirect-url";
+
+const redirectURL = getRedirectURL();
+
 interface UseAuthReturn {
   user: User | null;
   isLoading: boolean;
@@ -86,7 +90,7 @@ export function useAuth(): UseAuthReturn {
       const { error } = await auth.signInWithOAuth({
         provider,
         options: {
-          redirectTo: `${window.location.origin}/auth/callback`,
+          redirectTo: `${redirectURL}auth/callback`,
         },
       });
 
