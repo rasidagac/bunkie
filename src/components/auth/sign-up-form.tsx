@@ -46,11 +46,16 @@ export function SignUpForm() {
       if (error) {
         throw error;
       }
-
-      if (data.user) {
-        toast.success("Signed up successfully");
-        router.replace("/dashboard");
-      }
+      await new Promise((resolve) => {
+        if (data.user) {
+          toast.success("Signed up successfully", {
+            onAutoClose: () => {
+              resolve(true);
+            },
+          });
+          router.replace("/dashboard");
+        }
+      });
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Sign up failed");
     }
