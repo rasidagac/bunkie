@@ -14,9 +14,7 @@ export const updateSession = async (request: NextRequest) => {
   }
 
   let response = NextResponse.next({
-    request: {
-      headers: request.headers,
-    },
+    request,
   });
 
   const supabase = createServerClient(supabaseUrl, supabaseAnonKey, {
@@ -38,15 +36,19 @@ export const updateSession = async (request: NextRequest) => {
     },
   });
 
-  const { error: authError } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   const isProtectedRoute = protectedRoutes.some((route) =>
     request.nextUrl.pathname.startsWith(route),
   );
 
   // protected routes
-  if (isProtectedRoute && authError) {
-    return NextResponse.redirect(new URL("/sign-in", request.url));
+  if (isProtectedRoute && !user) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/sign-in";
+    return NextResponse.redirect(url);
   }
 
   return response;
