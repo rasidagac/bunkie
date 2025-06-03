@@ -28,7 +28,7 @@ export default function AuthErrorPage() {
             <li>The authentication session expired</li>
           </ul>
           <Button asChild>
-            <Link href="/sign-in">Try Again</Link>
+            <Link href="/auth/login">Try Again</Link>
           </Button>
         </CardContent>
       </Card>

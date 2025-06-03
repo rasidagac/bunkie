@@ -47,7 +47,7 @@ export const updateSession = async (request: NextRequest) => {
   // protected routes
   if (isProtectedRoute && !user) {
     const url = request.nextUrl.clone();
-    url.pathname = "/sign-in";
+    url.pathname = "/auth/login";
     return NextResponse.redirect(url);
   }
 

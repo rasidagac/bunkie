@@ -15,7 +15,6 @@ import { Eye } from "lucide-react";
 
 import type { Tables } from "@/types/supabase";
 
-import { currentUser } from "@/lib/supabase/current-user";
 import { createClient } from "@/utils/supabase/server";
 
 interface LiabilitiesDrawerProps {
@@ -23,9 +22,11 @@ interface LiabilitiesDrawerProps {
 }
 
 export async function LiabilitiesDrawer({ groupId }: LiabilitiesDrawerProps) {
-  const { user } = await currentUser();
-
   const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
   const user_balances = await supabase
     .from("user_balances")
     .select(

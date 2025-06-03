@@ -22,7 +22,6 @@ interface ExpensesTableProps {
 
 export function ExpensesTable({ data }: ExpensesTableProps) {
   const handleEdit = async (item: ExpenseWithProfile) => {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
     console.log("Edit item:", item);
   };
 

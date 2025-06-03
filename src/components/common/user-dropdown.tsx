@@ -7,33 +7,28 @@ import {
   DropdownMenuTrigger,
 } from "@ui/dropdown-menu";
 
-import { currentUser } from "@/lib/supabase";
+import { getCurrentUser } from "@/actions/auth/getCurrentUser";
 
 import UserDropdownContent from "./user-dropdown-content";
 export default async function UserDropdown() {
-  const { user, error } = await currentUser();
+  const { user_metadata, email: userEmail } = await getCurrentUser();
 
-  if (error) {
-    return null;
-  }
-
-  const email = user?.email || "";
-  const userMetadata = user?.user_metadata || {};
-
-  // Extract first letter of email for fallback
-  const fallbackInitial = email?.[0] || "U";
-
-  // Get display name (username from email or full name if available)
-  const displayName = userMetadata?.full_name || email?.split("@")[0] || "";
+  const { avatarSrc, avatarAlt, avatarFallback, email, displayName } = {
+    avatarSrc: user_metadata.avatar_url,
+    avatarAlt: user_metadata.full_name || userEmail?.split("@")[0] || "",
+    avatarFallback: userEmail ? userEmail[0] : "U",
+    email: userEmail,
+    displayName: user_metadata.full_name || userEmail?.split("@")[0] || "",
+  };
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <button className="hover:bg-muted flex items-center gap-2 rounded-md transition-colors focus:outline-hidden">
           <Avatar className="border-border h-8 w-8 border">
-            <AvatarImage src={userMetadata.avatar_url} alt={email} />
+            <AvatarImage src={avatarSrc} alt={avatarAlt} />
             <AvatarFallback className="text-xs">
-              {fallbackInitial.toUpperCase()}
+              {avatarFallback.toUpperCase()}
             </AvatarFallback>
           </Avatar>
         </button>
