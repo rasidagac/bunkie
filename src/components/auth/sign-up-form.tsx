@@ -55,6 +55,7 @@ export function SignUpForm() {
           });
           router.replace("/dashboard");
         }
+        resolve(false);
       });
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Sign up failed");
