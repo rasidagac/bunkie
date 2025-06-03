@@ -4,18 +4,21 @@ import { Button } from "@ui/button";
 import Link from "next/link";
 
 import ThemeToggle from "@/components/common/theme-toggle";
-import { currentUser } from "@/lib/supabase";
+import { createClient } from "@/utils/supabase/server";
 
 export default async function PublicLayout({
   children,
 }: {
   children: ReactNode;
 }) {
-  const { user } = await currentUser();
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   const headerButton = {
-    label: user ? "Dashboard" : "Sign in",
-    href: user ? "/dashboard" : "/sign-in",
+    label: user ? "Dashboard" : "Login",
+    href: user ? "/dashboard" : "/auth/login",
   };
 
   return (

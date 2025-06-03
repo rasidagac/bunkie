@@ -13,12 +13,13 @@ import Link from "next/link";
 
 import { GroupCards } from "@/components/features/group/group-cards";
 import JoinHouseForm from "@/components/features/group/join-house-form";
-import { currentUser } from "@/lib/supabase";
 import { createClient } from "@/utils/supabase/server";
 
 export default async function DashboardPage() {
-  const { user } = await currentUser();
   const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   const { data: groups } = await supabase
     .from("memberships")
