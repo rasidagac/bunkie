@@ -44,10 +44,12 @@ export const updateSession = async (request: NextRequest) => {
     request.nextUrl.pathname.startsWith(route),
   );
 
+  console.log("Middleware user:", user);
+
   // protected routes
   if (isProtectedRoute && !user) {
     const url = request.nextUrl.clone();
-    url.pathname = "/sign-in";
+    url.pathname = "/auth/login";
     return NextResponse.redirect(url);
   }
 

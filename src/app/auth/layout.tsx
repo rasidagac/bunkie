@@ -17,7 +17,7 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
         </Link>
         <ThemeToggle />
       </header>
-      <main className="flex grow flex-col items-center justify-center">
+      <main className="flex flex-col items-center justify-center p-2">
         {children}
       </main>
     </>

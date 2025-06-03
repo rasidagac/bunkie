@@ -7,15 +7,14 @@ import {
   DropdownMenuTrigger,
 } from "@ui/dropdown-menu";
 
-import { currentUser } from "@/lib/supabase";
+import { createClient } from "@/utils/supabase/server";
 
 import UserDropdownContent from "./user-dropdown-content";
 export default async function UserDropdown() {
-  const { user, error } = await currentUser();
-
-  if (error) {
-    return null;
-  }
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   const email = user?.email || "";
   const userMetadata = user?.user_metadata || {};

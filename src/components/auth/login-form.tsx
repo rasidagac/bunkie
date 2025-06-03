@@ -1,7 +1,6 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Alert, AlertDescription } from "@ui/alert";
 import { Button } from "@ui/button";
 import {
   Form,
@@ -11,68 +10,75 @@ import {
   FormLabel,
   FormMessage,
 } from "@ui/form";
+import { Github } from "@ui/icons";
 import { Input } from "@ui/input";
 import { Loader2 } from "lucide-react";
-import { useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import * as z from "zod";
+import { toast } from "sonner";
 
-import { useAuth } from "@/lib/supabase/use-auth";
+import type { SignInFormValues } from "@/types/auth";
 
-import { OAuthButtons } from "./oauth-buttons";
+import { signInSchema } from "@/schema/auth";
+import { createClient } from "@/utils/supabase/client";
 
-const formSchema = z.object({
-  email: z.string().email("Invalid email address"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
-});
-
-type FormValues = z.infer<typeof formSchema>;
+import { OAuthButton } from "./oauth-buttons";
 
 export function SignInForm() {
-  const { signIn } = useAuth();
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
-  const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<SignInFormValues>({
+    resolver: zodResolver(signInSchema),
     defaultValues: {
       email: "",
       password: "",
     },
   });
 
-  async function onSubmit(values: FormValues) {
+  async function onValid(values: SignInFormValues) {
+    const supabase = createClient();
+
     try {
-      setIsLoading(true);
-      setError(null);
-      await signIn(values.email, values.password);
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: values.email,
+        password: values.password,
+      });
+
+      if (error) throw error;
+
+      if (data.user) {
+        toast.success("Signed in successfully", {
+          onAutoClose: () => router.replace("/dashboard"),
+        });
+      }
     } catch (error) {
-      setError(error instanceof Error ? error.message : "An error occurred");
-    } finally {
-      setIsLoading(false);
+      toast.error(error instanceof Error ? error.message : "Sign in failed");
+      form.reset();
     }
   }
 
   return (
-    <div className="grid gap-6">
-      <OAuthButtons />
+    <div className="space-y-4">
+      <OAuthButton
+        provider="github"
+        label="GitHub"
+        className="w-full"
+        variant="outline"
+        icon={<Github className="fill-foreground size-4" />}
+      />
       <div className="relative">
         <div className="absolute inset-0 flex items-center">
           <span className="w-full border-t" />
         </div>
-        <div className="relative flex justify-center text-xs uppercase">
+        <div className="relative flex justify-center text-sm">
           <span className="bg-background text-muted-foreground px-2">
             Or continue with
           </span>
         </div>
       </div>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          {error && (
-            <Alert variant="destructive">
-              <AlertDescription>{error}</AlertDescription>
-            </Alert>
-          )}
+        <form onSubmit={form.handleSubmit(onValid)} className="space-y-4">
           <FormField
             control={form.control}
             name="email"
@@ -80,11 +86,7 @@ export function SignInForm() {
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder="Enter your email"
-                    type="email"
-                    {...field}
-                  />
+                  <Input autoComplete="email" type="email" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -98,8 +100,8 @@ export function SignInForm() {
                 <FormLabel>Password</FormLabel>
                 <FormControl>
                   <Input
-                    placeholder="Enter your password"
                     type="password"
+                    autoComplete="current-password"
                     {...field}
                   />
                 </FormControl>
@@ -107,8 +109,12 @@ export function SignInForm() {
               </FormItem>
             )}
           />
-          <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? (
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={form.formState.isSubmitting}
+          >
+            {form.formState.isSubmitting ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 Signing in...
@@ -119,6 +125,12 @@ export function SignInForm() {
           </Button>
         </form>
       </Form>
+      <div className="text-center text-sm">
+        Don&apos;t have an account?{" "}
+        <Link href="/auth/sign-up" className="underline underline-offset-4">
+          Sign up
+        </Link>
+      </div>
     </div>
   );
 }

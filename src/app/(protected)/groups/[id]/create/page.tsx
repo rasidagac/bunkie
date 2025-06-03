@@ -1,9 +1,8 @@
 import { Separator } from "@ui/separator";
-import { redirect } from "next/navigation";
 
 import CreateExpenseBreadcrumb from "@/components/features/expense/create-expense-breadcrumb";
 import CreateExpenseForm from "@/components/features/expense/create-expense-form";
-import { currentUser } from "@/lib/supabase";
+import { createClient } from "@/utils/supabase/server";
 
 export default async function CreateExpensePage({
   params,
@@ -11,12 +10,10 @@ export default async function CreateExpensePage({
   params: Promise<{ id: string }>;
 }) {
   const { id: groupId } = await params;
-
-  const { user, error } = await currentUser();
-
-  if (error) {
-    redirect("/login");
-  }
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   return (
     <>
