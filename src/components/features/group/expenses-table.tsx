@@ -31,23 +31,24 @@ export function ExpensesTable({ data }: ExpensesTableProps) {
 
   const renderItem = useCallback((expense: ExpenseWithProfile) => {
     return (
-      <div className="grid grid-cols-[auto_auto_1fr_auto] items-center gap-2 gap-x-2 text-xs">
+      <div className="grid grid-cols-10 grid-rows-1 items-center gap-2 text-xs">
         <div className="w-min text-center">{expense.created_at}</div>
-        <div className="bg-gray-200 p-1">
+        <div className="relative aspect-square bg-gray-200">
           <Image
-            src={expense.image_url || "/window.svg"}
-            width={25}
-            height={25}
+            src={expense.image_url || "/receipt-text.svg"}
+            fill
+            objectFit="cover"
+            className="p-0.5"
             alt={expense.title}
           />
         </div>
-        <div className="flex flex-col">
-          <div className="text-base font-bold">{expense.title}</div>
-          <div className="text-gray-500">{`${expense.full_name} paid ${expense.amount}`}</div>
+        <div className="col-span-6 flex flex-col">
+          <div className="truncate font-semibold">{expense.title}</div>
+          <div className="text-muted-foreground truncate">{`${expense.full_name} paid ${expense.amount}`}</div>
         </div>
-        <div className="text-right">
+        <div className="col-span-2 col-start-9 text-right">
           <div>{expense.debt.text}</div>
-          <div>{expense.debt.amount}</div>
+          <div className="truncate">{expense.debt.amount}</div>
         </div>
       </div>
     );
