@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useCallback } from "react";
 
 import { deleteExpense } from "@/actions/expenses/deleteExpense";
 import { SwipeableList } from "@/components/swipeable-list";
@@ -28,7 +29,7 @@ export function ExpensesTable({ data }: ExpensesTableProps) {
     await deleteExpense(id);
   };
 
-  const renderItem = (expense: ExpenseWithProfile) => {
+  const renderItem = useCallback((expense: ExpenseWithProfile) => {
     return (
       <div className="grid grid-cols-10 grid-rows-1 items-center gap-2 text-xs">
         <div className="w-min text-center">{expense.created_at}</div>
@@ -51,7 +52,7 @@ export function ExpensesTable({ data }: ExpensesTableProps) {
         </div>
       </div>
     );
-  };
+  }, []);
 
   return (
     <SwipeableList
