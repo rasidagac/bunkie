@@ -35,7 +35,7 @@ export default async function SingleGroupPage({
   }
 
   return (
-    <div>
+    <>
       <GroupBreadcrumb />
       <div className="flex flex-col gap-6">
         <GroupHeader
@@ -57,6 +57,6 @@ export default async function SingleGroupPage({
           <ExpensesTable data={formattedExpenses} />
         </div>
       </div>
-    </div>
+    </>
   );
 }
