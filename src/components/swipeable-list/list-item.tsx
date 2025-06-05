@@ -1,6 +1,6 @@
 "use client";
 
-import type { ReactNode, TouchEvent, MouseEvent } from "react";
+import type { MouseEvent, ReactNode, TouchEvent } from "react";
 
 import { Edit3, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -10,21 +10,21 @@ type Item = {
 };
 
 interface ListItemProps<T extends Item> {
-  item: T;
-  isActive: boolean;
-  onSwipe: (id: string) => void;
-  onEdit: (item: T) => void;
-  onDelete: (id: string) => void;
   children: ReactNode;
+  isActive: boolean;
+  item: T;
+  onDelete: (id: string) => void;
+  onEdit: (item: T) => void;
+  onSwipe: (id: string) => void;
 }
 
 export function ListItem<T extends Item>({
-  item,
-  isActive,
-  onSwipe,
-  onEdit,
-  onDelete,
   children,
+  isActive,
+  item,
+  onDelete,
+  onEdit,
+  onSwipe,
 }: ListItemProps<T>) {
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
@@ -103,16 +103,16 @@ export function ListItem<T extends Item>({
       {/* Action buttons background */}
       <div className="absolute top-0 right-0 flex h-full">
         <button
-          onClick={() => onEdit(item)}
-          className="flex w-16 items-center justify-center bg-blue-500 text-white transition-colors hover:bg-blue-600"
           aria-label="Edit item"
+          className="flex w-16 items-center justify-center bg-blue-500 text-white transition-colors hover:bg-blue-600"
+          onClick={() => onEdit(item)}
         >
           <Edit3 className="h-5 w-5" />
         </button>
         <button
-          onClick={() => onDelete(item.id)}
-          className="flex w-16 items-center justify-center bg-red-500 text-white transition-colors hover:bg-red-600"
           aria-label="Delete item"
+          className="flex w-16 items-center justify-center bg-red-500 text-white transition-colors hover:bg-red-600"
+          onClick={() => onDelete(item.id)}
         >
           <Trash2 className="h-5 w-5" />
         </button>
@@ -125,16 +125,16 @@ export function ListItem<T extends Item>({
             ? "transition-none"
             : "transition-transform duration-300 ease-out"
         }`}
+        onMouseDown={handleMouseDown}
+        onMouseLeave={handleMouseUp}
+        onMouseMove={isDragging ? handleMouseMove : undefined}
+        onMouseUp={handleMouseUp}
+        onTouchEnd={handleTouchEnd}
+        onTouchMove={handleTouchMove}
+        onTouchStart={handleTouchStart}
         style={{
           transform: `translateX(-${translateX}px)`,
         }}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
-        onMouseDown={handleMouseDown}
-        onMouseMove={isDragging ? handleMouseMove : undefined}
-        onMouseUp={handleMouseUp}
-        onMouseLeave={handleMouseUp}
       >
         {children}
       </div>

@@ -29,11 +29,11 @@ export function SignInForm() {
   const router = useRouter();
 
   const form = useForm<SignInFormValues>({
-    resolver: zodResolver(signInSchema),
     defaultValues: {
       email: "",
       password: "",
     },
+    resolver: zodResolver(signInSchema),
   });
 
   async function onValid(values: SignInFormValues) {
@@ -61,11 +61,11 @@ export function SignInForm() {
   return (
     <div className="space-y-4">
       <OAuthButton
-        provider="github"
-        label="GitHub"
         className="w-full"
-        variant="outline"
         icon={<Github className="fill-foreground size-4" />}
+        label="GitHub"
+        provider="github"
+        variant="outline"
       />
       <div className="relative">
         <div className="absolute inset-0 flex items-center">
@@ -78,7 +78,7 @@ export function SignInForm() {
         </div>
       </div>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onValid)} className="space-y-4">
+        <form className="space-y-4" onSubmit={form.handleSubmit(onValid)}>
           <FormField
             control={form.control}
             name="email"
@@ -100,8 +100,8 @@ export function SignInForm() {
                 <FormLabel>Password</FormLabel>
                 <FormControl>
                   <Input
-                    type="password"
                     autoComplete="current-password"
+                    type="password"
                     {...field}
                   />
                 </FormControl>
@@ -110,9 +110,9 @@ export function SignInForm() {
             )}
           />
           <Button
-            type="submit"
             className="w-full"
             disabled={form.formState.isSubmitting}
+            type="submit"
           >
             {form.formState.isSubmitting ? (
               <>
@@ -127,7 +127,7 @@ export function SignInForm() {
       </Form>
       <div className="text-center text-sm">
         Don&apos;t have an account?{" "}
-        <Link href="/auth/sign-up" className="underline underline-offset-4">
+        <Link className="underline underline-offset-4" href="/auth/sign-up">
           Sign up
         </Link>
       </div>

@@ -28,8 +28,8 @@ export async function joinGroup(
   }
 
   const { error: groupUserError } = await supabase.from("memberships").insert({
-    user_id: user.id,
     group_id: group.id,
+    user_id: user.id,
   });
 
   if (groupUserError) {

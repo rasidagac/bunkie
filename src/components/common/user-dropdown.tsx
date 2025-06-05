@@ -11,14 +11,14 @@ import { getCurrentUser } from "@/actions/auth/getCurrentUser";
 
 import UserDropdownContent from "./user-dropdown-content";
 export default async function UserDropdown() {
-  const { user_metadata, email: userEmail } = await getCurrentUser();
+  const { email: userEmail, user_metadata } = await getCurrentUser();
 
-  const { avatarSrc, avatarAlt, avatarFallback, email, displayName } = {
-    avatarSrc: user_metadata.avatar_url,
+  const { avatarAlt, avatarFallback, avatarSrc, displayName, email } = {
     avatarAlt: user_metadata.full_name || userEmail?.split("@")[0] || "",
     avatarFallback: userEmail ? userEmail[0] : "U",
-    email: userEmail,
+    avatarSrc: user_metadata.avatar_url,
     displayName: user_metadata.full_name || userEmail?.split("@")[0] || "",
+    email: userEmail,
   };
 
   return (
@@ -26,7 +26,7 @@ export default async function UserDropdown() {
       <DropdownMenuTrigger asChild>
         <button className="hover:bg-muted flex items-center gap-2 rounded-md transition-colors focus:outline-hidden">
           <Avatar className="border-border h-8 w-8 border">
-            <AvatarImage src={avatarSrc} alt={avatarAlt} />
+            <AvatarImage alt={avatarAlt} src={avatarSrc} />
             <AvatarFallback className="text-xs">
               {avatarFallback.toUpperCase()}
             </AvatarFallback>

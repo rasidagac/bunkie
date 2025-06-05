@@ -1,78 +1,111 @@
-export type Json =
-  | string
-  | number
-  | boolean
-  | null
-  | { [key: string]: Json | undefined }
-  | Json[];
+export type CompositeTypes<
+  PublicCompositeTypeNameOrOptions extends
+    | { schema: keyof Database }
+    | keyof DefaultSchema["CompositeTypes"],
+  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+    schema: keyof Database;
+  }
+    ? keyof Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    : never = never,
+> = PublicCompositeTypeNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
+    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+    : never;
 
 export type Database = {
   public: {
+    CompositeTypes: {
+      [_ in never]: never;
+    };
+    Enums: {
+      currency_enum: "EUR" | "TRY" | "USD";
+      split_type_enum: "custom" | "equal" | "percentage";
+    };
+    Functions: {
+      [_ in never]: never;
+    };
     Tables: {
       expense_splits: {
-        Row: {
-          amount: number;
-          expense_id: string;
-          id: string;
-          is_settled: boolean;
-          percentage: number | null;
-          user_id: string;
-        };
         Insert: {
           amount: number;
           expense_id?: string;
           id?: string;
           is_settled?: boolean;
-          percentage?: number | null;
+          percentage?: null | number;
           user_id?: string;
+        };
+        Relationships: [
+          {
+            columns: ["expense_id"];
+            foreignKeyName: "expense_splits_expense_id_fkey";
+            isOneToOne: false;
+            referencedColumns: ["id"];
+            referencedRelation: "expenses";
+          },
+          {
+            columns: ["user_id"];
+            foreignKeyName: "expense_splits_user_id_fkey";
+            isOneToOne: false;
+            referencedColumns: ["id"];
+            referencedRelation: "profiles";
+          },
+        ];
+        Row: {
+          amount: number;
+          expense_id: string;
+          id: string;
+          is_settled: boolean;
+          percentage: null | number;
+          user_id: string;
         };
         Update: {
           amount?: number;
           expense_id?: string;
           id?: string;
           is_settled?: boolean;
-          percentage?: number | null;
+          percentage?: null | number;
+          user_id?: string;
+        };
+      };
+      expenses: {
+        Insert: {
+          amount: number;
+          created_at?: string;
+          currency?: Database["public"]["Enums"]["currency_enum"];
+          group_id?: string;
+          id?: string;
+          image_url?: null | string;
+          split_type?: Database["public"]["Enums"]["split_type_enum"];
+          title: string;
           user_id?: string;
         };
         Relationships: [
           {
-            foreignKeyName: "expense_splits_expense_id_fkey";
-            columns: ["expense_id"];
+            columns: ["group_id"];
+            foreignKeyName: "expenses_group_id_fkey";
             isOneToOne: false;
-            referencedRelation: "expenses";
             referencedColumns: ["id"];
+            referencedRelation: "groups";
           },
           {
-            foreignKeyName: "expense_splits_user_id_fkey";
             columns: ["user_id"];
+            foreignKeyName: "expenses_user_id_fkey";
             isOneToOne: false;
-            referencedRelation: "profiles";
             referencedColumns: ["id"];
+            referencedRelation: "profiles";
           },
         ];
-      };
-      expenses: {
         Row: {
           amount: number;
           created_at: string;
           currency: Database["public"]["Enums"]["currency_enum"];
           group_id: string;
           id: string;
-          image_url: string | null;
+          image_url: null | string;
           split_type: Database["public"]["Enums"]["split_type_enum"];
           title: string;
           user_id: string;
-        };
-        Insert: {
-          amount: number;
-          created_at?: string;
-          currency?: Database["public"]["Enums"]["currency_enum"];
-          group_id?: string;
-          id?: string;
-          image_url?: string | null;
-          split_type?: Database["public"]["Enums"]["split_type_enum"];
-          title: string;
-          user_id?: string;
         };
         Update: {
           amount?: number;
@@ -80,39 +113,24 @@ export type Database = {
           currency?: Database["public"]["Enums"]["currency_enum"];
           group_id?: string;
           id?: string;
-          image_url?: string | null;
+          image_url?: null | string;
           split_type?: Database["public"]["Enums"]["split_type_enum"];
           title?: string;
           user_id?: string;
         };
-        Relationships: [
-          {
-            foreignKeyName: "expenses_group_id_fkey";
-            columns: ["group_id"];
-            isOneToOne: false;
-            referencedRelation: "groups";
-            referencedColumns: ["id"];
-          },
-          {
-            foreignKeyName: "expenses_user_id_fkey";
-            columns: ["user_id"];
-            isOneToOne: false;
-            referencedRelation: "profiles";
-            referencedColumns: ["id"];
-          },
-        ];
       };
       groups: {
-        Row: {
-          code: string;
-          created_at: string;
-          id: string;
-          name: string;
-        };
         Insert: {
           code?: string;
           created_at?: string;
           id?: string;
+          name: string;
+        };
+        Relationships: [];
+        Row: {
+          code: string;
+          created_at: string;
+          id: string;
           name: string;
         };
         Update: {
@@ -121,45 +139,76 @@ export type Database = {
           id?: string;
           name?: string;
         };
-        Relationships: [];
       };
       memberships: {
-        Row: {
-          created_at: string;
-          group_id: string | null;
-          id: string;
-          user_id: string | null;
-        };
         Insert: {
           created_at?: string;
-          group_id?: string | null;
+          group_id?: null | string;
           id?: string;
-          user_id?: string | null;
-        };
-        Update: {
-          created_at?: string;
-          group_id?: string | null;
-          id?: string;
-          user_id?: string | null;
+          user_id?: null | string;
         };
         Relationships: [
           {
-            foreignKeyName: "house_users_group_id_fkey";
             columns: ["group_id"];
+            foreignKeyName: "house_users_group_id_fkey";
             isOneToOne: false;
-            referencedRelation: "groups";
             referencedColumns: ["id"];
+            referencedRelation: "groups";
           },
           {
-            foreignKeyName: "house_users_user_id_fkey";
             columns: ["user_id"];
+            foreignKeyName: "house_users_user_id_fkey";
             isOneToOne: false;
-            referencedRelation: "profiles";
             referencedColumns: ["id"];
+            referencedRelation: "profiles";
           },
         ];
+        Row: {
+          created_at: string;
+          group_id: null | string;
+          id: string;
+          user_id: null | string;
+        };
+        Update: {
+          created_at?: string;
+          group_id?: null | string;
+          id?: string;
+          user_id?: null | string;
+        };
       };
       payments: {
+        Insert: {
+          amount: number;
+          created_at?: string;
+          currency?: string;
+          group_id?: string;
+          id?: string;
+          payer_id?: string;
+          receiver_id?: string;
+        };
+        Relationships: [
+          {
+            columns: ["group_id"];
+            foreignKeyName: "payments_group_id_fkey";
+            isOneToOne: false;
+            referencedColumns: ["id"];
+            referencedRelation: "groups";
+          },
+          {
+            columns: ["payer_id"];
+            foreignKeyName: "payments_payer_id_fkey";
+            isOneToOne: false;
+            referencedColumns: ["id"];
+            referencedRelation: "profiles";
+          },
+          {
+            columns: ["receiver_id"];
+            foreignKeyName: "payments_receiver_id_fkey";
+            isOneToOne: false;
+            referencedColumns: ["id"];
+            referencedRelation: "profiles";
+          },
+        ];
         Row: {
           amount: number;
           created_at: string;
@@ -169,15 +218,6 @@ export type Database = {
           payer_id: string;
           receiver_id: string;
         };
-        Insert: {
-          amount: number;
-          created_at?: string;
-          currency?: string;
-          group_id?: string;
-          id?: string;
-          payer_id?: string;
-          receiver_id?: string;
-        };
         Update: {
           amount?: number;
           created_at?: string;
@@ -187,125 +227,113 @@ export type Database = {
           payer_id?: string;
           receiver_id?: string;
         };
-        Relationships: [
-          {
-            foreignKeyName: "payments_group_id_fkey";
-            columns: ["group_id"];
-            isOneToOne: false;
-            referencedRelation: "groups";
-            referencedColumns: ["id"];
-          },
-          {
-            foreignKeyName: "payments_payer_id_fkey";
-            columns: ["payer_id"];
-            isOneToOne: false;
-            referencedRelation: "profiles";
-            referencedColumns: ["id"];
-          },
-          {
-            foreignKeyName: "payments_receiver_id_fkey";
-            columns: ["receiver_id"];
-            isOneToOne: false;
-            referencedRelation: "profiles";
-            referencedColumns: ["id"];
-          },
-        ];
       };
       profiles: {
-        Row: {
-          avatar_url: string | null;
-          created_at: string;
-          email: string | null;
-          full_name: string | null;
-          id: string;
-          is_active: boolean;
-          updated_at: string | null;
-          username: string | null;
-        };
         Insert: {
-          avatar_url?: string | null;
+          avatar_url?: null | string;
           created_at?: string;
-          email?: string | null;
-          full_name?: string | null;
+          email?: null | string;
+          full_name?: null | string;
           id: string;
           is_active?: boolean;
-          updated_at?: string | null;
-          username?: string | null;
-        };
-        Update: {
-          avatar_url?: string | null;
-          created_at?: string;
-          email?: string | null;
-          full_name?: string | null;
-          id?: string;
-          is_active?: boolean;
-          updated_at?: string | null;
-          username?: string | null;
+          updated_at?: null | string;
+          username?: null | string;
         };
         Relationships: [];
+        Row: {
+          avatar_url: null | string;
+          created_at: string;
+          email: null | string;
+          full_name: null | string;
+          id: string;
+          is_active: boolean;
+          updated_at: null | string;
+          username: null | string;
+        };
+        Update: {
+          avatar_url?: null | string;
+          created_at?: string;
+          email?: null | string;
+          full_name?: null | string;
+          id?: string;
+          is_active?: boolean;
+          updated_at?: null | string;
+          username?: null | string;
+        };
       };
     };
     Views: {
       group_balances: {
-        Row: {
-          balance: number | null;
-          group_id: string | null;
-          user_id: string | null;
-        };
         Relationships: [];
+        Row: {
+          balance: null | number;
+          group_id: null | string;
+          user_id: null | string;
+        };
       };
       user_balances: {
-        Row: {
-          amount: number | null;
-          creditor: string | null;
-          debtor: string | null;
-          group_id: string | null;
-          id: number | null;
-        };
         Relationships: [
           {
-            foreignKeyName: "expense_splits_user_id_fkey";
             columns: ["debtor"];
+            foreignKeyName: "expense_splits_user_id_fkey";
             isOneToOne: false;
-            referencedRelation: "profiles";
             referencedColumns: ["id"];
+            referencedRelation: "profiles";
           },
           {
-            foreignKeyName: "expenses_group_id_fkey";
             columns: ["group_id"];
+            foreignKeyName: "expenses_group_id_fkey";
             isOneToOne: false;
-            referencedRelation: "groups";
             referencedColumns: ["id"];
+            referencedRelation: "groups";
           },
           {
-            foreignKeyName: "expenses_user_id_fkey";
             columns: ["creditor"];
+            foreignKeyName: "expenses_user_id_fkey";
             isOneToOne: false;
-            referencedRelation: "profiles";
             referencedColumns: ["id"];
+            referencedRelation: "profiles";
           },
         ];
+        Row: {
+          amount: null | number;
+          creditor: null | string;
+          debtor: null | string;
+          group_id: null | string;
+          id: null | number;
+        };
       };
-    };
-    Functions: {
-      [_ in never]: never;
-    };
-    Enums: {
-      split_type_enum: "equal" | "custom" | "percentage";
-      currency_enum: "TRY" | "USD" | "EUR";
-    };
-    CompositeTypes: {
-      [_ in never]: never;
     };
   };
 };
 
-type DefaultSchema = Database[Extract<keyof Database, "public">];
+export type Enums<
+  DefaultSchemaEnumNameOrOptions extends
+    | { schema: keyof Database }
+    | keyof DefaultSchema["Enums"],
+  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+    schema: keyof Database;
+  }
+    ? keyof Database[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+    : never = never,
+> = DefaultSchemaEnumNameOrOptions extends { schema: keyof Database }
+  ? Database[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
+  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
+    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
+    : never;
+
+export type Json =
+  | { [key: string]: Json | undefined }
+  | boolean
+  | Json[]
+  | null
+  | number
+  | string;
 
 export type Tables<
   DefaultSchemaTableNameOrOptions extends
-    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
-    | { schema: keyof Database },
+    | { schema: keyof Database }
+    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"]),
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof Database;
   }
@@ -331,8 +359,8 @@ export type Tables<
 
 export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema["Tables"]
-    | { schema: keyof Database },
+    | { schema: keyof Database }
+    | keyof DefaultSchema["Tables"],
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof Database;
   }
@@ -354,8 +382,8 @@ export type TablesInsert<
 
 export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema["Tables"]
-    | { schema: keyof Database },
+    | { schema: keyof Database }
+    | keyof DefaultSchema["Tables"],
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof Database;
   }
@@ -375,41 +403,13 @@ export type TablesUpdate<
       : never
     : never;
 
-export type Enums<
-  DefaultSchemaEnumNameOrOptions extends
-    | keyof DefaultSchema["Enums"]
-    | { schema: keyof Database },
-  EnumName extends DefaultSchemaEnumNameOrOptions extends {
-    schema: keyof Database;
-  }
-    ? keyof Database[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
-    : never = never,
-> = DefaultSchemaEnumNameOrOptions extends { schema: keyof Database }
-  ? Database[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
-  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
-    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
-    : never;
-
-export type CompositeTypes<
-  PublicCompositeTypeNameOrOptions extends
-    | keyof DefaultSchema["CompositeTypes"]
-    | { schema: keyof Database },
-  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
-    schema: keyof Database;
-  }
-    ? keyof Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
-    : never = never,
-> = PublicCompositeTypeNameOrOptions extends { schema: keyof Database }
-  ? Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
-  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
-    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
-    : never;
+type DefaultSchema = Database[Extract<keyof Database, "public">];
 
 export const Constants = {
   public: {
     Enums: {
-      split_type_enum: ["equal", "custom", "percentage"],
       currency_enum: ["TRY", "USD", "EUR"],
+      split_type_enum: ["equal", "custom", "percentage"],
     },
   },
 } as const;

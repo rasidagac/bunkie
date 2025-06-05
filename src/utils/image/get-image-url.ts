@@ -11,7 +11,7 @@ import uploadFile from "@/actions/upload/uploadFile";
 export async function getImageUrl(
   image: ExpenseCreateFormValues["image"],
   groupId: string,
-): Promise<string | null> {
+): Promise<null | string> {
   if (!image || image.length === 0) return null;
 
   const firstImage = image[0];

@@ -19,10 +19,10 @@ export default function JoinHouseForm() {
       <div className="grid grid-cols-6 items-center gap-2">
         <Label htmlFor="code">Code</Label>
         <Input
+          className={state.error ? "col-span-5 border-red-600" : "col-span-5"}
           id="code"
           name="code"
           required
-          className={state.error ? "col-span-5 border-red-600" : "col-span-5"}
         />
         {state.error && (
           <p className="col-span-5 col-start-2 text-sm text-red-500">

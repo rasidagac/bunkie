@@ -58,14 +58,14 @@ export default async function DashboardPage() {
         <h1 className="text-2xl font-bold">My Groups</h1>
         <div className="flex items-center gap-2">
           <Link href="/dashboard/create">
-            <Button size="sm" variant="outline" className="rounded-full">
+            <Button className="rounded-full" size="sm" variant="outline">
               <Plus /> Create
             </Button>
           </Link>
-          <Separator orientation="vertical" className="h-4" />
+          <Separator className="h-4" orientation="vertical" />
           <Dialog>
             <DialogTrigger asChild>
-              <Button size="sm" variant="outline" className="rounded-full">
+              <Button className="rounded-full" size="sm" variant="outline">
                 <Users /> Join
               </Button>
             </DialogTrigger>
