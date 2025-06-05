@@ -1,5 +1,6 @@
 "use client";
 
+import type React from "react";
 import type { ComponentProps } from "react";
 
 import {
@@ -21,10 +22,12 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
+type FileItem = File | string;
+
 interface FileInputProps
   extends Omit<ComponentProps<"input">, "value" | "onChange"> {
-  value?: File[];
-  onChange?: (files: File[]) => void;
+  value?: FileItem[];
+  onChange?: (files: FileItem[]) => void;
   accept?: string;
   multiple?: boolean;
   maxSize?: number; // in bytes
@@ -45,65 +48,122 @@ const formatFileSize = (bytes: number): string => {
 };
 
 const getFileIcon = (type: string) => {
-  if (type.startsWith("image/")) return ImageIcon;
+  if (type.startsWith("image/") || type === "image/url") return ImageIcon;
   if (type.startsWith("video/")) return Video;
   if (type.startsWith("audio/")) return Music;
   if (type.includes("text") || type.includes("document")) return FileText;
   return File;
 };
 
-function FilePreview({ file, onRemove }: { file: File; onRemove: () => void }) {
+const getFileNameFromUrl = (url: string): string => {
+  try {
+    const urlObj = new URL(url);
+    const pathname = urlObj.pathname;
+    const fileName = pathname.split("/").pop();
+    return fileName || `Image ${Math.floor(Math.random() * 1000)}`;
+  } catch {
+    return `Image ${Math.floor(Math.random() * 1000)}`;
+  }
+};
+
+const isImageUrl = (url: string): boolean => {
+  const imageExtensions = [
+    ".jpg",
+    ".jpeg",
+    ".png",
+    ".gif",
+    ".webp",
+    ".svg",
+    ".bmp",
+  ];
+  const lowerUrl = url.toLowerCase();
+  return (
+    imageExtensions.some((ext) => lowerUrl.includes(ext)) ||
+    lowerUrl.includes("image")
+  );
+};
+
+function FilePreview({
+  file,
+  onRemove,
+}: {
+  file: FileItem;
+  onRemove: () => void;
+}) {
   const [previewUrl, setPreviewUrl] = useState<string>("");
-  const IconComponent = getFileIcon(file.type);
+
+  // Check if it's a URL string or File object
+  const isUrl = typeof file === "string";
+  const fileName = isUrl ? getFileNameFromUrl(file) : file.name;
+  const fileSize = isUrl ? 0 : file.size;
+  const fileType = isUrl ? (isImageUrl(file) ? "image/url" : "url") : file.type;
+
+  const IconComponent = getFileIcon(fileType);
 
   useEffect(() => {
-    if (file.type.startsWith("image/")) {
+    if (isUrl) {
+      setPreviewUrl(file);
+    } else if (file.type.startsWith("image/")) {
       const url = URL.createObjectURL(file);
       setPreviewUrl(url);
       return () => URL.revokeObjectURL(url);
     }
-  }, [file]);
+  }, [file, isUrl]);
+
+  const shouldShowImagePreview =
+    (isUrl && isImageUrl(file)) || (!isUrl && file.type.startsWith("image/"));
 
   return (
     <Card className="group relative">
       <CardContent className="p-3">
-        <div className="flex items-start gap-3">
-          <div className="flex-shrink-0">
-            {file.type.startsWith("image/") && previewUrl ? (
-              <div className="bg-muted h-12 w-12 overflow-hidden rounded-md">
+        <div className="grid grid-cols-12 grid-rows-1 items-start gap-3">
+          <div className="col-span-3 size-full">
+            {shouldShowImagePreview && previewUrl ? (
+              <div className="bg-muted relative size-full overflow-hidden rounded-md">
                 <Image
                   src={previewUrl || "/placeholder.svg"}
-                  alt={file.name}
-                  className="h-full w-full object-cover"
-                  width={48}
-                  height={48}
+                  alt={fileName}
+                  className="object-cover"
+                  fill
+                  sizes="70px"
+                  priority
                 />
               </div>
             ) : (
-              <div className="bg-muted flex h-12 w-12 items-center justify-center rounded-md">
+              <div className="bg-muted flex size-full items-center justify-center rounded-md">
                 <IconComponent className="text-muted-foreground h-6 w-6" />
               </div>
             )}
           </div>
-          <div className="min-w-0 flex-1">
-            <p className="truncate text-sm font-medium" title={file.name}>
-              {file.name}
+          <div className="col-span-7">
+            <p className="truncate text-sm font-medium" title={fileName}>
+              {fileName}
             </p>
             <div className="mt-1 flex items-center gap-2">
-              <Badge variant="secondary" className="text-xs">
-                {formatFileSize(file.size)}
-              </Badge>
+              {fileSize > 0 && (
+                <Badge variant="secondary" className="text-xs">
+                  {formatFileSize(fileSize)}
+                </Badge>
+              )}
               <Badge variant="outline" className="text-xs">
-                {file.type || "Unknown"}
+                {isUrl ? "URL" : fileType || "Unknown"}
               </Badge>
             </div>
+            {isUrl && (
+              <p
+                className="text-muted-foreground mt-1 truncate text-xs"
+                title={file}
+              >
+                {file}
+              </p>
+            )}
           </div>
           <Button
             variant="ghost"
             size="sm"
             onClick={onRemove}
-            className="h-8 w-8 p-0 lg:opacity-0 lg:transition-opacity lg:group-hover:opacity-100"
-            aria-label={`Remove ${file.name}`}
+            className="col-span-2 p-0 lg:opacity-0 lg:transition-opacity lg:group-hover:opacity-100"
+            aria-label={`Remove ${fileName}`}
           >
             <X className="h-4 w-4" />
           </Button>
@@ -125,7 +185,7 @@ export function FileInput({
   placeholder = "Choose files or drag and drop",
   ...props
 }: FileInputProps) {
-  const [internalFiles, setInternalFiles] = useState<File[]>([]);
+  const [internalFiles, setInternalFiles] = useState<FileItem[]>([]);
   const [dragActive, setDragActive] = useState(false);
   const [error, setError] = useState<string>("");
   const [isProcessing, setIsProcessing] = useState(false);
@@ -162,7 +222,7 @@ export function FileInput({
 
   const processFiles = (fileList: FileList) => {
     setError("");
-    const newFiles: File[] = [];
+    const newFiles: FileItem[] = [];
     const errors: string[] = [];
 
     Array.from(fileList).forEach((file) => {
@@ -332,7 +392,11 @@ export function FileInput({
           </p>
           {files.map((file, index) => (
             <FilePreview
-              key={`${file.name}-${file.size}-${file.lastModified}`}
+              key={
+                typeof file === "string"
+                  ? `url-${index}`
+                  : `file-${index}-${file.name}`
+              }
               file={file}
               onRemove={() => removeFile(index)}
             />
@@ -342,3 +406,6 @@ export function FileInput({
     </div>
   );
 }
+
+// Export types for external use
+export type { FileItem };

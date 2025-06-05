@@ -55,7 +55,7 @@ export type Database = {
         Row: {
           amount: number;
           created_at: string;
-          currency: string;
+          currency: Database["public"]["Enums"]["currency_enum"];
           group_id: string;
           id: string;
           image_url: string | null;
@@ -66,7 +66,7 @@ export type Database = {
         Insert: {
           amount: number;
           created_at?: string;
-          currency?: string;
+          currency?: Database["public"]["Enums"]["currency_enum"];
           group_id?: string;
           id?: string;
           image_url?: string | null;
@@ -77,7 +77,7 @@ export type Database = {
         Update: {
           amount?: number;
           created_at?: string;
-          currency?: string;
+          currency?: Database["public"]["Enums"]["currency_enum"];
           group_id?: string;
           id?: string;
           image_url?: string | null;
@@ -292,6 +292,7 @@ export type Database = {
     };
     Enums: {
       split_type_enum: "equal" | "custom" | "percentage";
+      currency_enum: "TRY" | "USD" | "EUR";
     };
     CompositeTypes: {
       [_ in never]: never;
@@ -408,6 +409,7 @@ export const Constants = {
   public: {
     Enums: {
       split_type_enum: ["equal", "custom", "percentage"],
+      currency_enum: ["TRY", "USD", "EUR"],
     },
   },
 } as const;
