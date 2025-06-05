@@ -16,12 +16,12 @@ export async function updateExpense(
   data: ExpenseCreateFormValues,
 ) {
   const supabase = await createClient();
+  const { image, ...rest } = data;
   let image_url: string | null = null;
 
   try {
-    image_url = await getImageUrl(data.image, groupId);
+    image_url = await getImageUrl(image, groupId);
 
-    const rest = data;
     const { error } = await supabase
       .from("expenses")
       .update({
