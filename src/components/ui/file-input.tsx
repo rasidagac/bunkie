@@ -4,16 +4,16 @@ import type React from "react";
 import type { ComponentProps } from "react";
 
 import {
-  X,
-  Upload,
   File,
-  ImageIcon,
   FileText,
+  ImageIcon,
   Music,
+  Upload,
   Video,
+  X,
 } from "lucide-react";
 import Image from "next/image";
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
@@ -22,20 +22,20 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
-type FileItem = File | string;
-
 interface FileInputProps
-  extends Omit<ComponentProps<"input">, "value" | "onChange"> {
-  value?: FileItem[];
-  onChange?: (files: FileItem[]) => void;
+  extends Omit<ComponentProps<"input">, "onChange" | "value"> {
   accept?: string;
-  multiple?: boolean;
-  maxSize?: number; // in bytes
-  maxFiles?: number;
   className?: string;
   disabled?: boolean;
+  maxFiles?: number;
+  maxSize?: number; // in bytes
+  multiple?: boolean;
+  onChange?: (files: FileItem[]) => void;
   placeholder?: string;
+  value?: FileItem[];
 }
+
+type FileItem = File | string;
 
 const formatFileSize = (bytes: number): string => {
   if (bytes === 0) return "0 Bytes";
@@ -83,106 +83,16 @@ const isImageUrl = (url: string): boolean => {
   );
 };
 
-function FilePreview({
-  file,
-  onRemove,
-}: {
-  file: FileItem;
-  onRemove: () => void;
-}) {
-  const [previewUrl, setPreviewUrl] = useState<string>("");
-
-  // Check if it's a URL string or File object
-  const isUrl = typeof file === "string";
-  const fileName = isUrl ? getFileNameFromUrl(file) : file.name;
-  const fileSize = isUrl ? 0 : file.size;
-  const fileType = isUrl ? (isImageUrl(file) ? "image/url" : "url") : file.type;
-
-  const IconComponent = getFileIcon(fileType);
-
-  useEffect(() => {
-    if (isUrl) {
-      setPreviewUrl(file);
-    } else if (file.type.startsWith("image/")) {
-      const url = URL.createObjectURL(file);
-      setPreviewUrl(url);
-      return () => URL.revokeObjectURL(url);
-    }
-  }, [file, isUrl]);
-
-  const shouldShowImagePreview =
-    (isUrl && isImageUrl(file)) || (!isUrl && file.type.startsWith("image/"));
-
-  return (
-    <Card className="group relative">
-      <CardContent className="p-3">
-        <div className="grid grid-cols-12 grid-rows-1 items-start gap-3">
-          <div className="col-span-3 size-full">
-            {shouldShowImagePreview && previewUrl ? (
-              <div className="bg-muted relative size-full overflow-hidden rounded-md">
-                <Image
-                  src={previewUrl || "/placeholder.svg"}
-                  alt={fileName}
-                  className="object-cover"
-                  fill
-                  sizes="70px"
-                  priority
-                />
-              </div>
-            ) : (
-              <div className="bg-muted flex size-full items-center justify-center rounded-md">
-                <IconComponent className="text-muted-foreground h-6 w-6" />
-              </div>
-            )}
-          </div>
-          <div className="col-span-7">
-            <p className="truncate text-sm font-medium" title={fileName}>
-              {fileName}
-            </p>
-            <div className="mt-1 flex items-center gap-2">
-              {fileSize > 0 && (
-                <Badge variant="secondary" className="text-xs">
-                  {formatFileSize(fileSize)}
-                </Badge>
-              )}
-              <Badge variant="outline" className="text-xs">
-                {isUrl ? "URL" : fileType || "Unknown"}
-              </Badge>
-            </div>
-            {isUrl && (
-              <p
-                className="text-muted-foreground mt-1 truncate text-xs"
-                title={file}
-              >
-                {file}
-              </p>
-            )}
-          </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onRemove}
-            className="col-span-2 p-0 lg:opacity-0 lg:transition-opacity lg:group-hover:opacity-100"
-            aria-label={`Remove ${fileName}`}
-          >
-            <X className="h-4 w-4" />
-          </Button>
-        </div>
-      </CardContent>
-    </Card>
-  );
-}
-
 export function FileInput({
-  value,
-  onChange,
   accept,
-  multiple = false,
-  maxSize = 10 * 1024 * 1024, // 10MB default
-  maxFiles = 5,
   className,
   disabled = false,
+  maxFiles = 5,
+  maxSize = 10 * 1024 * 1024, // 10MB default
+  multiple = false,
+  onChange,
   placeholder = "Choose files or drag and drop",
+  value,
   ...props
 }: FileInputProps) {
   const [internalFiles, setInternalFiles] = useState<FileItem[]>([]);
@@ -194,7 +104,7 @@ export function FileInput({
   const isControlled = value !== undefined;
   const files = isControlled ? value : internalFiles;
 
-  const validateFile = (file: File): string | null => {
+  const validateFile = (file: File): null | string => {
     if (file.size > maxSize) {
       return `File "${file.name}" is too large. Maximum size is ${formatFileSize(maxSize)}.`;
     }
@@ -322,6 +232,7 @@ export function FileInput({
   return (
     <div className={cn("w-full", className)}>
       <div
+        aria-label="File upload area"
         className={cn(
           "relative rounded-lg border-2 border-dashed p-4 transition-colors",
           dragActive && !disabled
@@ -332,36 +243,35 @@ export function FileInput({
           props["aria-invalid"] &&
             "ring-destructive/20 dark:ring-destructive/40 border-destructive",
         )}
-        onDragEnter={handleDrag}
-        onDragLeave={handleDrag}
-        onDragOver={handleDrag}
-        onDrop={handleDrop}
         onClick={(e) => {
           // Only open dialog if clicking on the container itself, not child elements
           if (e.target === e.currentTarget && !isProcessing) {
             openFileDialog();
           }
         }}
-        role="button"
-        tabIndex={disabled ? -1 : 0}
-        aria-label="File upload area"
+        onDragEnter={handleDrag}
+        onDragLeave={handleDrag}
+        onDragOver={handleDrag}
+        onDrop={handleDrop}
         onKeyDown={(e) => {
           if ((e.key === "Enter" || e.key === " ") && !disabled) {
             e.preventDefault();
             openFileDialog();
           }
         }}
+        role="button"
+        tabIndex={disabled ? -1 : 0}
       >
         <Input
-          ref={inputRef}
-          type="file"
           accept={accept}
+          className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
+          disabled={disabled}
           multiple={multiple}
           onChange={handleChange}
           onClick={(e) => e.stopPropagation()}
-          disabled={disabled}
-          className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
+          ref={inputRef}
           tabIndex={-1}
+          type="file"
           {...props}
         />
 
@@ -379,7 +289,7 @@ export function FileInput({
       </div>
 
       {error && (
-        <Alert variant="destructive" className="mt-4">
+        <Alert className="mt-4" variant="destructive">
           <AlertDescription>{error}</AlertDescription>
         </Alert>
       )}
@@ -392,18 +302,108 @@ export function FileInput({
           </p>
           {files.map((file, index) => (
             <FilePreview
+              file={file}
               key={
                 typeof file === "string"
                   ? `url-${index}`
                   : `file-${index}-${file.name}`
               }
-              file={file}
               onRemove={() => removeFile(index)}
             />
           ))}
         </div>
       )}
     </div>
+  );
+}
+
+function FilePreview({
+  file,
+  onRemove,
+}: {
+  file: FileItem;
+  onRemove: () => void;
+}) {
+  const [previewUrl, setPreviewUrl] = useState<string>("");
+
+  // Check if it's a URL string or File object
+  const isUrl = typeof file === "string";
+  const fileName = isUrl ? getFileNameFromUrl(file) : file.name;
+  const fileSize = isUrl ? 0 : file.size;
+  const fileType = isUrl ? (isImageUrl(file) ? "image/url" : "url") : file.type;
+
+  const IconComponent = getFileIcon(fileType);
+
+  useEffect(() => {
+    if (isUrl) {
+      setPreviewUrl(file);
+    } else if (file.type.startsWith("image/")) {
+      const url = URL.createObjectURL(file);
+      setPreviewUrl(url);
+      return () => URL.revokeObjectURL(url);
+    }
+  }, [file, isUrl]);
+
+  const shouldShowImagePreview =
+    (isUrl && isImageUrl(file)) || (!isUrl && file.type.startsWith("image/"));
+
+  return (
+    <Card className="group relative">
+      <CardContent className="p-3">
+        <div className="grid grid-cols-12 grid-rows-1 items-start gap-3">
+          <div className="col-span-3 size-full">
+            {shouldShowImagePreview && previewUrl ? (
+              <div className="bg-muted relative size-full overflow-hidden rounded-md">
+                <Image
+                  alt={fileName}
+                  className="object-cover"
+                  fill
+                  priority
+                  sizes="70px"
+                  src={previewUrl || "/placeholder.svg"}
+                />
+              </div>
+            ) : (
+              <div className="bg-muted flex size-full items-center justify-center rounded-md">
+                <IconComponent className="text-muted-foreground h-6 w-6" />
+              </div>
+            )}
+          </div>
+          <div className="col-span-7">
+            <p className="truncate text-sm font-medium" title={fileName}>
+              {fileName}
+            </p>
+            <div className="mt-1 flex items-center gap-2">
+              {fileSize > 0 && (
+                <Badge className="text-xs" variant="secondary">
+                  {formatFileSize(fileSize)}
+                </Badge>
+              )}
+              <Badge className="text-xs" variant="outline">
+                {isUrl ? "URL" : fileType || "Unknown"}
+              </Badge>
+            </div>
+            {isUrl && (
+              <p
+                className="text-muted-foreground mt-1 truncate text-xs"
+                title={file}
+              >
+                {file}
+              </p>
+            )}
+          </div>
+          <Button
+            aria-label={`Remove ${fileName}`}
+            className="col-span-2 p-0 lg:opacity-0 lg:transition-opacity lg:group-hover:opacity-100"
+            onClick={onRemove}
+            size="sm"
+            variant="ghost"
+          >
+            <X className="h-4 w-4" />
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
   );
 }
 

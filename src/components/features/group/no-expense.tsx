@@ -11,8 +11,8 @@ export function NoExpense({ groupId }: { groupId: string }) {
       <GroupBreadcrumb />
       <div className="space-y-4 rounded-lg border-2 border-dashed p-6 text-center">
         <Frown
-          className="text-muted-foreground mx-auto h-10 w-10"
           aria-hidden="true"
+          className="text-muted-foreground mx-auto h-10 w-10"
         />
         <div>
           <p className="text-lg font-bold">No expenses yet</p>
@@ -20,7 +20,7 @@ export function NoExpense({ groupId }: { groupId: string }) {
             Create your first expense to get started
           </p>
         </div>
-        <Button size="sm" asChild>
+        <Button asChild size="sm">
           <Link href={`/groups/${groupId}/create`}>
             <PlusCircle className="mr-2 h-4 w-4" />
             Create Expense

@@ -6,10 +6,10 @@ import type { Tables } from "./supabase";
 
 export type Expense = Tables<"expenses">;
 
-export type ExpensesWithProfiles = Expense & {
-  profile: {
-    full_name: string | null;
-  };
-};
-
 export type ExpenseCreateFormValues = z.infer<typeof formSchema>;
+
+export type ExpensesWithProfiles = {
+  profile: {
+    full_name: null | string;
+  };
+} & Expense;

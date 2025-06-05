@@ -46,7 +46,7 @@ export async function LiabilitiesDrawer({ groupId }: LiabilitiesDrawerProps) {
   return (
     <Drawer autoFocus>
       <DrawerTrigger asChild className="w-fit">
-        <Button variant="outline" size="sm" className="rounded-full">
+        <Button className="rounded-full" size="sm" variant="outline">
           <Eye className="h-4 w-4" /> View Liabilities
         </Button>
       </DrawerTrigger>
@@ -61,8 +61,8 @@ export async function LiabilitiesDrawer({ groupId }: LiabilitiesDrawerProps) {
           {user_balances.data?.length ? (
             user_balances.data?.map((balance) => (
               <div
-                key={balance.id}
                 className="flex items-center justify-between gap-2 rounded-full border px-3 py-2 text-base"
+                key={balance.id}
               >
                 <div>{balance.creditor?.full_name}</div>
                 <div>

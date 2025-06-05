@@ -7,14 +7,14 @@ import { Check, Copy, Loader2 } from "lucide-react";
 import { useState } from "react";
 
 interface CopyToClipboardProps extends ButtonProps {
-  textToCopy: string;
   label: string;
+  textToCopy: string;
 }
 
 export default function CopyToClipboard({
-  textToCopy,
-  label,
   className,
+  label,
+  textToCopy,
   ...props
 }: CopyToClipboardProps) {
   const [copied, setCopied] = useState(false);
@@ -42,9 +42,9 @@ export default function CopyToClipboard({
 
   return (
     <Button
-      onClick={handleClick}
       className={className}
       disabled={disabled}
+      onClick={handleClick}
       {...props}
     >
       {icon} {label}

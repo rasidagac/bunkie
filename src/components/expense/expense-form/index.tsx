@@ -1,8 +1,8 @@
 "use client";
 
 import type {
-  SubmitHandler,
   SubmitErrorHandler,
+  SubmitHandler,
   UseFormProps,
 } from "react-hook-form";
 
@@ -11,10 +11,10 @@ import { Button } from "@ui/button";
 import { FileInput } from "@ui/file-input";
 import {
   Form,
-  FormLabel,
-  FormItem,
-  FormField,
   FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
   FormMessage,
 } from "@ui/form";
 import { Input } from "@ui/input";
@@ -26,19 +26,19 @@ import { formSchema } from "@/schema/expense";
 import { ExpenseCreateFormValues } from "@/types/expenses";
 
 interface ExpenseFormProps {
-  onValid: SubmitHandler<ExpenseCreateFormValues>;
-  onInvalid?: SubmitErrorHandler<ExpenseCreateFormValues>;
   defaultValues: UseFormProps<ExpenseCreateFormValues>["defaultValues"];
+  onInvalid?: SubmitErrorHandler<ExpenseCreateFormValues>;
+  onValid: SubmitHandler<ExpenseCreateFormValues>;
 }
 
 export function ExpenseForm({
-  onValid,
-  onInvalid,
   defaultValues,
+  onInvalid,
+  onValid,
 }: ExpenseFormProps) {
   const form = useForm<ExpenseCreateFormValues>({
-    resolver: zodResolver(formSchema),
     defaultValues,
+    resolver: zodResolver(formSchema),
   });
 
   const buttonDisabled = useMemo(
@@ -49,8 +49,8 @@ export function ExpenseForm({
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(onValid, onInvalid)}
         className="flex flex-col gap-4"
+        onSubmit={form.handleSubmit(onValid, onInvalid)}
       >
         <FormField
           control={form.control}
@@ -91,7 +91,7 @@ export function ExpenseForm({
             </FormItem>
           )}
         />
-        <Button type="submit" disabled={buttonDisabled}>
+        <Button disabled={buttonDisabled} type="submit">
           {form.formState.isSubmitting ? (
             <>
               <Loader2 className="animate-spin" />

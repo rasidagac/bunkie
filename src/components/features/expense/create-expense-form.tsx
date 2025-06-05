@@ -29,14 +29,14 @@ export default function CreateExpenseForm({
   userId,
 }: CreateExpenseFormProps) {
   const form = useForm<ExpenseCreateFormValues>({
-    resolver: zodResolver(formSchema),
     defaultValues: {
-      title: "",
       amount: 0,
       currency: "TRY",
-      split_type: "equal",
       image: [],
+      split_type: "equal",
+      title: "",
     },
+    resolver: zodResolver(formSchema),
   });
 
   async function handleSubmit(values: ExpenseCreateFormValues) {
@@ -53,8 +53,8 @@ export default function CreateExpenseForm({
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(handleSubmit)}
         className="flex flex-col gap-4"
+        onSubmit={form.handleSubmit(handleSubmit)}
       >
         <FormField
           control={form.control}

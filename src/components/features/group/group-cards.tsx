@@ -8,18 +8,18 @@ import { useRouter } from "next/navigation";
 
 import type { Tables } from "@/types/supabase";
 
-type GroupsData = {
-  groups: Tables<"groups"> | null;
-  all_users: {
-    memberships: Array<{
-      profiles: Tables<"profiles"> | null;
-    }> | null;
-  } | null;
-}[];
-
 interface GroupCardsProps {
   groupsData: GroupsData;
 }
+
+type GroupsData = {
+  all_users: {
+    memberships: Array<{
+      profiles: null | Tables<"profiles">;
+    }> | null;
+  } | null;
+  groups: null | Tables<"groups">;
+}[];
 
 export function GroupCards({ groupsData }: GroupCardsProps) {
   const router = useRouter();
@@ -29,11 +29,11 @@ export function GroupCards({ groupsData }: GroupCardsProps) {
     router.push(`/groups/${group.id}`);
   }
 
-  return groupsData.map(({ groups, all_users }) => (
+  return groupsData.map(({ all_users, groups }) => (
     <Card
-      onClick={() => handleCardClick(groups!)}
-      key={groups?.id}
       className="mb-4 cursor-pointer transition-shadow hover:shadow-md"
+      key={groups?.id}
+      onClick={() => handleCardClick(groups!)}
     >
       <CardHeader>
         <CardTitle className="text-xl">{groups?.name}</CardTitle>
@@ -42,12 +42,12 @@ export function GroupCards({ groupsData }: GroupCardsProps) {
         <div className="flex -space-x-5 hover:-space-x-2">
           {all_users?.memberships?.map(({ profiles }) => (
             <Avatar
-              key={profiles?.id}
               className="border-2 drop-shadow-xs transition-all ease-in-out"
+              key={profiles?.id}
             >
               <AvatarImage
-                src={profiles?.avatar_url as string}
                 alt={profiles?.username as string}
+                src={profiles?.avatar_url as string}
               />
               <AvatarFallback>{profiles?.username?.[0]}</AvatarFallback>
             </Avatar>

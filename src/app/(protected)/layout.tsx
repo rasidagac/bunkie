@@ -21,7 +21,7 @@ export default async function ProtectedLayout({
         </div>
         <div className="flex items-center gap-3">
           <ThemeToggle />
-          <Separator orientation="vertical" className="h-6" />
+          <Separator className="h-6" orientation="vertical" />
           <UserDropdown />
         </div>
       </header>

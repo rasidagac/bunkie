@@ -25,8 +25,8 @@ export async function createGroup(formData: FormData) {
   }
 
   await supabase.from("memberships").insert({
-    user_id: data.user?.id,
     group_id: group.id,
+    user_id: data.user?.id,
   });
 
   redirect(`../groups/${group?.code}`);

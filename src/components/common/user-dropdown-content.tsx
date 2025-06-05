@@ -25,8 +25,8 @@ export default function UserDropdownContent() {
         </Link>
       </DropdownMenuItem> */}
       <DropdownMenuItem
-        onClick={handleSignOut}
         className="text-destructive focus:text-destructive cursor-pointer"
+        onClick={handleSignOut}
       >
         <LogOut className="mr-2 h-4 w-4" />
         <span>Sign Out</span>
