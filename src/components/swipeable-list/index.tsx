@@ -2,7 +2,7 @@
 
 import type { ReactNode } from "react";
 
-import { useState, useRef, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { ListItem } from "./list-item";
 
@@ -12,16 +12,16 @@ type Item = {
 
 interface SwipeableListProps<T extends Item> {
   data: T[];
-  renderItem: (item: T) => ReactNode;
-  onEdit: (item: T) => Promise<void> | void;
   onDelete: (id: string) => Promise<void> | void;
+  onEdit: (item: T) => Promise<void> | void;
+  renderItem: (item: T) => ReactNode;
 }
 
 export function SwipeableList<T extends Item>({
-  renderItem,
   data,
-  onEdit,
   onDelete,
+  onEdit,
+  renderItem,
 }: SwipeableListProps<T>) {
   const [activeItemId, setActiveItemId] = useState<string>("");
   const listRef = useRef<HTMLDivElement>(null);
@@ -61,12 +61,12 @@ export function SwipeableList<T extends Item>({
     <div ref={listRef}>
       {data.map((item) => (
         <ListItem
-          key={item.id}
-          item={item}
           isActive={activeItemId === item.id}
-          onSwipe={handleSwipe}
-          onEdit={handleEdit}
+          item={item}
+          key={item.id}
           onDelete={handleDelete}
+          onEdit={handleEdit}
+          onSwipe={handleSwipe}
         >
           {renderItem(item)}
         </ListItem>

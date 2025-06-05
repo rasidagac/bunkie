@@ -13,15 +13,15 @@ import { toast } from "sonner";
 import { createClient } from "@/utils/supabase/client";
 
 interface OAuthButtonProps extends ButtonProps {
-  provider: Provider;
-  label: string;
   icon: ReactNode;
+  label: string;
+  provider: Provider;
 }
 
 export function OAuthButton({
-  provider,
-  label,
   icon,
+  label,
+  provider,
   ...props
 }: OAuthButtonProps) {
   const form = useForm();
@@ -31,10 +31,10 @@ export function OAuthButton({
 
     try {
       const { error } = await supabase.auth.signInWithOAuth({
-        provider,
         options: {
           redirectTo: `${window.location.origin}/auth/callback?next=/dashboard`,
         },
+        provider,
       });
 
       if (error) throw error;

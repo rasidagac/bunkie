@@ -39,8 +39,8 @@ export default async function SingleGroupPage({
       <GroupBreadcrumb />
       <div className="flex flex-col gap-6">
         <GroupHeader
-          groupName={currentGroup.name}
           groupCode={currentGroup.code}
+          groupName={currentGroup.name}
         />
         <LiabilitiesDrawer groupId={groupId} />
         <div>

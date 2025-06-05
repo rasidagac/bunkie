@@ -5,8 +5,8 @@ import { Loader2 } from "lucide-react";
 import { useFormStatus } from "react-dom";
 
 export default function FormSubmitButton({
-  type = "submit",
   children,
+  type = "submit",
   ...props
 }: ButtonProps) {
   const status = useFormStatus();

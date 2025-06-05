@@ -8,13 +8,13 @@ import FormSubmitButton from "@/components/common/form-submit-button";
 export default function CreateHouseForm() {
   return (
     <Form
-      id="create-house-form"
-      className="grid gap-4 py-4"
       action={createGroup}
+      className="grid gap-4 py-4"
+      id="create-house-form"
     >
       <div className="flex items-center gap-4">
         <Label htmlFor="title">Title</Label>
-        <Input id="title" name="title" className="col-span-4" required />
+        <Input className="col-span-4" id="title" name="title" required />
       </div>
       <FormSubmitButton>Create House</FormSubmitButton>
     </Form>

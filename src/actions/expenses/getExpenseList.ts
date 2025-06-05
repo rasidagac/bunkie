@@ -52,26 +52,26 @@ function formattedExpenses(
     const pricePerUser = expense.amount / userCount;
 
     const debtAmount = pricePerUser.toLocaleString("tr-TR", {
-      style: "currency",
       currency: expense.currency,
+      style: "currency",
     });
 
     const debtInfo = {
-      text: expense.user_id === userId ? "You lent" : "You borrowed",
       amount: debtAmount,
+      text: expense.user_id === userId ? "You lent" : "You borrowed",
     };
 
     return {
-      id: expense.id,
-      created_at: format(expense.created_at, "MMM \n dd"),
-      title: expense.title,
-      full_name: expense.profile.full_name,
-      image_url: expense.image_url,
       amount: expense.amount.toLocaleString("tr-TR", {
-        style: "currency",
         currency: expense.currency,
+        style: "currency",
       }),
+      created_at: format(expense.created_at, "MMM \n dd"),
       debt: debtInfo,
+      full_name: expense.profile.full_name,
+      id: expense.id,
+      image_url: expense.image_url,
+      title: expense.title,
     };
   });
 }

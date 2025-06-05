@@ -17,7 +17,7 @@ export async function updateExpense(
 ) {
   const supabase = await createClient();
   const { image, ...rest } = data;
-  let image_url: string | null = null;
+  let image_url: null | string = null;
 
   try {
     image_url = await getImageUrl(image, groupId);

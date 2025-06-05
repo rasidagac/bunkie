@@ -13,10 +13,10 @@ import { Separator } from "@/components/ui/separator";
 export default async function ExpensePage({
   params,
 }: {
-  params: Promise<{ id: string; expenseId: string }>;
+  params: Promise<{ expenseId: string; id: string }>;
 }) {
   const { expenseId, id: groupId } = await params;
-  const { title, amount, currency, split_type, image_url } =
+  const { amount, currency, image_url, split_type, title } =
     await getExpense(expenseId);
   const group = await getById(groupId);
 
@@ -36,14 +36,14 @@ export default async function ExpensePage({
       <div className="truncate text-xl font-bold">{title}</div>
       <Separator />
       <ExpenseForm
-        onValid={updateExpenseWithId}
         defaultValues={{
-          title,
           amount,
           currency,
-          split_type,
           image: image_url ? [image_url] : [],
+          split_type,
+          title,
         }}
+        onValid={updateExpenseWithId}
       />
     </div>
   );

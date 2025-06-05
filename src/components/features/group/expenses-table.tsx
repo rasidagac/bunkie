@@ -7,20 +7,20 @@ import { useCallback } from "react";
 import { deleteExpense } from "@/actions/expenses/deleteExpense";
 import { SwipeableList } from "@/components/swipeable-list";
 
-type ExpenseWithProfile = {
-  id: string;
-  created_at: string;
-  title: string;
-  full_name: string | null;
-  image_url: string | null;
-  amount: string;
-  debt: { text: string; amount: string };
-};
-
 interface ExpensesTableProps {
   data: ExpenseWithProfile[];
   groupId: string;
 }
+
+type ExpenseWithProfile = {
+  amount: string;
+  created_at: string;
+  debt: { amount: string; text: string };
+  full_name: null | string;
+  id: string;
+  image_url: null | string;
+  title: string;
+};
 
 export function ExpensesTable({ data, groupId }: ExpensesTableProps) {
   const router = useRouter();
@@ -39,11 +39,11 @@ export function ExpensesTable({ data, groupId }: ExpensesTableProps) {
         <div className="w-min text-center">{expense.created_at}</div>
         <div className="relative aspect-square bg-gray-200">
           <Image
-            src={expense.image_url || "/receipt-text.svg"}
-            fill
-            className="p-0.5"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             alt={expense.title}
+            className="p-0.5"
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            src={expense.image_url || "/receipt-text.svg"}
           />
         </div>
         <div className="col-span-6 flex flex-col">
@@ -61,9 +61,9 @@ export function ExpensesTable({ data, groupId }: ExpensesTableProps) {
   return (
     <SwipeableList
       data={data}
-      renderItem={renderItem}
-      onEdit={handleEdit}
       onDelete={handleDelete}
+      onEdit={handleEdit}
+      renderItem={renderItem}
     />
   );
 }

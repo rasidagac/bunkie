@@ -5,13 +5,13 @@ import type { Readable } from "node:stream";
 import { put } from "@vercel/blob";
 
 type PutBody =
-  | string
-  | Readable
-  | Buffer
-  | Blob
   | ArrayBuffer
+  | Blob
+  | Buffer
+  | File
+  | Readable
   | ReadableStream
-  | File;
+  | string;
 
 export default async function uploadFile(file: PutBody, pathname: string) {
   return await put(pathname, file, {
