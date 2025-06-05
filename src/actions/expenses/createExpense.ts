@@ -12,9 +12,9 @@ export default async function createExpense(
   userId: string,
   values: ExpenseCreateFormValues,
 ) {
-  const { title, amount, currency, image, split_type } = values;
+  const { amount, currency, image, split_type, title } = values;
   const supabase = await createClient();
-  let image_url: string | null = null;
+  let image_url: null | string = null;
 
   try {
     image_url = await getImageUrl(image, groupId);
@@ -22,13 +22,13 @@ export default async function createExpense(
     const { data, error } = await supabase
       .from("expenses")
       .insert({
-        title,
         amount,
-        image_url,
         currency,
-        split_type,
-        user_id: userId,
         group_id: groupId,
+        image_url,
+        split_type,
+        title,
+        user_id: userId,
       })
       .select()
       .single();

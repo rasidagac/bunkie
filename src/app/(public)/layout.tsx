@@ -17,8 +17,8 @@ export default async function PublicLayout({
   } = await supabase.auth.getUser();
 
   const headerButton = {
-    label: user ? "Dashboard" : "Login",
     href: user ? "/dashboard" : "/auth/login",
+    label: user ? "Dashboard" : "Login",
   };
 
   return (

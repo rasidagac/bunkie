@@ -7,7 +7,7 @@ import {
   BreadcrumbList,
 } from "@ui/breadcrumb";
 import Link from "next/link";
-import { ReactNode, createContext, useContext } from "react";
+import { createContext, ReactNode, useContext } from "react";
 
 // Create a context to manage breadcrumb items
 export const BreadcrumbContext = createContext<{
@@ -17,10 +17,6 @@ export const BreadcrumbContext = createContext<{
   addBreadcrumbItem: () => {},
   items: [],
 });
-
-export function useBreadcrumb() {
-  return useContext(BreadcrumbContext);
-}
 
 interface BreadcrumbWrapperProps {
   children?: ReactNode;
@@ -41,4 +37,8 @@ export default function BreadcrumbWrapper({
       </BreadcrumbList>
     </Breadcrumb>
   );
+}
+
+export function useBreadcrumb() {
+  return useContext(BreadcrumbContext);
 }

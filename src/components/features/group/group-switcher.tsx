@@ -26,7 +26,7 @@ export async function GroupSwitcher() {
   return (
     <Drawer autoFocus>
       <DrawerTrigger asChild>
-        <Button variant="outline" className="justify-start">
+        <Button className="justify-start" variant="outline">
           {currentGroup.name}
           <ChevronDown className="ml-2 h-4 w-4" />
         </Button>

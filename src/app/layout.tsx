@@ -9,18 +9,18 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 
 const geistSans = Geist({
-  variable: "--font-geist-sans",
   subsets: ["latin"],
+  variable: "--font-geist-sans",
 });
 
 const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
   subsets: ["latin"],
+  variable: "--font-geist-mono",
 });
 
 export const metadata: Metadata = {
-  title: "Bunkie",
   description: "Manage your shared house expenses with ease",
+  title: "Bunkie",
 };
 
 export default function RootLayout({
@@ -30,14 +30,14 @@ export default function RootLayout({
 }>) {
   return (
     <html
+      className={`${geistSans.variable} ${geistMono.variable}`}
       lang="en"
       suppressHydrationWarning
-      className={`${geistSans.variable} ${geistMono.variable}`}
     >
       <body className="grid min-h-screen grid-rows-[auto_1fr] antialiased">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           {children}
-          <Toaster richColors position="top-center" />
+          <Toaster position="top-center" richColors />
         </ThemeProvider>
       </body>
     </html>

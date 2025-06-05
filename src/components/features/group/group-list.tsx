@@ -26,8 +26,8 @@ export function GroupList({ data }: { data: Group[] }) {
           {data.map((group) => (
             <CommandItem
               key={group.id}
-              value={group.name + " " + group.id}
               onSelect={() => handleSelect(group)}
+              value={group.name + " " + group.id}
             >
               {group.name}
             </CommandItem>

@@ -26,19 +26,19 @@ export function SignUpForm() {
   const router = useRouter();
 
   const form = useForm<SignUpFormValues>({
-    resolver: zodResolver(signUpSchema),
     defaultValues: {
+      confirmPassword: "",
       email: "",
       password: "",
-      confirmPassword: "",
     },
+    resolver: zodResolver(signUpSchema),
   });
 
   async function onValid(values: SignUpFormValues) {
     const supabase = createClient();
 
     try {
-      const { error, data } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email: values.email,
         password: values.password,
       });
@@ -65,7 +65,7 @@ export function SignUpForm() {
   return (
     <div className="space-y-4">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onValid)} className="space-y-4">
+        <form className="space-y-4" onSubmit={form.handleSubmit(onValid)}>
           <FormField
             control={form.control}
             name="email"
@@ -87,8 +87,8 @@ export function SignUpForm() {
                 <FormLabel>Password</FormLabel>
                 <FormControl>
                   <Input
-                    type="password"
                     autoComplete="new-password"
+                    type="password"
                     {...field}
                   />
                 </FormControl>
@@ -104,8 +104,8 @@ export function SignUpForm() {
                 <FormLabel>Confirm Password</FormLabel>
                 <FormControl>
                   <Input
-                    type="password"
                     autoComplete="new-password"
+                    type="password"
                     {...field}
                   />
                 </FormControl>
@@ -114,9 +114,9 @@ export function SignUpForm() {
             )}
           />
           <Button
-            type="submit"
             className="w-full"
             disabled={form.formState.isSubmitting}
+            type="submit"
           >
             {form.formState.isSubmitting ? (
               <>
@@ -131,7 +131,7 @@ export function SignUpForm() {
       </Form>
       <div className="text-center text-sm">
         Already have an account?{" "}
-        <Link href="/auth/login" className="underline underline-offset-4">
+        <Link className="underline underline-offset-4" href="/auth/login">
           Sign in
         </Link>
       </div>
