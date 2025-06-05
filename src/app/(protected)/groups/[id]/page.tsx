@@ -54,7 +54,7 @@ export default async function SingleGroupPage({
             </Link>
           </div>
           <Separator className="my-2" />
-          <ExpensesTable data={formattedExpenses} />
+          <ExpensesTable data={formattedExpenses} groupId={groupId} />
         </div>
       </div>
     </>
