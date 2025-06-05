@@ -9,12 +9,7 @@ export function cn(...inputs: ClassValue[]) {
 
 export async function getFileFromImageUrl(imageUrl: string): Promise<File> {
   try {
-    const response = await fetch(imageUrl, {
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-      },
-    });
+    const response = await fetch(imageUrl);
     const blob = await response.blob();
 
     const extension = imageUrl.split(".").pop() || "jpg";

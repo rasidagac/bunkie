@@ -1,8 +1,10 @@
 "use server";
 
+import { cache } from "react";
+
 import { createClient } from "@/utils/supabase/server";
 
-export async function getExpense(id: string) {
+export const getExpense = cache(async (id: string) => {
   const supabase = await createClient();
 
   const { data } = await supabase
@@ -13,4 +15,4 @@ export async function getExpense(id: string) {
     .throwOnError();
 
   return data;
-}
+});
