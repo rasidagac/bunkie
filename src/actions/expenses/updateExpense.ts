@@ -7,36 +7,32 @@ import type { ExpenseCreateFormValues } from "@/types/expenses";
 import { getImageUrl } from "@/utils/image/get-image-url";
 import { createClient } from "@/utils/supabase/server";
 
-export default async function createExpense(
+/**
+ * Updates an expense in the database and revalidates the group dashboard page.
+ */
+export async function updateExpense(
+  id: string,
   groupId: string,
-  userId: string,
-  values: ExpenseCreateFormValues,
+  data: ExpenseCreateFormValues,
 ) {
-  const { title, amount, currency, image, split_type } = values;
   const supabase = await createClient();
+  const { image, ...rest } = data;
   let image_url: string | null = null;
 
   try {
     image_url = await getImageUrl(image, groupId);
 
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from("expenses")
-      .insert({
-        title,
-        amount,
+      .update({
+        ...rest,
         image_url,
-        currency,
-        split_type,
-        user_id: userId,
-        group_id: groupId,
       })
-      .select()
-      .single();
+      .eq("id", id);
 
     if (error) throw error;
 
     revalidatePath(`/dashboard/groups/${groupId}`, "page");
-    return data;
   } catch (error) {
     throw error;
   }

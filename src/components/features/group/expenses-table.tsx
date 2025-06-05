@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useCallback } from "react";
 
 import { deleteExpense } from "@/actions/expenses/deleteExpense";
@@ -18,11 +19,14 @@ type ExpenseWithProfile = {
 
 interface ExpensesTableProps {
   data: ExpenseWithProfile[];
+  groupId: string;
 }
 
-export function ExpensesTable({ data }: ExpensesTableProps) {
+export function ExpensesTable({ data, groupId }: ExpensesTableProps) {
+  const router = useRouter();
+
   const handleEdit = async (item: ExpenseWithProfile) => {
-    console.log("Edit item:", item);
+    router.push(`/groups/${groupId}/expenses/${item.id}`);
   };
 
   const handleDelete = async (id: string) => {
@@ -37,8 +41,8 @@ export function ExpensesTable({ data }: ExpensesTableProps) {
           <Image
             src={expense.image_url || "/receipt-text.svg"}
             fill
-            objectFit="cover"
             className="p-0.5"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             alt={expense.title}
           />
         </div>
