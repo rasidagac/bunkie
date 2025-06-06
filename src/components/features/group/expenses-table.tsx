@@ -25,7 +25,7 @@ type ExpenseWithProfile = {
 export function ExpensesTable({ data, groupId }: ExpensesTableProps) {
   const router = useRouter();
 
-  const handleEdit = async (item: ExpenseWithProfile) => {
+  const handleEdit = (item: ExpenseWithProfile) => {
     router.push(`/groups/${groupId}/expenses/${item.id}`);
   };
 

@@ -1,5 +1,7 @@
 "use client";
 
+import type { ReactNode } from "react";
+
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -7,7 +9,7 @@ import {
   BreadcrumbList,
 } from "@ui/breadcrumb";
 import Link from "next/link";
-import { createContext, ReactNode, useContext } from "react";
+import { createContext, useContext } from "react";
 
 // Create a context to manage breadcrumb items
 export const BreadcrumbContext = createContext<{

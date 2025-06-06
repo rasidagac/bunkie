@@ -1,6 +1,6 @@
-import { z } from "zod";
+import type { z } from "zod";
 
-import { signInSchema, signUpSchema } from "@/schema/auth";
+import type { signInSchema, signUpSchema } from "@/schema/auth";
 
 import type { Tables } from "./supabase";
 
