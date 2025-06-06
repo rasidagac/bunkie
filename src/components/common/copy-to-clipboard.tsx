@@ -32,8 +32,6 @@ export default function CopyToClipboard({
       }, 1000);
     } catch (error) {
       console.error(error);
-    } finally {
-      setDisabled(false);
     }
   }
 
