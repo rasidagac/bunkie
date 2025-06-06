@@ -22,8 +22,9 @@ import { Loader2 } from "lucide-react";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 
+import type { ExpenseCreateFormValues } from "@/types/expenses";
+
 import { formSchema } from "@/schema/expense";
-import { ExpenseCreateFormValues } from "@/types/expenses";
 
 interface ExpenseFormProps {
   defaultValues: UseFormProps<ExpenseCreateFormValues>["defaultValues"];

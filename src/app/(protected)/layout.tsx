@@ -6,7 +6,7 @@ import ThemeToggle from "@/components/common/theme-toggle";
 import UserDropdown from "@/components/common/user-dropdown";
 import { GroupSwitcher } from "@/components/features/group/group-switcher";
 
-export default async function ProtectedLayout({
+export default function ProtectedLayout({
   children,
   modal,
 }: {

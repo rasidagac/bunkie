@@ -19,21 +19,17 @@ export async function updateExpense(
   const { image, ...rest } = data;
   let image_url: null | string = null;
 
-  try {
-    image_url = await getImageUrl(image, groupId);
+  image_url = await getImageUrl(image, groupId);
 
-    const { error } = await supabase
-      .from("expenses")
-      .update({
-        ...rest,
-        image_url,
-      })
-      .eq("id", id);
+  const { error } = await supabase
+    .from("expenses")
+    .update({
+      ...rest,
+      image_url,
+    })
+    .eq("id", id);
 
-    if (error) throw error;
+  if (error) throw error;
 
-    revalidatePath(`/dashboard/groups/${groupId}`, "page");
-  } catch (error) {
-    throw error;
-  }
+  revalidatePath(`/dashboard/groups/${groupId}`, "page");
 }
