@@ -15,29 +15,24 @@ export default async function createExpense(
   const { amount, currency, image, split_type, title } = values;
   const supabase = await createClient();
   let image_url: null | string = null;
+  image_url = await getImageUrl(image, groupId);
 
-  try {
-    image_url = await getImageUrl(image, groupId);
+  const { data, error } = await supabase
+    .from("expenses")
+    .insert({
+      amount,
+      currency,
+      group_id: groupId,
+      image_url,
+      split_type,
+      title,
+      user_id: userId,
+    })
+    .select()
+    .single();
 
-    const { data, error } = await supabase
-      .from("expenses")
-      .insert({
-        amount,
-        currency,
-        group_id: groupId,
-        image_url,
-        split_type,
-        title,
-        user_id: userId,
-      })
-      .select()
-      .single();
+  if (error) throw error;
 
-    if (error) throw error;
-
-    revalidatePath(`/dashboard/groups/${groupId}`, "page");
-    return data;
-  } catch (error) {
-    throw error;
-  }
+  revalidatePath(`/dashboard/groups/${groupId}`, "page");
+  return data;
 }

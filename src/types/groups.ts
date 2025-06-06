@@ -1,3 +1,3 @@
-import { Tables } from "./supabase";
+import type { Tables } from "./supabase";
 
 export type Group = Tables<"groups">;

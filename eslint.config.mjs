@@ -1,32 +1,55 @@
 import { FlatCompat } from "@eslint/eslintrc";
+import eslint from "@eslint/js";
 import perfectionist from "eslint-plugin-perfectionist";
 import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended";
-import unusedImports from "eslint-plugin-unused-imports";
+import tsEslint from "typescript-eslint";
 
 const compat = new FlatCompat({
   baseDirectory: import.meta.dirname,
 });
 
-const eslintConfig = [
-  ...compat.extends("next/core-web-vitals", "next/typescript"),
+const tslintConfig = tsEslint.config(
+  eslint.configs.recommended,
+  tsEslint.configs.recommendedTypeChecked,
   {
-    plugins: {
-      "unused-imports": unusedImports,
+    languageOptions: {
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname,
+      },
     },
     rules: {
-      "no-unused-vars": "off",
-      "unused-imports/no-unused-imports": "error",
-      "unused-imports/no-unused-vars": [
-        "warn",
+      "@typescript-eslint/consistent-type-exports": "error",
+      "@typescript-eslint/consistent-type-imports": "error",
+      "@typescript-eslint/no-misused-promises": [
+        "error",
         {
-          args: "after-used",
+          checksVoidReturn: {
+            attributes: false,
+          },
+        },
+      ],
+
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        {
+          args: "all",
           argsIgnorePattern: "^_",
-          vars: "all",
+          caughtErrors: "all",
+          caughtErrorsIgnorePattern: "^_",
+          destructuredArrayIgnorePattern: "^_",
+          ignoreRestSiblings: true,
           varsIgnorePattern: "^_",
         },
       ],
+      "no-unused-vars": "off",
     },
   },
+);
+
+const eslintConfig = [
+  ...compat.extends("next/core-web-vitals"),
+  ...tslintConfig,
   perfectionist.configs["recommended-alphabetical"],
   eslintPluginPrettierRecommended,
 ];

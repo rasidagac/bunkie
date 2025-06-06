@@ -13,8 +13,8 @@ import { setCookie } from "cookies-next";
 import type { Group } from "@/types/groups";
 
 export function GroupList({ data }: { data: Group[] }) {
-  function handleSelect(group: Group) {
-    setCookie("currentGroup", group.id);
+  async function handleSelect(group: Group) {
+    await setCookie("currentGroup", group.id);
   }
 
   return (

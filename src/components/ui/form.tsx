@@ -1,9 +1,9 @@
 "use client";
 
+import type * as LabelPrimitive from "@radix-ui/react-label";
 import type { ComponentProps } from "react";
 import type { ControllerProps, FieldPath, FieldValues } from "react-hook-form";
 
-import * as LabelPrimitive from "@radix-ui/react-label";
 import { Slot } from "@radix-ui/react-slot";
 import { createContext, useContext, useId } from "react";
 import {

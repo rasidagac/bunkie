@@ -1,6 +1,6 @@
-import { z } from "zod";
+import type { z } from "zod";
 
-import { formSchema } from "@/schema/expense";
+import type { formSchema } from "@/schema/expense";
 
 import type { Tables } from "./supabase";
 

@@ -45,6 +45,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.1",
+    "@eslint/js": "^9.28.0",
     "@tailwindcss/postcss": "^4.1.7",
     "@types/node": "^22.15.19",
     "@types/react": "^19.1.4",
@@ -53,7 +54,7 @@
     "bufferutil": "^4.0.9",
     "cookies-next": "^5.1.0",
     "dotenv-cli": "^8.0.0",
-    "eslint": "^9.27.0",
+    "eslint": "^9.28.0",
     "eslint-config-next": "15.3.2",
     "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-perfectionist": "^4.13.0",
@@ -64,7 +65,8 @@
     "prettier-plugin-tailwindcss": "^0.6.11",
     "supabase": "2.22.12",
     "tailwindcss": "^4.1.7",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.33.1"
   },
   "packageManager": "yarn@4.6.0"
 }

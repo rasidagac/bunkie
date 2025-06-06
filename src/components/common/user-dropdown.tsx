@@ -10,16 +10,19 @@ import {
 import { getCurrentUser } from "@/actions/auth/getCurrentUser";
 
 import UserDropdownContent from "./user-dropdown-content";
+
 export default async function UserDropdown() {
   const { email: userEmail, user_metadata } = await getCurrentUser();
 
-  const { avatarAlt, avatarFallback, avatarSrc, displayName, email } = {
-    avatarAlt: user_metadata.full_name || userEmail?.split("@")[0] || "",
-    avatarFallback: userEmail ? userEmail[0] : "U",
-    avatarSrc: user_metadata.avatar_url,
-    displayName: user_metadata.full_name || userEmail?.split("@")[0] || "",
-    email: userEmail,
-  };
+  const avatarAlt = (user_metadata.full_name ||
+    userEmail?.split("@")[0] ||
+    "") as string;
+  const avatarFallback = userEmail ? userEmail[0] : "U";
+  const avatarSrc = user_metadata.avatar_url as string;
+  const displayName = (user_metadata.full_name ||
+    userEmail?.split("@")[0] ||
+    "") as string;
+  const email = userEmail;
 
   return (
     <DropdownMenu>
