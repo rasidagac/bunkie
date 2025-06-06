@@ -1,9 +1,9 @@
 "use client";
 
+import type { Provider } from "@supabase/supabase-js";
 import type { ButtonProps } from "@ui/button";
 import type { ReactNode } from "react";
 
-import { Provider } from "@supabase/supabase-js";
 import { Button } from "@ui/button";
 import { Form } from "@ui/form";
 import { Loader2 } from "lucide-react";

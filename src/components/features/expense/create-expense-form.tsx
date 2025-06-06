@@ -14,10 +14,11 @@ import { Input } from "@ui/input";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
+import type { ExpenseCreateFormValues } from "@/types/expenses";
+
 import FormSubmitButton from "@/components/common/form-submit-button";
 import { FileInput } from "@/components/ui/file-input";
 import { formSchema } from "@/schema/expense";
-import { ExpenseCreateFormValues } from "@/types/expenses";
 
 interface CreateExpenseFormProps {
   groupId: string;

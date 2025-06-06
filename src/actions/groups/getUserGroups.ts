@@ -26,5 +26,5 @@ export const getUserGroups = cache(async () => {
 
   const groups = data.map((group) => group.groups!);
 
-  return { data: groups!, error: null };
+  return { data: groups, error: null };
 });

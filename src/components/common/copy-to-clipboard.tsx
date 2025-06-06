@@ -20,16 +20,21 @@ export default function CopyToClipboard({
   const [copied, setCopied] = useState(false);
   const [disabled, setDisabled] = useState(false);
 
-  function handleClick() {
+  async function handleClick() {
     setDisabled(true);
 
-    navigator.clipboard.writeText(textToCopy).then(() => {
+    try {
+      await navigator.clipboard.writeText(textToCopy);
       setTimeout(() => {
         setDisabled(false);
         setCopied(true);
         setTimeout(() => setCopied(false), 1000);
       }, 1000);
-    });
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setDisabled(false);
+    }
   }
 
   const icon = disabled ? (
