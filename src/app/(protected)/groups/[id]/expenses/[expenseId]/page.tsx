@@ -1,14 +1,14 @@
-import { getExpense } from "@/actions/expenses/getExpense";
-import { updateExpense } from "@/actions/expenses/updateExpense";
-import { getById } from "@/actions/groups/getById";
-import { ExpenseForm } from "@/components/expense/expense-form";
-import { BreadcrumbWrapper } from "@/components/layout";
 import {
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import { Separator } from "@/components/ui/separator";
+} from "@ui/breadcrumb";
+import { notFound } from "next/navigation";
+
+import { getExpense } from "@/actions/expenses/getExpense";
+import { getById } from "@/actions/groups/getById";
+import { EditPage } from "@/components/expense/edit-page";
+import { BreadcrumbWrapper } from "@/components/layout";
 
 export default async function ExpensePage({
   params,
@@ -16,11 +16,13 @@ export default async function ExpensePage({
   params: Promise<{ expenseId: string; id: string }>;
 }) {
   const { expenseId, id: groupId } = await params;
-  const { amount, currency, image_url, split_type, title } =
-    await getExpense(expenseId);
-  const group = await getById(groupId);
+  const expense = await getExpense(expenseId);
 
-  const updateExpenseWithId = updateExpense.bind(null, expenseId, groupId);
+  if (!expense) {
+    notFound();
+  }
+
+  const group = await getById(groupId);
 
   return (
     <div className="space-y-4">
@@ -33,18 +35,7 @@ export default async function ExpensePage({
         </BreadcrumbItem>
         <BreadcrumbSeparator />
       </BreadcrumbWrapper>
-      <div className="truncate text-xl font-bold">{title}</div>
-      <Separator />
-      <ExpenseForm
-        defaultValues={{
-          amount,
-          currency,
-          image: image_url ? [image_url] : [],
-          split_type,
-          title,
-        }}
-        onValid={updateExpenseWithId}
-      />
+      <EditPage expense={expense} groupId={groupId} />
     </div>
   );
 }
