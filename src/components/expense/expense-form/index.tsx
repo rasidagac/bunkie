@@ -28,17 +28,20 @@ import { formSchema } from "@/schema/expense";
 
 interface ExpenseFormProps {
   defaultValues: UseFormProps<ExpenseCreateFormValues>["defaultValues"];
+  disabled?: boolean;
   onInvalid?: SubmitErrorHandler<ExpenseCreateFormValues>;
   onValid: SubmitHandler<ExpenseCreateFormValues>;
 }
 
 export function ExpenseForm({
   defaultValues,
+  disabled,
   onInvalid,
   onValid,
 }: ExpenseFormProps) {
   const form = useForm<ExpenseCreateFormValues>({
     defaultValues,
+    disabled,
     resolver: zodResolver(formSchema),
   });
 
@@ -55,6 +58,7 @@ export function ExpenseForm({
       >
         <FormField
           control={form.control}
+          defaultValue=""
           name="title"
           render={({ field }) => (
             <FormItem>
@@ -68,6 +72,7 @@ export function ExpenseForm({
         />
         <FormField
           control={form.control}
+          defaultValue={0}
           name="amount"
           render={({ field }) => (
             <FormItem>
