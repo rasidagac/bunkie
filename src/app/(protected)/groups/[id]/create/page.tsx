@@ -1,8 +1,14 @@
-import { Separator } from "@ui/separator";
+import { notFound } from "next/navigation";
 
-import CreateExpenseBreadcrumb from "@/components/features/expense/create-expense-breadcrumb";
-import CreateExpenseForm from "@/components/features/expense/create-expense-form";
-import { createClient } from "@/utils/supabase/server";
+import { getCurrentUser } from "@/actions/auth/getCurrentUser";
+import { getById } from "@/actions/groups/getById";
+import { CreatePage } from "@/components/expense/create-page";
+import { BreadcrumbWrapper } from "@/components/layout";
+import {
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 
 export default async function CreateExpensePage({
   params,
@@ -10,19 +16,26 @@ export default async function CreateExpensePage({
   params: Promise<{ id: string }>;
 }) {
   const { id: groupId } = await params;
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { data: group, error } = await getById(groupId);
+
+  if (error) {
+    return notFound();
+  }
+
+  const { id: userId } = await getCurrentUser();
 
   return (
     <>
-      <CreateExpenseBreadcrumb />
-      <div className="mt-4 flex flex-col gap-2">
-        <h1 className="text-xl font-bold">Create Expense</h1>
-        <Separator className="w-1/3" />
-        <CreateExpenseForm groupId={groupId} userId={user!.id} />
-      </div>
+      <BreadcrumbWrapper>
+        <BreadcrumbSeparator />
+        <BreadcrumbItem>
+          <BreadcrumbLink href={`/groups/${groupId}`}>
+            {group.name}
+          </BreadcrumbLink>
+        </BreadcrumbItem>
+        <BreadcrumbSeparator />
+      </BreadcrumbWrapper>
+      <CreatePage groupId={groupId} userId={userId} />
     </>
   );
 }
