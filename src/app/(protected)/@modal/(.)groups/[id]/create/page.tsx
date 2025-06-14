@@ -18,6 +18,8 @@ import {
   CreatePageSkeleton,
 } from "@/components/expense/create-page";
 
+const MODAL_CLOSE_DELAY_MS = 200;
+
 export default function CreateExpenseModal({
   params,
 }: {
@@ -35,7 +37,7 @@ export default function CreateExpenseModal({
     if (!open) {
       setTimeout(() => {
         router.back();
-      }, 200);
+      }, MODAL_CLOSE_DELAY_MS); // Delay to allow modal close animation to complete
     }
   }
 
