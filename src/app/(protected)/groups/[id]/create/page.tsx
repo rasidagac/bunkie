@@ -1,14 +1,14 @@
+import {
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbSeparator,
+} from "@ui/breadcrumb";
 import { notFound } from "next/navigation";
 
 import { getCurrentUser } from "@/actions/auth/getCurrentUser";
 import { getById } from "@/actions/groups/getById";
 import { CreatePage } from "@/components/expense/create-page";
 import { BreadcrumbWrapper } from "@/components/layout";
-import {
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
 
 export default async function CreateExpensePage({
   params,
@@ -22,7 +22,7 @@ export default async function CreateExpensePage({
     return notFound();
   }
 
-  const { id: userId } = await getCurrentUser();
+  const user = await getCurrentUser();
 
   return (
     <>
@@ -35,7 +35,7 @@ export default async function CreateExpensePage({
         </BreadcrumbItem>
         <BreadcrumbSeparator />
       </BreadcrumbWrapper>
-      <CreatePage groupId={groupId} userId={userId} />
+      <CreatePage groupId={groupId} userId={user.id} />
     </>
   );
 }

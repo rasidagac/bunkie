@@ -8,7 +8,6 @@ import type { ExpenseCreateFormValues } from "@/types/expenses";
 import createExpense from "@/actions/expenses/createExpense";
 
 import { ExpenseForm } from "../expense-form";
-import { CreatePageDrawer } from "./drawer";
 
 interface CreatePageProps {
   groupId: string;
@@ -47,4 +46,4 @@ export function CreatePage({ groupId, userId }: CreatePageProps) {
   );
 }
 
-export { CreatePageDrawer };
+export { CreatePageSkeleton } from "./skeleton";
