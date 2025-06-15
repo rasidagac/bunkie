@@ -32,7 +32,7 @@ export default function BreadcrumbWrapper({
       <BreadcrumbList>
         <BreadcrumbItem>
           <BreadcrumbLink asChild>
-            <Link href="/dashboard">Dashboard</Link>
+            <Link href="/groups">Dashboard</Link>
           </BreadcrumbLink>
         </BreadcrumbItem>
         {children}

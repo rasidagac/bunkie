@@ -53,7 +53,7 @@ export function SignUpForm() {
               resolve(true);
             },
           });
-          router.replace("/dashboard");
+          router.replace("/groups");
         }
         resolve(false);
       });

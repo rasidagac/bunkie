@@ -29,5 +29,5 @@ export async function createGroup(formData: FormData) {
     user_id: data.user?.id,
   });
 
-  redirect(`../groups/${group?.code}`);
+  redirect(`/groups/${group.id}`);
 }
