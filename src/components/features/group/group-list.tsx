@@ -8,17 +8,18 @@ import {
   CommandItem,
   CommandList,
 } from "@ui/command";
-import { setCookie } from "cookies-next";
 
 import type { Group } from "@/types/groups";
 
+import { setCurrentGroup } from "@/actions/groups/setCurrentGroup";
+
 export function GroupList({ data }: { data: Group[] }) {
   async function handleSelect(group: Group) {
-    await setCookie("currentGroup", group.id);
+    await setCurrentGroup(group.id);
   }
 
   return (
-    <Command>
+    <Command className="rounded-none">
       <CommandInput placeholder="Filter group..." />
       <CommandList>
         <CommandEmpty>No groups found.</CommandEmpty>
