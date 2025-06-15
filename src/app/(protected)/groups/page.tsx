@@ -57,7 +57,7 @@ export default async function DashboardPage() {
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">My Groups</h1>
         <div className="flex items-center gap-2">
-          <Link href="/dashboard/create">
+          <Link href="/groups/create">
             <Button className="rounded-full" size="sm" variant="outline">
               <Plus /> Create
             </Button>
