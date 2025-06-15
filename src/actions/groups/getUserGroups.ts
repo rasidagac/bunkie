@@ -4,27 +4,21 @@ import { cache } from "react";
 
 import { createClient } from "@/utils/supabase/server";
 
+import { getCurrentUser } from "../auth/getCurrentUser";
+
 export const getUserGroups = cache(async () => {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getCurrentUser();
 
   const { data, error } = await supabase
     .from("memberships")
-    .select(
-      `
-      groups:groups(*)
-    `,
-    )
-    .eq("user_id", user!.id);
+    .select("groups(*)")
+    .eq("user_id", user.id);
 
   if (error) {
-    console.error("Error fetching user groups:", error);
-    return { data: null, error };
+    return { data: [], error };
   }
-
-  const groups = data.map((group) => group.groups!);
+  const groups = data?.map((entry) => entry.groups) ?? [];
 
   return { data: groups, error: null };
 });

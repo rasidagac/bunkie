@@ -1,4 +1,6 @@
 import { getExpenseList } from "@actions/expenses/getExpenseList";
+import { Button } from "@ui/button";
+import { Separator } from "@ui/separator";
 import { PlusCircle } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -9,8 +11,6 @@ import { GroupBreadcrumb } from "@/components/features/group/group-breadcrumb";
 import { GroupHeader } from "@/components/features/group/house-header";
 import { LiabilitiesDrawer } from "@/components/features/group/liabilities-drawer";
 import { NoExpense } from "@/components/features/group/no-expense";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 
 export default async function SingleGroupPage({
   params,
@@ -19,9 +19,9 @@ export default async function SingleGroupPage({
 }) {
   const { id: groupId } = await params;
 
-  const currentGroup = await getCurrentGroup();
+  const { data: currentGroup, error } = await getCurrentGroup();
 
-  if (!currentGroup) {
+  if (error || !currentGroup) {
     notFound();
   }
 
