@@ -3,7 +3,7 @@ import type { NextRequest } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse } from "next/server";
 
-const protectedRoutes = ["/dashboard", "/groups"];
+const protectedRoutes = ["/groups", "/groups"];
 
 export const updateSession = async (request: NextRequest) => {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
