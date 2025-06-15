@@ -36,5 +36,5 @@ export async function joinGroup(
     return { error: "Failed to join house" };
   }
 
-  redirect(`/dashboard/groups/${group.code}`);
+  redirect(`/groups/${group.id}`);
 }

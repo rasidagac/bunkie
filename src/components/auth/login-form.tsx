@@ -49,7 +49,7 @@ export function SignInForm() {
 
       if (data.user) {
         toast.success("Signed in successfully", {
-          onAutoClose: () => router.replace("/dashboard"),
+          onAutoClose: () => router.replace("/groups"),
         });
       }
     } catch (error) {

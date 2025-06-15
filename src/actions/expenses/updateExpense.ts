@@ -31,5 +31,5 @@ export async function updateExpense(
 
   if (error) throw error;
 
-  revalidatePath(`/dashboard/groups/${groupId}`, "page");
+  revalidatePath(`/groups/${groupId}`, "page");
 }

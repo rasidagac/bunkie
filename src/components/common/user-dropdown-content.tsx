@@ -19,7 +19,7 @@ export default function UserDropdownContent() {
   return (
     <>
       {/* <DropdownMenuItem asChild>
-        <Link href="/dashboard" className="cursor-pointer">
+        <Link href="/groups" className="cursor-pointer">
           <Settings className="mr-2 h-4 w-4" />
           Manage Account
         </Link>
