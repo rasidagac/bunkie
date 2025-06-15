@@ -128,9 +128,9 @@ export type Database = {
       memberships: {
         Insert: {
           created_at?: string;
-          group_id?: null | string;
+          group_id?: string;
           id?: string;
-          user_id?: null | string;
+          user_id?: string;
         };
         Relationships: [
           {
@@ -150,15 +150,15 @@ export type Database = {
         ];
         Row: {
           created_at: string;
-          group_id: null | string;
+          group_id: string;
           id: string;
-          user_id: null | string;
+          user_id: string;
         };
         Update: {
           created_at?: string;
-          group_id?: null | string;
+          group_id?: string;
           id?: string;
-          user_id?: null | string;
+          user_id?: string;
         };
       };
       payments: {

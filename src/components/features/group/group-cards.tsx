@@ -2,11 +2,12 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from "@ui/avatar";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@ui/card";
-import { setCookie } from "cookies-next";
 import { ChevronRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import type { Tables } from "@/types/supabase";
+
+import { setCurrentGroup } from "@/actions/groups/setCurrentGroup";
 
 interface GroupCardsProps {
   groupsData: GroupsData;
@@ -25,7 +26,7 @@ export function GroupCards({ groupsData }: GroupCardsProps) {
   const router = useRouter();
 
   async function handleCardClick(group: Tables<"groups">) {
-    await setCookie("currentGroup", group.id);
+    await setCurrentGroup(group.id);
     router.push(`/groups/${group.id}`);
   }
 
