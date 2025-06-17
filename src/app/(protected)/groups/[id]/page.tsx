@@ -9,8 +9,8 @@ import { getCurrentGroup } from "@/actions/groups/getCurrentGroup";
 import { ExpensesTable } from "@/components/features/group/expenses-table";
 import { GroupBreadcrumb } from "@/components/features/group/group-breadcrumb";
 import { GroupHeader } from "@/components/features/group/house-header";
-import { LiabilitiesDrawer } from "@/components/features/group/liabilities-drawer";
 import { NoExpense } from "@/components/features/group/no-expense";
+import { DebtsDrawer } from "@/components/group/debts";
 
 export default async function SingleGroupPage({
   params,
@@ -42,7 +42,7 @@ export default async function SingleGroupPage({
           groupCode={currentGroup.code}
           groupName={currentGroup.name}
         />
-        <LiabilitiesDrawer groupId={groupId} />
+        <DebtsDrawer groupId={groupId} />
         <div>
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-semibold">Latest Expenses</h2>
