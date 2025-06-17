@@ -35,7 +35,7 @@ export function ExpensesTable({ data, groupId }: ExpensesTableProps) {
 
   const renderItem = useCallback((expense: ExpenseWithProfile) => {
     return (
-      <div className="grid grid-cols-10 grid-rows-1 items-center gap-2 text-xs">
+      <div className="grid grid-cols-12 grid-rows-1 items-center gap-2 text-xs">
         <div className="w-min text-center">{expense.created_at}</div>
         <div className="relative aspect-square bg-gray-200">
           <Image
@@ -46,11 +46,15 @@ export function ExpensesTable({ data, groupId }: ExpensesTableProps) {
             src={expense.image_url || "/receipt-text.svg"}
           />
         </div>
-        <div className="col-span-6 flex flex-col">
+        <div className="col-span-7 flex flex-col">
           <div className="truncate font-semibold">{expense.title}</div>
-          <div className="text-muted-foreground truncate">{`${expense.full_name} paid ${expense.amount}`}</div>
+          <div className="text-muted-foreground flex items-center gap-1">
+            <span className="truncate font-semibold">{expense.full_name}</span>
+            <span className="font-semibold">paid</span>
+            <span className="font-semibold">{expense.amount}</span>
+          </div>
         </div>
-        <div className="col-span-2 col-start-9 text-right">
+        <div className="col-span-3 col-start-10 text-right">
           <div>{expense.debt.text}</div>
           <div className="truncate">{expense.debt.amount}</div>
         </div>

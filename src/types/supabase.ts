@@ -251,9 +251,9 @@ export type Database = {
       group_balances: {
         Relationships: [];
         Row: {
-          balance: null | number;
-          group_id: null | string;
-          user_id: null | string;
+          balance: number;
+          group_id: string;
+          user_id: string;
         };
       };
       user_balances: {
