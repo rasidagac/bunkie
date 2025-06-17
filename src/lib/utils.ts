@@ -61,8 +61,8 @@ export function settleDebts(balances: Balance[]) {
     debtor.balance -= amount;
     creditor.balance += amount;
 
-    if (debtor.balance === 0) i++;
-    if (creditor.balance === 0) j++;
+    if (Math.abs(debtor.balance) < Number.EPSILON) i++;
+    if (Math.abs(creditor.balance) < Number.EPSILON) j++;
   }
 
   return settlements;
