@@ -33,10 +33,12 @@ export const getDebtsWithProfiles = cache(async (groupId: string) => {
     };
   }
 
-  const enriched = balances.map((balance) => ({
-    ...balance,
-    user: users.find((u) => u.id === balance.user_id)!,
-  }));
+  const enriched = balances
+    .map((balance) => {
+      const user = users.find((u) => u.id === balance.user_id);
+      return user ? { ...balance, user } : null;
+    })
+    .filter((item) => item !== null);
 
   return {
     data: enriched,
