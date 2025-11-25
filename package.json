@@ -6,7 +6,8 @@
     "dev": "NODE_OPTIONS='--inspect' next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "update-types": "pnpm dlx supabase gen types --lang=typescript --project-id \"$PROJECT_REF\" > database.types.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^4.1.3",
@@ -68,5 +69,5 @@
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.33.1"
   },
-  "packageManager": "yarn@4.6.0"
+  "packageManager": "pnpm@10.23.0"
 }
