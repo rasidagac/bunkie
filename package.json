@@ -6,8 +6,7 @@
     "dev": "NODE_OPTIONS='--inspect' next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "update-types": "pnpm dlx supabase gen types --lang=typescript --project-id \"$PROJECT_REF\" > database.types.ts"
+    "update-types": "pnpm dlx supabase gen types --lang=typescript --project-id \"$PROJECT_REF\" > src/database.types.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^4.1.3",
@@ -46,7 +45,6 @@
     "zod": "^3.25.0"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3.3.1",
     "@eslint/js": "^9.28.0",
     "@tailwindcss/postcss": "^4.1.7",
     "@types/node": "^22.15.19",
@@ -57,9 +55,9 @@
     "dotenv-cli": "^8.0.0",
     "eslint": "^9.28.0",
     "eslint-config-next": "16.0.4",
-    "eslint-config-prettier": "^10.1.5",
+    "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-perfectionist": "^4.13.0",
-    "eslint-plugin-prettier": "^5.4.0",
+    "eslint-plugin-prettier": "^5.5.4",
     "eslint-plugin-unused-imports": "^4.1.4",
     "postcss": "^8.5.3",
     "prettier": "3.5.3",
