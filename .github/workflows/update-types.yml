@@ -17,7 +17,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          persist-credentials: false
+          token: ${{ secrets.ADMIN_PAT }}
           fetch-depth: 0
 
       - uses: pnpm/action-setup@v3
@@ -52,5 +52,5 @@ jobs:
         if: ${{contains(steps.git_status.outputs.status, ' ')}}
         uses: ad-m/github-push-action@master
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.ADMIN_PAT }}
           branch: ${{ github.ref }}
