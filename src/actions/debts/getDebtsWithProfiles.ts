@@ -9,7 +9,7 @@ export const getDebtsWithProfiles = cache(async (groupId: string) => {
 
   const { data: balances, error: balancesError } = await supabase
     .from("group_balances")
-    .select("user_id, balance")
+    .select("*")
     .eq("group_id", groupId);
 
   if (balancesError) {
@@ -19,7 +19,7 @@ export const getDebtsWithProfiles = cache(async (groupId: string) => {
     };
   }
 
-  const userIds = balances.map((b) => b.user_id);
+  const userIds = balances.map((b) => b.user_id!);
 
   const { data: users, error: usersError } = await supabase
     .from("profiles")
