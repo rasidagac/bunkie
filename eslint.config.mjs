@@ -1,13 +1,9 @@
-import { FlatCompat } from "@eslint/eslintrc";
 import eslint from "@eslint/js";
+import nextVitals from "eslint-config-next/core-web-vitals";
 import perfectionist from "eslint-plugin-perfectionist";
 import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended";
-import { defineConfig } from "eslint/config";
+import { defineConfig, globalIgnores } from "eslint/config";
 import tsEslint from "typescript-eslint";
-
-const compat = new FlatCompat({
-  baseDirectory: import.meta.dirname,
-});
 
 const tslintConfig = defineConfig(
   eslint.configs.recommended,
@@ -48,11 +44,19 @@ const tslintConfig = defineConfig(
   },
 );
 
-const eslintConfig = [
-  ...compat.extends("next/core-web-vitals"),
+const eslintConfig = defineConfig([
+  ...nextVitals,
   ...tslintConfig,
   perfectionist.configs["recommended-alphabetical"],
   eslintPluginPrettierRecommended,
-];
+  globalIgnores([
+    // Default ignores of eslint-config-next:
+    ".next/**",
+    "out/**",
+    "build/**",
+    "next-env.d.ts",
+    "src/database.types.ts",
+  ]),
+]);
 
 export default eslintConfig;
