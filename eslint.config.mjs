@@ -2,15 +2,16 @@ import { FlatCompat } from "@eslint/eslintrc";
 import eslint from "@eslint/js";
 import perfectionist from "eslint-plugin-perfectionist";
 import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended";
+import { defineConfig } from "eslint/config";
 import tsEslint from "typescript-eslint";
 
 const compat = new FlatCompat({
   baseDirectory: import.meta.dirname,
 });
 
-const tslintConfig = tsEslint.config(
+const tslintConfig = defineConfig(
   eslint.configs.recommended,
-  tsEslint.configs.recommendedTypeChecked,
+  tsEslint.configs.recommended,
   {
     languageOptions: {
       parserOptions: {
