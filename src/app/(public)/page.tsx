@@ -75,7 +75,7 @@ export default function Home() {
             alt="Window icon"
             aria-hidden
             height={16}
-            src="/window.svg"
+            src="/receipt-text.svg"
             width={16}
           />
           Examples
