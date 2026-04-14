@@ -41,7 +41,6 @@
     "tailwindcss-animate": "^1.0.7",
     "uuid": "^13.0.0",
     "vaul": "^1.1.2",
-    "ws": "^8.18.3",
     "zod": "^4.1.13"
   },
   "devDependencies": {
@@ -50,9 +49,6 @@
     "@types/node": "^24.10.1",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
-    "@types/ws": "^8.18.1",
-    "bufferutil": "^4.0.9",
-    "dotenv-cli": "^11.0.0",
     "eslint": "^9.39.1",
     "eslint-config-next": "16.0.4",
     "eslint-config-prettier": "^10.1.8",
