@@ -72,3 +72,8 @@ Questions for the repo owner
 - Should additional protected routes be added to `src/utils/supabase/middleware.ts` (it currently only protects `/groups`)?
 
 Please review and tell me which areas need more detail (CI, deployment, or additional conventions).
+
+<!-- SPECKIT START -->
+For additional context about technologies to be used, project structure,
+shell commands, and other important information, read the current plan
+<!-- SPECKIT END -->
