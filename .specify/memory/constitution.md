@@ -1,19 +1,20 @@
 <!--
 SYNC IMPACT REPORT
 ==================
-Version change: (none) → 1.0.0 (initial ratification)
-Modified principles: N/A — first issue
+Version change: 1.0.0 → 1.1.0
+Modified principles:
+  - II. Testing Standards → II. Test-First Verification
+  - III. User Experience Consistency → III. Predictable User Experience
+  - IV. Performance Requirements → V. Performance & Responsiveness
 Added sections:
-  - I. Code Quality
-  - II. Testing Standards
-  - III. User Experience Consistency
-  - IV. Performance Requirements
+  - IV. Data Integrity & Security
 Removed sections: N/A
 Templates reviewed:
-  ✅ .specify/templates/plan-template.md — Constitution Check gate references principles below
-  ✅ .specify/templates/spec-template.md — Success Criteria / Measurable Outcomes align with §IV
-  ✅ .specify/templates/tasks-template.md — Test tasks align with §II; Polish phase aligns with §I
-Follow-up TODOs: None — all placeholders resolved.
+  ✅ .specify/templates/plan-template.md — Constitution Check remains aligned with Roman-numeral principle references
+  ✅ .specify/templates/spec-template.md — Mandatory user stories / measurable outcomes remain compatible with the updated principles
+  ✅ .specify/templates/tasks-template.md — Phase/task organization still matches test-first and polish requirements
+  ✅ .specify/templates/commands/*.md — No command templates present in this workspace
+Follow-up TODOs: None.
 -->
 
 # Bunkie Constitution
@@ -22,79 +23,80 @@ Follow-up TODOs: None — all placeholders resolved.
 
 ### I. Code Quality
 
-All production code MUST be written in TypeScript with no implicit `any`. Strict mode is
-non-negotiable; the compiler is the first line of defence against runtime errors.
+Production code MUST be TypeScript-first, strictly typed, and easy to reason about. The compiler,
+lint rules, and file boundaries are part of the design, not optional cleanup.
 
 Rules:
-- Every type-only import MUST use `import type` (enforced by `@typescript-eslint/consistent-type-imports`).
-- Imports MUST be sorted alphabetically (`eslint-plugin-perfectionist`). Run `pnpm lint` before
-  every commit; CI will reject non-compliant code.
-- Server actions MUST live under `src/actions/{feature}/` and start with `"use server"`. They MUST
-  use `src/utils/supabase/server.ts` exclusively — never the browser client.
-- Browser components MUST use `src/utils/supabase/client.ts` (`NEXT_PUBLIC_*` keys only). Mixing
-  server and client Supabase instances is a hard failure.
-- Path aliases (`@/*`, `@lib/*`, `@ui/*`, `@actions/*`) MUST be used; relative `../../` imports
-  crossing feature or layer boundaries are disallowed.
-- Code MUST NOT introduce OWASP Top-10 vulnerabilities. SQL queries go through the Supabase client
-  only — raw string concatenation into queries is forbidden.
-- Dead code and backwards-compatibility shims MUST be deleted outright, not commented out or
-  prefixed with underscore.
+- All production code MUST compile without implicit `any` and without disabled type checks.
+- Every type-only import MUST use `import type`, and imports MUST remain alphabetized.
+- Server actions MUST live under `src/actions/{feature}/`, start with `"use server"`, and use
+  `src/utils/supabase/server.ts` only.
+- Browser code MUST use `src/utils/supabase/client.ts` only; server-only helpers MUST never leak
+  into client components.
+- Path aliases (`@/*`, `@lib/*`, `@ui/*`, `@actions/*`) MUST be used for cross-layer imports.
+- Code MUST avoid raw query string construction, hidden side effects, and dead compatibility shims.
+- Every PR MUST leave the codebase in a state where `pnpm lint` and `pnpm build` can pass.
 
-### II. Testing Standards
+### II. Test-First Verification
 
-Every user-facing acceptance scenario documented in a spec MUST have a corresponding test before
-the feature is merged. Tests that cannot be run in isolation are not tests.
+Every user-visible behavior change MUST be expressed as an automated test before merge. If a story
+cannot be tested in isolation, the design is not ready.
 
 Rules:
-- Acceptance tests MUST be written and confirmed failing (red) before implementation begins (TDD).
-- Tests against Supabase MUST hit a real Supabase instance (local via `supabase start` or a
-  dedicated branch). Mocking the database is prohibited; mock/prod divergence has historically
-  masked broken migrations.
-- Server actions MUST be covered by integration tests that exercise the full request → database
-  → response path, including RLS policies.
-- UI tests MUST exercise the golden path and at least one error/edge case per user story.
-- Test files MUST reside alongside the code they test (`*.test.ts` / `*.test.tsx`) or under
-  `tests/` for integration suites.
-- A feature is not "done" until all its acceptance scenarios pass and `pnpm lint` exits cleanly.
+- Acceptance scenarios in the spec MUST map to tests before implementation begins.
+- New tests MUST fail before code is written when the change is feasible to drive with TDD.
+- Supabase-related behavior MUST be validated against a real database instance or branch; mocking
+  persistence is not acceptable for feature verification.
+- Server actions MUST have integration coverage that exercises request, database, and response
+  behavior, including RLS-sensitive flows.
+- UI work MUST cover the primary journey plus at least one error or edge case per story.
+- A feature is not complete until the relevant tests pass and lint is clean.
 
-### III. User Experience Consistency
+### III. Predictable User Experience
 
-Bunkie users are non-technical housemates managing shared money. Every interaction MUST feel
-predictable, accessible, and trustworthy.
+Bunkie serves housemates who need clear, low-friction money flows. The UI MUST feel consistent,
+accessible, and unsurprising across devices and themes.
 
 Rules:
-- All UI components MUST be built from `shadcn/ui` (New York style) imported via `@ui/`. New
-  one-off components are only permitted when shadcn/ui has no equivalent.
-- Forms MUST use React Hook Form + Zod for validation. Inline validation messages MUST appear
-  adjacent to the offending field, not in a top-level banner alone.
-- Toast notifications (via the global `Toaster` in `src/app/layout.tsx`) are the standard channel
-  for async feedback (success, error, loading). Duplicate or competing notification systems are
-  disallowed.
-- Protected routes MUST be listed in `src/utils/supabase/middleware.ts`. An unauthenticated user
-  hitting a protected route MUST be redirected to `/auth/login` — silent 404s or blank screens are
-  failures.
-- Tailwind classes MUST be ordered by `prettier-plugin-tailwindcss`. Manually ordered or
-  arbitrarily sorted class strings are rejected in review.
-- Dark-mode and light-mode states MUST be tested via `ThemeProvider` before shipping any new page.
+- Shared UI MUST come from `shadcn/ui` primitives via `@ui/` unless no equivalent exists.
+- Forms MUST use React Hook Form + Zod, and field-level validation messages MUST appear next to the
+  invalid input.
+- Async feedback MUST use the global toast channel in `src/app/layout.tsx`; competing notification
+  systems are not allowed.
+- Protected routes MUST be registered in `src/utils/supabase/middleware.ts`, and unauthenticated
+  users MUST redirect to `/auth/login`.
+- Money-related screens MUST use consistent currency, amount, and balance formatting across pages.
+- Dark and light themes MUST render correctly, and mobile layouts MUST remain usable without
+  horizontal scrolling.
+- Tailwind class ordering MUST remain compatible with `prettier-plugin-tailwindcss`.
 
-### IV. Performance Requirements
+### IV. Data Integrity & Security
 
-Bunkie is a financial tool; users check balances on mobile over variable connections. Perceived
-speed directly affects trust.
+Shared expense data is the product. Any inconsistency in permissions, balances, or schema contracts
+is a user-facing defect.
 
 Rules:
-- Core Web Vitals targets (measured in production via Vercel Analytics or Lighthouse CI):
-  - LCP ≤ 2.5 s on a simulated mobile 4G connection.
-  - CLS < 0.1 across all pages.
-  - INP ≤ 200 ms for any user interaction.
-- Server Components MUST be the default rendering strategy. Client Components (`"use client"`) are
-  only introduced when interactivity or browser APIs require it; every `"use client"` boundary MUST
-  be justified in the PR description.
-- Images served from Vercel Blob MUST use `next/image` with explicit `width`/`height` or `fill`
-  to prevent layout shift.
-- Redux state MUST only hold data that is genuinely shared across multiple, non-parent-child
-  components. Local or server state is preferred otherwise.
-- Bundle size regressions > 10 kB (gzip) on any page route require explicit sign-off in the PR.
+- Supabase row-level security is the source of truth for access control.
+- Server actions MUST validate ownership and group membership before mutating shared data.
+- Environment variables MUST only come from documented project keys; secret values MUST never be
+  embedded in source or logs.
+- Schema changes MUST be followed by type regeneration and review of affected data flows.
+- Raw SQL string concatenation is forbidden; all persistence access MUST go through the approved
+  Supabase helpers or migrations.
+
+### V. Performance & Responsiveness
+
+The app MUST feel fast on mobile networks because users check balances in real time and trust the
+resulting delay or jitter.
+
+Rules:
+- Server Components MUST be the default rendering strategy; `"use client"` boundaries MUST be kept
+  as small as possible and justified by interaction needs.
+- Images MUST use `next/image` with explicit dimensions or `fill` to avoid layout shift.
+- Global client state MUST be limited to data that genuinely spans multiple unrelated components.
+- Core user journeys SHOULD remain responsive on mid-range mobile devices and variable connections.
+- Bundle or route regressions that materially slow the primary expense and balance flows MUST be
+  called out in review with a mitigation plan.
 
 ## Quality Gates
 
@@ -129,9 +131,9 @@ to every contributor and every automated agent working in this repository.
 4. Merge requires at least one reviewer who is not the author.
 
 All plan Constitution Check gates (`plan-template.md §Constitution Check`) MUST reference the
-principles in this document by Roman-numeral heading (I–IV).
+principles in this document by Roman-numeral heading (I–V).
 
 Complexity that violates a principle MUST be justified in the plan's Complexity Tracking table
 before implementation begins.
 
-**Version**: 1.0.0 | **Ratified**: 2026-04-13 | **Last Amended**: 2026-04-13
+**Version**: 1.1.0 | **Ratified**: 2026-04-13 | **Last Amended**: 2026-04-23
