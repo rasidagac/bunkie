@@ -109,3 +109,8 @@ All tables have RLS enabled.
 | `NEXT_PUBLIC_SUPABASE_URL` | Yes — both middleware and client |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Yes — both middleware and client |
 | `PROJECT_REF` | Only for `pnpm update-types` |
+
+<!-- SPECKIT START -->
+For additional context about technologies to be used, project structure,
+shell commands, and other important information, read the current plan
+<!-- SPECKIT END -->
